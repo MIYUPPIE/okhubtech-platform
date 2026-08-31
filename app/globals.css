@@ -18,6 +18,17 @@
    * anything a reader has to actually read.
    */
   --gold-ink: #8a6d00;
+
+  /*
+   * The same problem one step up: .text-gradient paints the gold ramp *into*
+   * text, and on the day ground the bright ramp scores 1.34 / 1.70 / 2.48:1 —
+   * the homepage headline's second line was a pale smear. Day mode runs the
+   * deep end of the ramp (3.53 / 4.71 / 7.10:1), night mode the bright end
+   * (14.97 / 11.81 / 8.12:1).
+   */
+  --gold-ramp-start: #a87f00;
+  --gold-ramp-mid: #8a6d00;
+  --gold-ramp-end: #6b5200;
 }
 
 /*
@@ -48,6 +59,9 @@ body {
 
 .dark {
   --gold-ink: var(--gold-primary);
+  --gold-ramp-start: var(--gold-primary);
+  --gold-ramp-mid: var(--gold-secondary);
+  --gold-ramp-end: var(--gold-deep);
 }
 
 ::selection {
@@ -75,7 +89,7 @@ body {
 }
 
 .text-gradient {
-  background-image: linear-gradient(120deg, var(--gold-primary), var(--gold-secondary), var(--gold-deep));
+  background-image: linear-gradient(120deg, var(--gold-ramp-start), var(--gold-ramp-mid), var(--gold-ramp-end));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -212,7 +226,7 @@ body {
 .kpi-value {
   font-size: 2rem;
   font-weight: 600;
-  color: var(--gold-primary);
+  color: var(--gold-ink);
 }
 
 .kpi-label {
@@ -251,4 +265,38 @@ body {
 
 .dark .noise-bg::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23000000'/%3E%3Ccircle cx='50' cy='50' r='1' fill='%23ffffff' opacity='0.08'/%3E%3C/svg%3E");
+}
+/*
+ * Homepage office panel. The station card slides in from the side it lives on
+ * and settles - a plain fade reads as a tooltip, and this is a piece of the
+ * room arriving, not a hint about one.
+ */
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.office-panel {
+  animation: panelIn 0.45s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/*
+ * Scoped deliberately. A blanket rule over every animated class would also
+ * stop the loading spinner, which is the one animation a reduced-motion
+ * visitor still needs: it is the only signal that the office is on its way
+ * rather than broken.
+ */
+@media (prefers-reduced-motion: reduce) {
+
+  .marquee-track,
+  .office-panel {
+    animation: none !important;
+  }
 }

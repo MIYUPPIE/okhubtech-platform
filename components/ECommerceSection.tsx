@@ -73,7 +73,7 @@ const ECommerceSection = () => (
                     <p className="font-semibold">{product.title}</p>
                     <p className="text-xs uppercase tracking-[0.3em] text-black/65 dark:text-white/50">{product.type}</p>
                   </div>
-                  <p className="text-lg font-semibold text-[var(--gold-primary)]">{product.price}</p>
+                  <p className="text-lg font-semibold text-gold-ink">{product.price}</p>
                 </div>
                 <p className="mt-3 text-sm text-black/70 dark:text-white/70">{product.description}</p>
               </div>

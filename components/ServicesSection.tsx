@@ -300,7 +300,7 @@ const ServicesSection = () => (
                 className="rounded-3xl border border-black/15 dark:border-white/10 bg-white shadow-md dark:bg-black/70 p-6"
               >
                 <div className="flex items-center gap-3">
-                  <div className="rounded-full border border-black/15 dark:border-white/15 p-3" style={{ color: "var(--gold-primary)" }}>
+                  <div className="rounded-full border border-black/15 dark:border-white/15 p-3" style={{ color: "var(--gold-ink)" }}>
                     <service.icon className="h-5 w-5" />
                   </div>
                   <div>

@@ -575,15 +575,15 @@ const MarketingPage = async ({ params }: PageParams) => {
   }
 
   return (
-    <main className="space-y-16 bg-gradient-to-b from-black via-[#050505] to-black pb-24 pt-12 text-white">
+    <main className="space-y-16 pb-24 pt-12">
       <section className="container-default section-shell space-y-6">
-        <span className={`inline-flex w-fit items-center rounded-full px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/70 bg-gradient-to-r ${config.accent ?? accentFallback}`}>
+        <span className={`inline-flex w-fit items-center rounded-full px-4 py-1 text-xs uppercase tracking-[0.3em] text-black/75 bg-gradient-to-r ${config.accent ?? accentFallback}`}>
           {config.badge}
         </span>
-        <h1 className="max-w-4xl font-display text-4xl leading-tight text-white md:text-5xl">
+        <h1 className="max-w-4xl font-display text-4xl leading-tight text-black dark:text-white md:text-5xl">
           {config.title}
         </h1>
-        <p className="max-w-3xl text-lg text-white/70">{config.description}</p>
+        <p className="max-w-3xl text-lg text-black/70 dark:text-white/70">{config.description}</p>
         {config.cta && (
           <Link href={config.cta.href} className="btn-primary w-fit">
             {config.cta.label}
@@ -594,10 +594,10 @@ const MarketingPage = async ({ params }: PageParams) => {
       <section className="container-default">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {config.highlights.map((highlight) => (
-            <div key={highlight.label} className="rounded-3xl border border-white/10 bg-white/5 px-6 py-6 backdrop-blur">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/60">{highlight.label}</p>
-              <p className="mt-3 font-display text-3xl text-white">{highlight.value}</p>
-              <p className="mt-2 text-sm text-white/70">{highlight.caption}</p>
+            <div key={highlight.label} className="rounded-3xl border border-black/10 bg-white px-6 py-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 dark:shadow-none">
+              <p className="text-xs uppercase tracking-[0.3em] text-black/60 dark:text-white/60">{highlight.label}</p>
+              <p className="mt-3 font-display text-3xl text-black dark:text-white">{highlight.value}</p>
+              <p className="mt-2 text-sm text-black/70 dark:text-white/70">{highlight.caption}</p>
             </div>
           ))}
         </div>
@@ -605,11 +605,11 @@ const MarketingPage = async ({ params }: PageParams) => {
 
       <section className="container-default space-y-10">
         {config.sections.map((section) => (
-          <div key={section.title} className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/50">{section.eyebrow}</p>
-            <h2 className="mt-3 font-display text-2xl text-white">{section.title}</h2>
-            <p className="mt-3 text-white/70">{section.description}</p>
-            <ul className="mt-4 space-y-2 text-white/80">
+          <div key={section.title} className="rounded-3xl border border-black/10 bg-white p-8 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 dark:shadow-none">
+            <p className="text-xs uppercase tracking-[0.3em] text-black/50 dark:text-white/50">{section.eyebrow}</p>
+            <h2 className="mt-3 font-display text-2xl text-black dark:text-white">{section.title}</h2>
+            <p className="mt-3 text-black/70 dark:text-white/70">{section.description}</p>
+            <ul className="mt-4 space-y-2 text-black/80 dark:text-white/80">
               {section.bullets.map((bullet) => (
                 <li key={bullet} className="flex items-start gap-3">
                   <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[var(--gold-primary)]" />
@@ -623,17 +623,17 @@ const MarketingPage = async ({ params }: PageParams) => {
 
       {config.spotlight && (
         <section className="container-default">
-          <div className="grid gap-6 rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-8 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="grid gap-6 rounded-3xl border border-black/10 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-transparent dark:bg-gradient-to-br dark:from-white/10 dark:via-white/5 dark:to-transparent dark:shadow-none lg:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-white/60">Spotlight</p>
-              <h3 className="mt-3 font-display text-3xl text-white">{config.spotlight.title}</h3>
-              <p className="mt-3 text-white/70">{config.spotlight.description}</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-black/60 dark:text-white/60">Spotlight</p>
+              <h3 className="mt-3 font-display text-3xl text-black dark:text-white">{config.spotlight.title}</h3>
+              <p className="mt-3 text-black/70 dark:text-white/70">{config.spotlight.description}</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {config.spotlight.items.map((item) => (
-                <div key={item.title} className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                  <p className="text-sm uppercase tracking-[0.2em] text-white/50">{item.title}</p>
-                  <p className="mt-2 text-white/80">{item.detail}</p>
+                <div key={item.title} className="rounded-2xl border border-black/10 bg-black/[0.04] p-4 dark:border-white/10 dark:bg-black/40">
+                  <p className="text-sm uppercase tracking-[0.2em] text-black/50 dark:text-white/50">{item.title}</p>
+                  <p className="mt-2 text-black/80 dark:text-white/80">{item.detail}</p>
                 </div>
               ))}
             </div>
@@ -644,16 +644,16 @@ const MarketingPage = async ({ params }: PageParams) => {
       {config.caseStudies && (
         <section className="container-default space-y-6">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-white/60">Case Studies</p>
-            <h3 className="mt-2 font-display text-3xl text-white">Outcomes across sectors</h3>
+            <p className="text-xs uppercase tracking-[0.3em] text-black/60 dark:text-white/60">Case Studies</p>
+            <h3 className="mt-2 font-display text-3xl text-black dark:text-white">Outcomes across sectors</h3>
           </div>
           <div className="grid gap-6 lg:grid-cols-3">
             {config.caseStudies.map((study) => (
-              <div key={study.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm uppercase tracking-[0.3em] text-white/50">{study.sector}</p>
-                <h4 className="mt-3 font-display text-2xl text-white">{study.title}</h4>
-                <p className="mt-2 text-sm text-[var(--gold-primary)]">{study.impact}</p>
-                <p className="mt-3 text-white/70">{study.summary}</p>
+              <div key={study.title} className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-none">
+                <p className="text-sm uppercase tracking-[0.3em] text-black/50 dark:text-white/50">{study.sector}</p>
+                <h4 className="mt-3 font-display text-2xl text-black dark:text-white">{study.title}</h4>
+                <p className="mt-2 text-sm text-gold-ink">{study.impact}</p>
+                <p className="mt-3 text-black/70 dark:text-white/70">{study.summary}</p>
               </div>
             ))}
           </div>
@@ -662,7 +662,7 @@ const MarketingPage = async ({ params }: PageParams) => {
 
       {config.resources && (
         <section className="container-default space-y-4">
-          <p className="text-xs uppercase tracking-[0.3em] text-white/60">Resources</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-black/60 dark:text-white/60">Resources</p>
           <div className="flex flex-wrap gap-3">
             {config.resources.map((resource) => (
               resource.external ? (
@@ -671,7 +671,7 @@ const MarketingPage = async ({ params }: PageParams) => {
                   href={resource.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-2xl border border-white/10 px-4 py-2 text-sm text-white hover:border-white/40"
+                  className="rounded-2xl border border-black/10 px-4 py-2 text-sm text-black hover:border-black/40 dark:border-white/10 dark:text-white dark:hover:border-white/40"
                 >
                   {resource.label}
                 </a>
@@ -679,7 +679,7 @@ const MarketingPage = async ({ params }: PageParams) => {
                 <Link
                   key={resource.label}
                   href={resource.href}
-                  className="rounded-2xl border border-white/10 px-4 py-2 text-sm text-white hover:border-white/40"
+                  className="rounded-2xl border border-black/10 px-4 py-2 text-sm text-black hover:border-black/40 dark:border-white/10 dark:text-white dark:hover:border-white/40"
                 >
                   {resource.label}
                 </Link>
@@ -691,24 +691,24 @@ const MarketingPage = async ({ params }: PageParams) => {
 
       {config.contactBlocks && (
         <section className="container-default space-y-4">
-          <p className="text-xs uppercase tracking-[0.3em] text-white/60">Direct channels</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-black/60 dark:text-white/60">Direct channels</p>
           <div className="grid gap-4 md:grid-cols-2">
             {config.contactBlocks.map((block) => {
               const body = (
                 <>
-                  <p className="text-sm uppercase tracking-[0.2em] text-white/60">{block.title}</p>
-                  <p className="mt-2 break-words font-display text-2xl text-white">{block.detail}</p>
-                  <p className="mt-1 text-sm text-white/70">{block.meta}</p>
+                  <p className="text-sm uppercase tracking-[0.2em] text-black/60 dark:text-white/60">{block.title}</p>
+                  <p className="mt-2 break-words font-display text-2xl text-black dark:text-white">{block.detail}</p>
+                  <p className="mt-1 text-sm text-black/70 dark:text-white/70">{block.meta}</p>
                 </>
               );
-              const className = "rounded-3xl border border-white/10 bg-white/5 p-5";
+              const className = "rounded-3xl border border-black/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-none";
 
               return block.href ? (
                 <a
                   key={block.title}
                   href={block.href}
                   {...(block.external ? { target: "_blank", rel: "noreferrer" } : {})}
-                  className={`${className} transition hover:border-white/40`}
+                  className={`${className} transition hover:border-black/40 dark:hover:border-white/40`}
                 >
                   {body}
                 </a>

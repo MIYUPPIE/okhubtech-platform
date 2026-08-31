@@ -100,7 +100,7 @@ const EducationSection = () => (
             download
             className="mt-4 inline-flex items-center gap-3 rounded-2xl border border-black/15 px-4 py-3 text-sm text-black/80 transition hover:border-black/40 dark:border-white/15 dark:text-white/80 dark:hover:border-white/40"
           >
-            <Download className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
+            <Download className="h-4 w-4" style={{ color: "var(--gold-ink)" }} />
             <span>
               A Beginner&rsquo;s Guide to Autonomous Robots
               <span className="ml-2 text-black/50 dark:text-white/50">

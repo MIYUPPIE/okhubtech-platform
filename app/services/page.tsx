@@ -92,7 +92,7 @@ export default function ServicesPage() {
             className="flex flex-col gap-3 rounded-2xl border border-black/10 bg-white p-6 shadow-sm transition-colors hover:border-black/30 dark:border-white/10 dark:bg-black/70 dark:hover:border-white/40"
           >
             <div className="flex items-center gap-3 mb-2">
-              <service.icon className="h-7 w-7" style={{ color: "var(--gold-primary)" }} />
+              <service.icon className="h-7 w-7" style={{ color: "var(--gold-ink)" }} />
               <h2 className="text-xl font-semibold text-black dark:text-white">{service.title}</h2>
             </div>
             <p className="text-black/70 dark:text-white/70">{service.description}</p>

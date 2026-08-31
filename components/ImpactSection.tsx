@@ -65,7 +65,7 @@ const ImpactSection = () => {
             {metrics.map((metric) => (
               <div key={metric.label} className="rounded-2xl border border-black/15 dark:border-white/10 bg-white shadow-sm dark:bg-black/60 p-6">
                 <p className="text-sm uppercase tracking-[0.3em] text-black/65 dark:text-white/50">{metric.label}</p>
-                <p className="mt-3 text-4xl font-semibold text-[var(--gold-primary)]">
+                <p className="mt-3 text-4xl font-semibold text-gold-ink">
                   {isInView ? metric.value.toLocaleString() : "--"}
                 </p>
               </div>

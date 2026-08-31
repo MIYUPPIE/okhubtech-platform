@@ -41,7 +41,7 @@ const CardHoverEffect = ({ items }: CardHoverEffectProps) => {
           />
           <div className="relative flex flex-col gap-4">
             <div className="flex items-center gap-3">
-              <div className="rounded-full bg-white/10 p-3" style={{ color: "var(--gold-primary)" }}>
+              <div className="rounded-full bg-black/[0.06] p-3 dark:bg-white/10" style={{ color: "var(--gold-ink)" }}>
                 <item.icon className="h-5 w-5" />
               </div>
               {item.tag && (
@@ -57,7 +57,7 @@ const CardHoverEffect = ({ items }: CardHoverEffectProps) => {
             {item.stats && (
               <p
                 className="text-sm font-medium"
-                style={{ color: "var(--gold-secondary)" }}
+                style={{ color: "var(--gold-ink)" }}
               >
                 {item.stats}
               </p>

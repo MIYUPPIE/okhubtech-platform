@@ -55,15 +55,15 @@ const Footer = () => (
           AI, robotics and engineering, built and taught in Nigeria.
         </p>
         <a href={MAILTO} className="flex items-center gap-2 text-sm text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white">
-          <Mail className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
+          <Mail className="h-4 w-4" style={{ color: "var(--gold-ink)" }} />
           {EMAIL}
         </a>
         <a href={TEL} className="flex items-center gap-2 text-sm text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white">
-          <PhoneCall className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
+          <PhoneCall className="h-4 w-4" style={{ color: "var(--gold-ink)" }} />
           {PHONE_DISPLAY}
         </a>
         <p className="flex items-center gap-2 text-sm text-black/80 dark:text-white/80">
-          <MapPin className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
+          <MapPin className="h-4 w-4" style={{ color: "var(--gold-ink)" }} />
           {LOCATION_SHORT}
         </p>
       </div>
