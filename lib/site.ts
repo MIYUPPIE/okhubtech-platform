@@ -16,10 +16,17 @@ export const TOP_LEVEL_PAGES = [
   "portfolio",
   "contact",
   "ai",
-  "data",
   "web",
   "robotics",
 ] as const;
+
+/**
+ * Top-level routes that have their own file under app/ instead of a slot in the
+ * pageContent map. A page moves here when it outgrows the shared template —
+ * that template paints a permanent black gradient, so anything living in it
+ * ignores the light theme.
+ */
+export const STANDALONE_PAGES = ["data"] as const;
 
 /** Mirrors the directories under app/services/. */
 export const SERVICE_SLUGS = [
@@ -74,6 +81,7 @@ export const EXPERTISE_SLUGS = [
 export const PUBLIC_ROUTES: string[] = [
   "",
   ...TOP_LEVEL_PAGES.map((p) => `/${p}`),
+  ...STANDALONE_PAGES.map((p) => `/${p}`),
   ...SERVICE_SLUGS.map((s) => `/services/${s}`),
   ...PORTFOLIO_SLUGS.map((s) => `/portfolio/${s}`),
   ...EXPERTISE_SLUGS.map((s) => `/expertise/${s}`),

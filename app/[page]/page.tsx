@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import ContactSection from "@/components/ContactSection";
 import AboutSection from "@/components/AboutSection";
+import EducationSection from "@/components/EducationSection";
 import ResearchSection from "@/components/ResearchSection";
 import InnovationSection from "@/components/InnovationSection";
 import PartnershipsSection from "@/components/PartnershipsSection";
@@ -404,58 +405,6 @@ const pageContent: Record<string, PageContent> = {
     ],
     cta: { label: "Engage AI architects", href: "/contact" },
   },
-  data: {
-    badge: "Data Science",
-    title: "Mission-critical intelligence, observability, and policy dashboards.",
-    description:
-      "We harmonize fragmented datasets, ship predictive models, and design executive-grade decision rooms for public and private sector clients.",
-    accent: "from-[#00b09b] via-[#96c93d] to-[var(--gold-primary)]",
-    highlights: [
-      { label: "Data Lakes", value: "14", caption: "National and enterprise data estates unified with governance." },
-      { label: "Real-time Pipelines", value: "280+", caption: "Telemetry across energy, mobility, finance, and civic services." },
-      { label: "Policy Dashboards", value: "35", caption: "Cabinet-ready insights with scenario planning." },
-    ],
-    sections: [
-      {
-        eyebrow: "Foundation",
-        title: "Modern data estates",
-        description:
-          "We inventory legacy systems, harmonize schemas, and deploy governance frameworks with lineage, quality, and access controls.",
-        bullets: [
-          "Data mesh architectures with federated governance.",
-          "Metadata catalogs and privacy engineering baked into pipelines.",
-          "Cloud, hybrid, or sovereign deployments with disaster recovery.",
-        ],
-      },
-      {
-        eyebrow: "Intelligence",
-        title: "Applied analytics",
-        description:
-          "Economists, quants, and behavioral scientists co-build models that power credit systems, pricing, and strategic planning.",
-        bullets: [
-          "Time-series, geospatial, and agent-based simulations.",
-          "Risk, ESG, and inclusion scoring linked to policy incentives.",
-          "Embedded decision-support apps for operators and citizens.",
-        ],
-      },
-      {
-        eyebrow: "Activation",
-        title: "Command rooms",
-        description:
-          "Immersive data theaters fuse large displays, tactile interfaces, and mixed reality overlays for executives and field teams.",
-        bullets: [
-          "Digital twins of cities, ports, and utilities.",
-          "Playbooks for crisis management, election readiness, and capital deployment.",
-          "Upskilling academies for analysts, controllers, and ministers.",
-        ],
-      },
-    ],
-    resources: [
-      { label: "See data playbooks", href: "/portfolio" },
-      { label: "Request reference architecture", href: "/contact" },
-    ],
-    cta: { label: "Design an intelligence stack", href: "/contact" },
-  },
   web: {
     badge: "Web Engineering",
     title: "Luxury-grade digital products with African aesthetics and reliability.",
@@ -770,6 +719,7 @@ const MarketingPage = async ({ params }: PageParams) => {
       {resolvedParams.page === "about" && (
         <>
           <AboutSection />
+          <EducationSection />
           <ResearchSection />
           <InnovationSection />
           <PartnershipsSection />

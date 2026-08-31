@@ -39,7 +39,7 @@ const DataAnalyticsSciencePage = () => (
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Get Started</h2>
         <p className="text-black/70 dark:text-white/70">
-          Ready to harness the power of your data? <Link href="/contact" className="text-gold-ink underline underline-offset-4 hover:opacity-80">Contact our analytics team</Link> to discuss your needs and discover tailored solutions.
+          Ready to harness the power of your data? <Link href="/contact" className="text-gold-ink underline underline-offset-4 hover:opacity-80">Contact our analytics team</Link>, or read the <Link href="/data" className="text-gold-ink underline underline-offset-4 hover:opacity-80">data practice page</Link> for the projects behind this work.
         </p>
       </div>
     </section>
