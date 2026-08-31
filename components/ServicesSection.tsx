@@ -314,7 +314,7 @@ const ServicesSection = () => (
                 </ul>
                 <a
                   href={href}
-                  className="mt-4 inline-block text-sm font-semibold text-black/80 dark:text-white/80 underline underline-offset-4 hover:text-black dark:text-white"
+                  className="mt-4 inline-block text-sm font-semibold text-black/80 dark:text-white/80 underline underline-offset-4 hover:text-black dark:hover:text-white"
                 >
                   Learn More
                 </a>

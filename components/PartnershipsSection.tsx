@@ -44,7 +44,7 @@ const PartnershipsSection = () => (
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {partnerTypes.map((partner) => (
-            <div key={partner.title} className="rounded-2xl border border-black/15 dark:border-white/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 dark:bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 p-5">
+            <div key={partner.title} className="rounded-2xl border border-black/15 dark:border-white/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 p-5">
               <div className="flex items-center gap-3">
                 <span className="rounded-2xl border border-black/15 dark:border-white/15 p-3 text-black/80 dark:text-white/80">
                   <partner.icon className="h-5 w-5" />

@@ -45,6 +45,7 @@ npm run dev
 - `npm test` — gate tests for the export verifier and the contact-detail verifier
 - `npm run verify:export` — assert `out/` cannot serve a directory listing
 - `npm run verify:contact` — assert no contact detail is hardcoded outside `lib/contact.ts`
+- `npm run verify:theme` — assert no text is invisible against its own background
 - `npm run prisma:generate` — regenerate Prisma client
 - `npm run prisma:migrate` — run migrations in dev
 - `npm run prisma:seed` — seed roles + bootstrap admin account
@@ -54,6 +55,22 @@ npm run dev
 - Credentials auth powered by NextAuth + Prisma adapter; login UI lives at `/login`.
 - Seed script creates all roles and an admin account using `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` (defaults `admin@okhubtech.com` / `ChangeMe123!`). Update these in `.env.local` before running `npm run prisma:seed` in production environments.
 - Registration form defaults to Student role; promote users by attaching roles via admin dashboard or Prisma.
+
+### Theming
+
+The site is light by default (`#fafafa` body, `#050505` text) and switches to
+dark on `.dark`, set by next-themes. Every colour utility therefore needs both
+halves: `text-black dark:text-white`, `border-black/10 dark:border-white/10`.
+A bare `text-white` is invisible in day mode.
+
+Gold is a fill colour, not a text colour: `#ffd700` scores 1.34:1 on the day
+background. Use `text-gold-ink` for gold text — it is `#8a6d00` by day (4.71:1)
+and the bright gold at night (14.97:1). `bg-gold-primary`, `border-gold-primary`
+and friends are registered in the `@theme` block in `app/globals.css`.
+
+`npm run verify:theme` (also part of `npm run build`) enforces both rules: no
+bare white on a page that renders on the body background, and no two utilities
+setting the same property under the same variant in one `className`.
 
 ### Contact Details
 

@@ -9,6 +9,28 @@
   --ink: #050505;
   --slate: #a3a3a3;
   --glass: rgba(255, 255, 255, 0.08);
+
+  /*
+   * Gold as *text* only works on a dark ground: #ffd700 scores 1.34:1 on the
+   * #fafafa day background, which is invisible. --gold-ink is the readable
+   * stand-in for day mode (4.71:1) and flips back to the bright gold at night
+   * (14.97:1). Use --gold-primary for fills, borders and glows; --gold-ink for
+   * anything a reader has to actually read.
+   */
+  --gold-ink: #8a6d00;
+}
+
+/*
+ * Registers the gold palette as Tailwind colours, so `text-gold-ink`,
+ * `bg-gold-primary/10` and `border-gold-primary` are real utilities. Before
+ * this they compiled to nothing: `text-gold-primary` was on five service pages
+ * and the portfolio index and had never once applied a colour.
+ */
+@theme {
+  --color-gold-primary: var(--gold-primary);
+  --color-gold-secondary: var(--gold-secondary);
+  --color-gold-deep: var(--gold-deep);
+  --color-gold-ink: var(--gold-ink);
 }
 
 body {
@@ -22,6 +44,10 @@ body {
 .dark body {
   background-color: #000000;
   color: #e8e8e8;
+}
+
+.dark {
+  --gold-ink: var(--gold-primary);
 }
 
 ::selection {

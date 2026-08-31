@@ -67,7 +67,7 @@ const ECommerceSection = () => (
           </p>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {products.map((product) => (
-              <div key={product.title} className="rounded-2xl border border-black/15 dark:border-white/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 dark:bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 p-5">
+              <div key={product.title} className="rounded-2xl border border-black/15 dark:border-white/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 p-5">
                 <div className="flex items-center justify-between text-black dark:text-white">
                   <div>
                     <p className="font-semibold">{product.title}</p>

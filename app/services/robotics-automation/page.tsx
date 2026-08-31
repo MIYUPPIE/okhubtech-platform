@@ -1,14 +1,15 @@
 
+import Link from "next/link";
 import React from "react";
 
 const RoboticsAutomationPage = () => (
   <main className="container-default py-12">
-    <h1 className="text-4xl font-bold mb-6 text-white">Robotics & Automation</h1>
+    <h1 className="text-4xl font-bold mb-6 text-black dark:text-white">Robotics & Automation</h1>
     <section className="mb-8">
-      <p className="text-lg text-white/80 mb-4">
+      <p className="text-lg text-black/80 dark:text-white/80 mb-4">
         Our Robotics & Automation service delivers intelligent machines and automated systems for industrial and commercial applications. We design, build, and deploy robotics solutions that enhance productivity, safety, and operational efficiency.
       </p>
-      <ul className="list-disc ml-6 text-lg text-white/70 mb-4">
+      <ul className="list-disc ml-6 text-lg text-black/70 dark:text-white/70 mb-4">
         <li>Industrial + commercial robotics deployments</li>
         <li>IoT innovation for smart, connected systems</li>
         <li>Custom automation for manufacturing and logistics</li>
@@ -17,17 +18,16 @@ const RoboticsAutomationPage = () => (
         <li>Maintenance and support for deployed systems</li>
       </ul>
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-white mb-2">Why Choose Us?</h2>
-        <p className="text-white/70 mb-2">
+        <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Why Choose Us?</h2>
+        <p className="text-black/70 dark:text-white/70 mb-2">
           Our robotics engineers and automation specialists deliver solutions that are reliable, scalable, and tailored to your unique needs. We help organizations embrace the future of automation with confidence and expertise.
         </p>
       </div>
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-white mb-2">Watch Our Overview</h2>
-        <div className="aspect-w-16 aspect-h-9 w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-white/10">
+        <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Overview</h2>
+        <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
           <iframe
-            width="100%"
-            height="400"
+            className="h-full w-full"
             src="https://www.youtube.com/embed/4u5XQWkQe3g"
             title="Robotics & Automation Explained"
             frameBorder="0"
@@ -37,9 +37,9 @@ const RoboticsAutomationPage = () => (
         </div>
       </div>
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-white mb-2">Get Started</h2>
-        <p className="text-white/70">
-          Ready to automate your operations? <a href="/contact" className="text-gold-primary underline">Contact our robotics team</a> to discuss your requirements and discover innovative solutions.
+        <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Get Started</h2>
+        <p className="text-black/70 dark:text-white/70">
+          Ready to automate your operations? <Link href="/contact" className="text-gold-ink underline underline-offset-4 hover:opacity-80">Contact our robotics team</Link> to discuss your requirements and discover innovative solutions.
         </p>
       </div>
     </section>

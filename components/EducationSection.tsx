@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BookOpenCheck, GraduationCap, Layers3, NotebookPen, Rocket, Target } from "lucide-react";
+import { Download, BookOpenCheck, GraduationCap, Layers3, NotebookPen, Rocket, Target } from "lucide-react";
 import Link from "next/link";
+import { ROBOTICS_GUIDE, fileSize } from "@/lib/media";
 
 const programTypes = [
   {
@@ -75,7 +76,7 @@ const EducationSection = () => (
           </p>
           <div className="mt-8 grid gap-4">
             {programTypes.map((program) => (
-              <div key={program.title} className="rounded-2xl border border-black/15 dark:border-white/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 dark:bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 p-5">
+              <div key={program.title} className="rounded-2xl border border-black/15 dark:border-white/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:bg-white/5 p-5">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-lg font-semibold text-black dark:text-white">{program.title}</p>
                   <span className="rounded-full border border-black/15 dark:border-white/15 px-3 py-1 text-xs uppercase tracking-[0.25em] text-black/60 dark:text-white/60">
@@ -94,6 +95,19 @@ const EducationSection = () => (
               Enroll Today
             </Link>
           </div>
+          <a
+            href={ROBOTICS_GUIDE.src}
+            download
+            className="mt-4 inline-flex items-center gap-3 rounded-2xl border border-black/15 px-4 py-3 text-sm text-black/80 transition hover:border-black/40 dark:border-white/15 dark:text-white/80 dark:hover:border-white/40"
+          >
+            <Download className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
+            <span>
+              A Beginner&rsquo;s Guide to Autonomous Robots
+              <span className="ml-2 text-black/50 dark:text-white/50">
+                PDF, {fileSize(ROBOTICS_GUIDE.bytes)}
+              </span>
+            </span>
+          </a>
         </motion.div>
         <div className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
