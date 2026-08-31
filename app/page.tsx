@@ -23,9 +23,15 @@ export const metadata: Metadata = {
  * /studio unchanged. This one is the whole office, and every part of it is a
  * door into the part of the business that lives there.
  *
+ * The headline lives here, in ordinary page flow, not layered on top of the
+ * canvas. It used to sit over the 3D room behind a legibility scrim, which
+ * meant either the text or the room was always somewhat compromised for the
+ * other. Splitting them lets the headline read at full contrast against the
+ * page background, and lets the room render undimmed as its own thing below.
+ *
  * `OfficeStage` is a client component: the WebGL canvas mounts inside it with
- * ssr:false, but the copy, the six station links and everything below the fold
- * are ordinary server-rendered markup in the static export.
+ * ssr:false, but the station links and everything else in it are ordinary
+ * server-rendered markup in the static export.
  */
 
 const elsewhere = [
@@ -49,6 +55,31 @@ const elsewhere = [
 export default function Home() {
   return (
     <>
+      <section className="container-default pb-8 pt-10 sm:pt-14">
+        <div className="max-w-2xl">
+          <p className="text-[0.65rem] uppercase tracking-[0.4em] text-black/50 dark:text-white/45">
+            Ibadan, Nigeria · AI · Robotics · Data
+          </p>
+          <h1 className="mt-5 font-display text-[2.6rem] leading-[1.05] tracking-tight text-[#050505] dark:text-white sm:text-[3.4rem] lg:text-[4rem]">
+            This is the room
+            <br />
+            <span className="text-gradient">the work comes out of.</span>
+          </h1>
+          <p className="mt-5 max-w-md text-lg text-black/65 dark:text-white/65">
+            OKHub Technology builds AI, robotics and data systems, and trains the
+            people who will build the next ones. Six stations below. Open any of them.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link href="/services" className="btn-primary">
+              What we do <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/contact" className="btn-secondary">
+              Talk to us
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <OfficeStage />
 
       <section className="container-default section-shell">

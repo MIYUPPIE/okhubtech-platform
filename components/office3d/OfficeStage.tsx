@@ -15,11 +15,17 @@ import { useCapabilities } from "./useCapabilities";
  * The homepage stage: a WebGL office behind, real HTML in front.
  *
  * The important structural decision is that the overlay is the content, not a
- * caption for it. Every station heading and every link in this component is in
+ * caption for it. Every station chip and every link in this component is in
  * the exported HTML whether or not the canvas ever starts, so the page works
  * with JavaScript off, with WebGL blocked, in a text browser and in a crawler.
  * The 3D is the presentation layer over content that stands on its own -
  * `scripts/verify-home.mjs` asserts exactly that against the built file.
+ *
+ * The headline and the pitch are not part of this component. They render in
+ * app/page.tsx as ordinary text above the stage, not layered on the canvas,
+ * so neither the copy nor the room has to compromise legibility for the
+ * other. What is left here is the room itself, the six station chips, the
+ * zoom/tour HUD, and the info panel a station opens.
  *
  * The canvas is loaded through next/dynamic with ssr:false because R3F cannot
  * render on the server. That is allowed here, and only here, because this
@@ -153,51 +159,26 @@ const OfficeStage = () => {
               <span className="inline-flex h-9 w-9 animate-spin rounded-full border-2 border-black/15 border-t-[var(--gold-primary)] dark:border-white/15" />
             </div>
           </div>
-          {/* Legibility scrim under the copy, nowhere else. Narrow and with a
-              fast falloff: the first pass ran 62% wide at 92/55% opacity and
-              turned two thirds of the room into paper. */}
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-full bg-gradient-to-r from-white/94 via-white/70 via-30% to-transparent to-60% sm:w-[52%] dark:from-black/94 dark:via-black/70"
-          />
+          {/* Legibility scrim behind the rail and the hint, nowhere else.
+              There is no copy layered on the room any more - it moved to
+              app/page.tsx as ordinary text above this stage - so this only
+              has to carry the bottom edge. */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white/75 to-transparent dark:from-black/80" />
         </div>
 
         {/* --- the content -------------------------------------------------- */}
-        <div className="pointer-events-none relative z-10 flex h-full flex-col justify-between px-4 py-7 sm:px-8 lg:px-12">
-          <div className="max-w-xl">
-            <p className="text-[0.65rem] uppercase tracking-[0.4em] text-black/55 dark:text-white/50">
-              Ibadan, Nigeria · AI · Robotics · Data
+        <div className="pointer-events-none relative z-10 flex h-full flex-col justify-end px-4 py-7 sm:px-8 lg:px-12">
+          {live ? (
+            <p
+              className={`mb-3 text-[0.68rem] uppercase tracking-[0.22em] text-black/45 transition-opacity duration-500 dark:text-white/45 ${
+                engaged ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              {caps.touch
+                ? "Drag to look · pinch to zoom · tap a ring"
+                : "Drag to look · shift + scroll to zoom · click a ring"}
             </p>
-            <h1 className="mt-5 font-display text-[2.4rem] font-semibold leading-[1.03] tracking-tight text-[#050505] dark:text-white sm:text-[3.2rem] lg:text-[3.9rem]">
-              This is the room
-              <br />
-              <span className="text-gradient">the work comes out of.</span>
-            </h1>
-            <p className="mt-5 max-w-md text-base text-black/70 dark:text-white/70 sm:text-lg">
-              OKHub Technology builds AI, robotics and data systems, and trains the
-              people who will build the next ones. Six stations below. Open any of them.
-            </p>
-            <div className="pointer-events-auto mt-7 flex flex-wrap gap-3">
-              <Link href="/services" className="btn-primary">
-                What we do <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link href="/contact" className="btn-secondary">
-                Talk to us
-              </Link>
-            </div>
-
-            {live ? (
-              <p
-                className={`mt-6 text-[0.68rem] uppercase tracking-[0.22em] text-black/45 transition-opacity duration-500 dark:text-white/45 ${
-                  engaged ? "opacity-0" : "opacity-100"
-                }`}
-              >
-                {caps.touch
-                  ? "Drag to look · pinch to zoom · tap a ring"
-                  : "Drag to look · shift + scroll to zoom · click a ring"}
-              </p>
-            ) : null}
-          </div>
+          ) : null}
 
           <div className="flex items-end justify-between gap-4">
             <StationRail
