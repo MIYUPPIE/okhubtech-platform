@@ -27,6 +27,14 @@ const EXTENSIONS = [".ts", ".tsx"];
 
 /** The retired details. Anywhere in code, these are a bug. */
 const RETIRED = [
+  {
+    pattern: /"https:\/\/(www\.)?(linkedin|twitter|x)\.com\/?"/g,
+    why: "a social network's own front page, not an OKHub profile — the footer shipped these for months",
+  },
+  {
+    pattern: /"https:\/\/(www\.)?(youtube|facebook|instagram)\.com\/?"/g,
+    why: "a social network's own front page, not an OKHub profile",
+  },
   { pattern: /[a-z0-9._%+-]+@okhub\.tech\b/gi, why: "okhub.tech is not a domain OKHub owns; mail to it bounces" },
   { pattern: /\+?234[\s-]?808[\s-]?113[\s-]?0222/g, why: "retired second phone number" },
   { pattern: /2348081130222/g, why: "retired second phone number" },
@@ -103,6 +111,8 @@ export function readSourceOfTruth(root) {
 
   return {
     EMAIL: value("EMAIL"),
+    FACEBOOK: value("FACEBOOK"),
+    INSTAGRAM: value("INSTAGRAM"),
     PHONE_E164: value("PHONE_E164"),
     PHONE_DISPLAY: value("PHONE_DISPLAY"),
     LOCATION: value("LOCATION"),
@@ -185,6 +195,8 @@ export function findViolations(root) {
     { value: truth.PHONE_E164.replace(/\D/g, ""), why: `import WHATSAPP_NUMBER from ${SOURCE_OF_TRUTH}` },
     { value: truth.BANK.accountNumber, why: `import BANK from ${SOURCE_OF_TRUTH}` },
     { value: "wa.me/", why: `import whatsappLink from ${SOURCE_OF_TRUTH}` },
+    { value: truth.FACEBOOK, why: `import FACEBOOK from ${SOURCE_OF_TRUTH}` },
+    { value: truth.INSTAGRAM, why: `import INSTAGRAM from ${SOURCE_OF_TRUTH}` },
   ];
 
   for (const path of sourceFiles(root)) {
@@ -213,6 +225,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log(`PASS  contact details single-sourced from ${SOURCE_OF_TRUTH}`);
     console.log(`      ${truth.EMAIL} · ${truth.PHONE_DISPLAY} · ${truth.LOCATION}`);
     console.log(`      ${truth.BANK.accountName} · ${truth.BANK.name} · ${truth.BANK.accountNumber}`);
+    console.log(`      ${truth.FACEBOOK} · ${truth.INSTAGRAM}`);
     process.exit(0);
   }
   console.error(`FAIL  ${violations.length} hardcoded contact detail(s)`);

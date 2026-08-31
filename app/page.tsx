@@ -3,6 +3,8 @@ import Link from "next/link";
 import HeroSection from "@/components/HeroSection";
 import BuildLogSection from "@/components/BuildLogSection";
 import ShowreelSection from "@/components/ShowreelSection";
+import ReelsSection from "@/components/ReelsSection";
+import BootcampSection from "@/components/BootcampSection";
 import ServicesSection from "@/components/ServicesSection";
 import ImpactSection from "@/components/ImpactSection";
 import ContactSection from "@/components/ContactSection";
@@ -24,6 +26,8 @@ export default function Home() {
 
       <BuildLogSection />
       <ShowreelSection />
+      <ReelsSection />
+      <BootcampSection />
       <ServicesSection />
       <ImpactSection />
       <ContactSection />

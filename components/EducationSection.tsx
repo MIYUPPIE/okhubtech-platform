@@ -88,8 +88,8 @@ const EducationSection = () => (
             ))}
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/services" className="btn-primary">
-              Explore Programs
+            <Link href="/bootcamp" className="btn-primary">
+              See the 4IR Bootcamp
             </Link>
             <Link href="/contact" className="btn-secondary">
               Enroll Today

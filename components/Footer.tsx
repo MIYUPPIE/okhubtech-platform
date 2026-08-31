@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Linkedin, Mail, MapPin, PhoneCall, Twitter, Youtube } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, PhoneCall, Youtube } from "lucide-react";
+import { YOUTUBE_CHANNEL } from "@/lib/bootcamp";
 
-import { EMAIL, LOCATION_SHORT, MAILTO, PHONE_DISPLAY, TEL } from "@/lib/contact";
+import { EMAIL, FACEBOOK, INSTAGRAM, LOCATION_SHORT, MAILTO, PHONE_DISPLAY, TEL } from "@/lib/contact";
 
 import { Logo } from "./Logo";
 
@@ -35,10 +36,14 @@ const footerLinks = [
   },
 ];
 
+// Only channels that actually resolve to OKHub. Each was requested and
+// answered 200 before it was listed here - the LinkedIn and Twitter entries
+// this replaced pointed at linkedin.com and twitter.com, the sites' own front
+// pages rather than OKHub profiles.
 const socialLinks = [
-  { icon: Linkedin, href: "https://www.linkedin.com", label: "LinkedIn" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
+  { icon: Instagram, href: INSTAGRAM, label: "Instagram" },
+  { icon: Facebook, href: FACEBOOK, label: "Facebook" },
+  { icon: Youtube, href: YOUTUBE_CHANNEL, label: "YouTube" },
 ];
 
 const Footer = () => (
@@ -85,6 +90,8 @@ const Footer = () => (
               key={item.label}
               href={item.href}
               aria-label={item.label}
+              target="_blank"
+              rel="noreferrer"
               className="rounded-full border border-black/15 p-3 text-black/70 transition hover:border-black/40 hover:text-black dark:border-white/10 dark:text-white/70 dark:hover:border-white/40 dark:hover:text-white"
             >
               <item.icon className="h-4 w-4" />

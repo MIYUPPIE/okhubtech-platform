@@ -8,7 +8,7 @@ import EducationSection from "@/components/EducationSection";
 import ResearchSection from "@/components/ResearchSection";
 import InnovationSection from "@/components/InnovationSection";
 import PartnershipsSection from "@/components/PartnershipsSection";
-import { BANK, EMAIL, LOCATION, MAILTO, PHONE_DISPLAY, TEL, whatsappLink } from "@/lib/contact";
+import { BANK, EMAIL, FACEBOOK, INSTAGRAM, LOCATION, MAILTO, PHONE_DISPLAY, TEL, whatsappLink } from "@/lib/contact";
 
 const accentFallback = "from-[var(--gold-primary)] via-[#ff8a1f] to-[#ffd166]";
 
@@ -331,6 +331,20 @@ const pageContent: Record<string, PageContent> = {
         external: true,
       },
       { title: "Visit", detail: "Ibadan", meta: LOCATION },
+      {
+        title: "Instagram",
+        detail: "@okhubtech",
+        meta: "Build videos and cohort work as it happens.",
+        href: INSTAGRAM,
+        external: true,
+      },
+      {
+        title: "Facebook",
+        detail: "@okhubtech",
+        meta: "Announcements, intakes and events.",
+        href: FACEBOOK,
+        external: true,
+      },
       {
         title: "Bank transfer",
         detail: `${BANK.accountNumber} · ${BANK.name}`,

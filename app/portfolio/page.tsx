@@ -11,6 +11,8 @@ interface PortfolioItem {
   tags: string[];
 }
 
+import ReelsSection from "@/components/ReelsSection";
+
 export default function PortfolioPage() {
   const [items, setItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +57,8 @@ export default function PortfolioPage() {
           ))}
         </div>
       )}
+
+      <ReelsSection />
     </main>
   );
 }

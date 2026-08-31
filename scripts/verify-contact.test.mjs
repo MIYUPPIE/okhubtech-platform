@@ -24,6 +24,8 @@ export const PHONE_E164 = "+2349069958990";
 export const PHONE_DISPLAY = "+234 906 995 8990";
 export const WHATSAPP_NUMBER = PHONE_E164.replace(/\\D/g, "");
 export const LOCATION = "Mokola, Ibadan, Oyo State, Nigeria";
+export const FACEBOOK = "https://www.facebook.com/okhubtech";
+export const INSTAGRAM = "https://www.instagram.com/okhubtech";
 export const LOCATION_SHORT = "Ibadan, Nigeria";
 export const MAILTO = \`mailto:\${EMAIL}\`;
 export const TEL = \`tel:\${PHONE_E164}\`;
@@ -98,6 +100,31 @@ const cases = [
     name: "duplicated bank account number is caught",
     body: 'export const X = () => "0102106463";',
     expect: ["0102106463"],
+  },
+  {
+    name: "a bare social front page is caught",
+    body: 'export const X = () => "https://twitter.com";',
+    expect: ["\"https://twitter.com\""],
+  },
+  {
+    name: "a bare instagram.com is caught",
+    body: 'export const X = () => "https://www.instagram.com/";',
+    expect: ["\"https://www.instagram.com/\""],
+  },
+  {
+    name: "duplicated instagram profile is caught",
+    body: 'export const X = () => "https://www.instagram.com/okhubtech";',
+    expect: ["https://www.instagram.com/okhubtech"],
+  },
+  {
+    name: "duplicated facebook profile is caught",
+    body: 'export const X = () => "https://www.facebook.com/okhubtech";',
+    expect: ["https://www.facebook.com/okhubtech"],
+  },
+  {
+    name: "a real profile url imported, not inlined, passes",
+    body: 'import { INSTAGRAM } from "@/lib/contact";\nexport const X = () => INSTAGRAM;',
+    expect: [],
   },
   {
     name: "hardcoded wa.me link is caught",
@@ -176,7 +203,17 @@ for (const [input, want] of unitCases) {
 {
   const root = mkdtempSync(join(tmpdir(), "contact-gate-"));
   try {
-    write(root, "lib/contact.ts", 'export const EMAIL = "info@okhubtech.com";');
+    // Everything present except PHONE_E164, so the throw names that one
+    // specifically rather than whichever field happens to be read first.
+    write(
+      root,
+      "lib/contact.ts",
+      [
+        'export const EMAIL = "info@okhubtech.com";',
+        'export const FACEBOOK = "https://www.facebook.com/okhubtech";',
+        'export const INSTAGRAM = "https://www.instagram.com/okhubtech";',
+      ].join("\n"),
+    );
     let threw = false;
     try {
       readSourceOfTruth(root);
