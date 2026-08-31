@@ -49,8 +49,15 @@ export const TrainingFloor = ({ palette, tex }: Props) => (
       </mesh>
       <mesh position={[0, 0, 0.035]}>
         <planeGeometry args={[3.36, 1.64]} />
+          {/*
+             Base colour zeroed: without it this plane also answers to the
+             room's lights, and a screen sitting near a bright point light (the
+             training-floor whiteboard, three units from a ceiling cove) washes
+             out to solid white under ACES + bloom. Only the emissive layer
+             should be visible - a display, not a reflective surface.
+          */}
         <meshStandardMaterial
-          map={tex.whiteboard}
+          color="#000000"
           emissiveMap={tex.whiteboard}
           emissive="#ffffff"
           emissiveIntensity={palette.screenGlow * 0.22}
@@ -326,8 +333,15 @@ export const DataWall = ({ palette, tex }: Props) => (
       </mesh>
       <mesh position={[0, 0, 0.035]}>
         <planeGeometry args={[2.56, 1.42]} />
+          {/*
+             Base colour zeroed: without it this plane also answers to the
+             room's lights, and a screen sitting near a bright point light (the
+             training-floor whiteboard, three units from a ceiling cove) washes
+             out to solid white under ACES + bloom. Only the emissive layer
+             should be visible - a display, not a reflective surface.
+          */}
         <meshStandardMaterial
-          map={tex.dashboard}
+          color="#000000"
           emissiveMap={tex.dashboard}
           emissive="#ffffff"
           emissiveIntensity={palette.screenGlow * 1.15}
@@ -488,7 +502,14 @@ export const FrontDesk = ({ palette, tex }: Props) => (
       </mesh>
       <mesh position={[0, 1.42, 0.065]}>
         <planeGeometry args={[2.2, 0.73]} />
+        {/*
+          map stays: transparent reads alpha from it for the rounded corners.
+          color="#000000" zeroes its RGB contribution so the sign does not
+          also answer to the room's lights, same as every other emissive
+          panel in the scene.
+        */}
         <meshStandardMaterial
+          color="#000000"
           map={tex.sign}
           emissiveMap={tex.sign}
           emissive="#ffffff"

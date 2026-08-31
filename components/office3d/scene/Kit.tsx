@@ -134,8 +134,15 @@ export const Monitor = ({
       </mesh>
       <mesh position={[0, 0, 0.013]}>
         <planeGeometry args={[width, height]} />
+          {/*
+             Base colour zeroed: without it this plane also answers to the
+             room's lights, and a screen sitting near a bright point light (the
+             training-floor whiteboard, three units from a ceiling cove) washes
+             out to solid white under ACES + bloom. Only the emissive layer
+             should be visible - a display, not a reflective surface.
+          */}
         <meshStandardMaterial
-          map={screen}
+          color="#000000"
           emissiveMap={screen}
           emissive="#ffffff"
           emissiveIntensity={palette.screenGlow}
@@ -166,8 +173,15 @@ export const Laptop = ({
       </mesh>
       <mesh position={[0, 0.11, 0.005]}>
         <planeGeometry args={[0.31, 0.19]} />
+          {/*
+             Base colour zeroed: without it this plane also answers to the
+             room's lights, and a screen sitting near a bright point light (the
+             training-floor whiteboard, three units from a ceiling cove) washes
+             out to solid white under ACES + bloom. Only the emissive layer
+             should be visible - a display, not a reflective surface.
+          */}
         <meshStandardMaterial
-          map={screen}
+          color="#000000"
           emissiveMap={screen}
           emissive="#ffffff"
           emissiveIntensity={palette.screenGlow * 0.9}
@@ -278,8 +292,15 @@ export const Frame = ({
     </mesh>
     <mesh position={[0, 0, 0.019]}>
       <planeGeometry args={[width - 0.06, height - 0.06]} />
+        {/*
+           Base colour zeroed: without it this plane also answers to the
+           room's lights, and a screen sitting near a bright point light (the
+           training-floor whiteboard, three units from a ceiling cove) washes
+           out to solid white under ACES + bloom. Only the emissive layer
+           should be visible - a display, not a reflective surface.
+        */}
       <meshStandardMaterial
-        map={art}
+        color="#000000"
         emissiveMap={art}
         emissive="#ffffff"
         emissiveIntensity={palette.screenGlow * 0.28}

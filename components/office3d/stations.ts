@@ -136,8 +136,11 @@ export const STATIONS: readonly [Station, ...Station[]] = [
     cta: "Talk to us",
     camera: [-1.4, 1.7, 8.6],
     target: [-1.2, 1.1, 4.3],
-    marker: [-1.2, 0.02, 4.2],
-    hit: [1.9, 1.2, 0.9],
+    // Off to the side of the counter, not in front of the sign it stands next
+    // to: at x -1.2 the floating label sat directly over the "OKHub" sign
+    // panel from the establishing shot, and the two ran their text together.
+    marker: [0.6, 0.02, 3.75],
+    hit: [1.3, 1.2, 0.9],
   },
 ] as const;
 
