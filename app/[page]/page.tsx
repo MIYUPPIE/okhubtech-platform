@@ -3,6 +3,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import ContactSection from "@/components/ContactSection";
+import AboutSection from "@/components/AboutSection";
+import ResearchSection from "@/components/ResearchSection";
+import InnovationSection from "@/components/InnovationSection";
+import PartnershipsSection from "@/components/PartnershipsSection";
 import { BANK, EMAIL, LOCATION, MAILTO, PHONE_DISPLAY, TEL, whatsappLink } from "@/lib/contact";
 
 const accentFallback = "from-[var(--gold-primary)] via-[#ff8a1f] to-[#ffd166]";
@@ -759,6 +763,17 @@ const MarketingPage = async ({ params }: PageParams) => {
         <div className="pt-4">
           <ContactSection />
         </div>
+      )}
+
+      {/* Moved off the homepage. The story belongs on the page people open
+          when they want the story. */}
+      {resolvedParams.page === "about" && (
+        <>
+          <AboutSection />
+          <ResearchSection />
+          <InnovationSection />
+          <PartnershipsSection />
+        </>
       )}
     </main>
   );

@@ -80,10 +80,10 @@ const ECommerceSection = () => (
             ))}
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/store" className="btn-primary">
+            <Link href="/services" className="btn-primary">
               Browse Catalog
             </Link>
-            <Link href="/cart" className="btn-secondary">
+            <Link href="/contact" className="btn-secondary">
               Go to Cart
             </Link>
           </div>

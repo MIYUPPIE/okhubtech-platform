@@ -4,7 +4,7 @@ export default function SmartCampusPortfolioPage() {
   return (
     <main className="container-default py-12">
       <h1 className="text-4xl font-bold mb-6 text-white">Smart Campus Automation</h1>
-      <img src="/portfolio/smart-campus.png" alt="Smart Campus" className="rounded-xl mb-6 w-full h-64 object-cover border border-white/10" />
+      <img src="/media/portfolio/smart-campus.webp" alt="Smart Campus" className="rounded-xl mb-6 w-full h-64 object-cover border border-white/10" />
       <section className="mb-8">
         <p className="text-lg text-white/80 mb-4">
           This project provides end-to-end automation and digital twin technology for a university campus, improving security, energy efficiency, and operational management.

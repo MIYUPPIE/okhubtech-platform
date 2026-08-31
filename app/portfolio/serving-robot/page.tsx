@@ -4,7 +4,7 @@ export default function ServingRobotPortfolioPage() {
     return (
         <main className="container-default py-12">
             <h1 className="text-4xl font-bold mb-6 text-white">Serving Robot</h1>
-            <img src="/portfolio/serving-robot.png" alt="Serving Robot" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
+            <img src="/media/portfolio/serving-robot.webp" alt="Serving Robot" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
             <section className="mb-8">
                 <p className="text-lg text-white/80 mb-4">
                     An autonomous serving robot engineered atop ROS (Robot Operating System). It maps complex, highly-dynamic indoor environments like restaurants and hospitality lounges, navigating safely to deliver items.

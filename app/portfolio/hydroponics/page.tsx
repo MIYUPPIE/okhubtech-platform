@@ -4,7 +4,7 @@ export default function HydroponicsPortfolioPage() {
     return (
         <main className="container-default py-12">
             <h1 className="text-4xl font-bold mb-6 text-white">Hydroponics Automation System</h1>
-            <img src="/portfolio/hydroponics.png" alt="Hydroponics Automation System" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
+            <img src="/media/portfolio/hydroponics.webp" alt="Hydroponics Automation System" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
             <section className="mb-8">
                 <p className="text-lg text-white/80 mb-4">
                     A high-tech approach to modern agriculture. This GSM and IoT driven infrastructure automates indoor vertical farming, ensuring that crops receive precise nutrients and climate control without reliance on local broadband.

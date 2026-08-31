@@ -4,7 +4,7 @@ export default function IoTHomePortfolioPage() {
     return (
         <main className="container-default py-12">
             <h1 className="text-4xl font-bold mb-6 text-white">IoT Home Automation</h1>
-            <img src="/portfolio/iot-home.png" alt="IoT Home Automation" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
+            <img src="/media/portfolio/iot-home.webp" alt="IoT Home Automation" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
             <section className="mb-8">
                 <p className="text-lg text-white/80 mb-4">
                     A fully integrated smart home ecosystem driven by Python and various embedded systems. It centralizes control over lighting, security, thermodynamics, and energy utilization seamlessly through a local network.

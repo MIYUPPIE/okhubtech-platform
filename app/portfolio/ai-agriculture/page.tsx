@@ -4,7 +4,7 @@ export default function AIAgriculturePortfolioPage() {
   return (
     <main className="container-default py-12">
       <h1 className="text-4xl font-bold mb-6 text-white">AI-Powered Agriculture Platform</h1>
-      <img src="/portfolio/agriculture.png" alt="AI Agriculture" className="rounded-xl mb-6 w-full h-64 object-cover border border-white/10" />
+      <img src="/media/portfolio/agriculture.webp" alt="AI Agriculture" className="rounded-xl mb-6 w-full h-64 object-cover border border-white/10" />
       <section className="mb-8">
         <p className="text-lg text-white/80 mb-4">
           This project delivers a scalable platform using AI and IoT to optimize crop yields for African farmers. It integrates real-time sensor data, predictive analytics, and automated recommendations to improve productivity and sustainability.

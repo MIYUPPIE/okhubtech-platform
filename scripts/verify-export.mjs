@@ -237,6 +237,63 @@ for (const entry of readdirSync(OUT, { withFileTypes: true })) {
   }
 }
 
+// H. Every internal link resolves to something that was actually exported.
+//    The homepage shipped links to /programs, /partners, /store, /enroll,
+//    /research, /publications, /cart and even /services/undefined - eight dead
+//    ends on the first page a visitor sees.
+{
+  const pageTargets = new Set();
+  const walkAll = [OUT, ...walkDirs(OUT, (name) => name.startsWith("."))];
+  for (const dir of walkAll) {
+    if (existsSync(join(dir, "index.html"))) {
+      const rel = relative(OUT, dir);
+      pageTargets.add(rel === "" ? "/" : `/${rel.split(sep).join("/")}/`);
+    }
+  }
+
+  const linkRe = /href="(\/[^"#?]*)"/g;
+  const broken = new Map();
+
+  const htmlFiles = [];
+  const collect = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!entry.name.startsWith(".") && entry.name !== "_next") collect(full);
+      } else if (entry.name.endsWith(".html")) {
+        htmlFiles.push(full);
+      }
+    }
+  };
+  collect(OUT);
+
+  for (const file of htmlFiles) {
+    const html = readFileSync(file, "utf8");
+    const from = relative(OUT, file) || "index.html";
+    for (const match of html.matchAll(linkRe)) {
+      const href = match[1];
+      // Asset routes are files, not pages; they are covered by checks B and G.
+      if (/^\/(_next|media|api)\//.test(href)) continue;
+      const asPage = href.endsWith("/") ? href : `${href}/`;
+      if (pageTargets.has(asPage)) continue;
+      if (existsSync(join(OUT, href.replace(/^\//, "")))) continue;
+      const seen = broken.get(href) ?? new Set();
+      seen.add(from);
+      broken.set(href, seen);
+    }
+  }
+
+  for (const [href, from] of [...broken].sort()) {
+    fail(
+      "H: internal link goes nowhere",
+      `${href} is linked from ${[...from].slice(0, 3).join(", ")} but no such page was exported`,
+    );
+  }
+  if (broken.size === 0) {
+    notes.push(`every internal link across ${htmlFiles.length} pages resolves`);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------

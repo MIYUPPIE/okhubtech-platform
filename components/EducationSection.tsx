@@ -7,12 +7,12 @@ import Link from "next/link";
 const programTypes = [
   {
     title: "Free community programs",
-    description: "Foundation labs for underserved learners featuring offline-first toolkits, micro-grants, and community mentors.",
+    description: "Offline-first kits and mentors, for schools without reliable power or bandwidth.",
     badge: "Open access",
   },
   {
     title: "Professional programs",
-    description: "Intensive Builder, Innovator, and Leader pathways co-designed with ministries and enterprises for mission-critical talent.",
+    description: "Longer tracks for people going into the work.",
     badge: "Paid + credentialed",
   },
 ];
@@ -22,25 +22,25 @@ const tracks = [
     title: "Foundation",
     icon: BookOpenCheck,
     duration: "6 weeks",
-    focus: "Digital fluency, AI literacy, low-code automation, and soft-skill mastery.",
+    focus: "Digital and AI basics.",
   },
   {
     title: "Builder",
     icon: Layers3,
     duration: "12 weeks",
-    focus: "Full-stack engineering, robotics assembly, and IoT deployment playbooks.",
+    focus: "Engineering, robotics assembly, IoT.",
   },
   {
     title: "Innovator",
     icon: Rocket,
     duration: "16 weeks",
-    focus: "Product leadership, venture readiness, and sovereign infrastructure patterns.",
+    focus: "Product and venture skills.",
   },
   {
     title: "Leader",
     icon: GraduationCap,
     duration: "Executive sessions",
-    focus: "Policy, governance, and scale orchestration for ministers, CTOs, and ecosystem partners.",
+    focus: "Policy and governance for decision makers.",
   },
 ];
 
@@ -48,12 +48,12 @@ const obligations = [
   {
     icon: Target,
     label: "Mandatory project deployment",
-    detail: "Every cohort ships a live solution with measurable impact metrics before certification.",
+    detail: "Every cohort ships something real before it certifies.",
   },
   {
     icon: NotebookPen,
     label: "Shared IP studio",
-    detail: "Learners access curated research, industry datasets, and design systems hosted on sovereign infrastructure.",
+    detail: "Research, datasets and design systems included.",
   },
 ];
 
@@ -69,9 +69,9 @@ const EducationSection = () => (
           transition={{ duration: 0.5 }}
           className="rounded-3xl border border-black/15 dark:border-white/10 bg-white shadow-md dark:bg-black/70 p-8"
         >
-          <h2 className="section-title leading-tight text-black dark:text-white">Tracks for every operator in the Fourth Industrial Revolution.</h2>
+          <h2 className="section-title leading-tight text-black dark:text-white">A track for wherever you are.</h2>
           <p className="mt-4 text-black/70 dark:text-white/70">
-            We treat education as infrastructure. Programs are bilingual, industry-backed, and powered by mentors across robotics, AI, IoT, immersive media, and data governance.
+            Education is infrastructure. Mentors come from robotics, AI, IoT and data.
           </p>
           <div className="mt-8 grid gap-4">
             {programTypes.map((program) => (
@@ -87,10 +87,10 @@ const EducationSection = () => (
             ))}
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/programs" className="btn-primary">
+            <Link href="/services" className="btn-primary">
               Explore Programs
             </Link>
-            <Link href="/enroll" className="btn-secondary">
+            <Link href="/contact" className="btn-secondary">
               Enroll Today
             </Link>
           </div>

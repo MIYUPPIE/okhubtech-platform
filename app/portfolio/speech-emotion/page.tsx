@@ -4,7 +4,7 @@ export default function SpeechEmotionPortfolioPage() {
     return (
         <main className="container-default py-12">
             <h1 className="text-4xl font-bold mb-6 text-white">Speech Emotion Recognition</h1>
-            <img src="/portfolio/speech-emotion.png" alt="Speech Emotion Recognition" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
+            <img src="/media/portfolio/speech-emotion.webp" alt="Speech Emotion Recognition" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
             <section className="mb-8">
                 <p className="text-lg text-white/80 mb-4">
                     An advanced NLP and Audio analysis AI utilizing Gated Recurrent Units (GRU). It extracts complex human emotional insights directly from speech nuances, providing deep behavioral analytics.

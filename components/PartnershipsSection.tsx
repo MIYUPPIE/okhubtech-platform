@@ -56,10 +56,10 @@ const PartnershipsSection = () => (
           ))}
         </div>
         <div className="mt-8 flex flex-wrap gap-4">
-          <Link href="/partners" className="btn-primary">
+          <Link href="/contact" className="btn-primary">
             Partner With Us
           </Link>
-          <Link href="/collaborate" className="btn-secondary">
+          <Link href="/contact" className="btn-secondary">
             Submit Collaboration Request
           </Link>
         </div>

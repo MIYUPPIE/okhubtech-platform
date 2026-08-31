@@ -4,7 +4,7 @@ export default function CreditCardFraudPortfolioPage() {
     return (
         <main className="container-default py-12">
             <h1 className="text-4xl font-bold mb-6 text-white">Credit Card Fraud Detection</h1>
-            <img src="/portfolio/credit-card-fraud.png" alt="Credit Card Fraud Detection" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
+            <img src="/media/portfolio/credit-card-fraud.webp" alt="Credit Card Fraud Detection" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
             <section className="mb-8">
                 <p className="text-lg text-white/80 mb-4">
                     A high-performance financial risk management platform leveraging Artificial Neural Networks (ANN) and Long Short-Term Memory (LSTM) networks to identify and block fraudulent credit card transactions in milliseconds.

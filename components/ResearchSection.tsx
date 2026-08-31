@@ -9,22 +9,22 @@ const researchProjects = [
   {
     title: "Digital twin & Isaac Sim for African ports",
     tag: "Prototype",
-    summary: "High-fidelity NVIDIA Isaac Simulation + ROS 2 orchestration for Lagos and Mombasa corridors.",
+    summary: "Isaac Sim and ROS 2, applied to port corridors.",
   },
   {
     title: "Cosmos Robotics Interoperability",
     tag: "Research",
-    summary: "Building scalable fleet coordination using Cosmos framework for autonomous infrastructure.",
+    summary: "Fleet coordination for autonomous infrastructure.",
   },
   {
     title: "AI genomics for community clinics",
     tag: "Research",
-    summary: "Federated learning pipeline aligned with continental health data protocols.",
+    summary: "Federated learning that keeps health data local.",
   },
   {
     title: "Agro-climate intelligence",
     tag: "Collaboration",
-    summary: "Joint work with universities to deploy predictive systems for cooperatives.",
+    summary: "Predictive systems, built with universities.",
   },
 ];
 
@@ -32,17 +32,17 @@ const researchBenefits = [
   {
     icon: Microscope,
     label: "Applied research",
-    detail: "Labs focused on autonomous robotics, AI, Digital Twins, Isaac Sim, and ROS 2/Cosmos orchestration for Africa’s realities.",
+    detail: "Robotics, AI and digital twins, tested against local conditions.",
   },
   {
     icon: FileText,
     label: "Publications",
-    detail: "Peer-reviewed papers and implementation guides with Cloudinary-hosted PDFs.",
+    detail: "Papers and implementation guides.",
   },
   {
     icon: Users,
     label: "Industry collaborations",
-    detail: "Joint ventures with governments, telcos, and development partners.",
+    detail: "Joint ventures with government and industry.",
   },
 ];
 
@@ -53,15 +53,15 @@ const ResearchSection = () => (
 
       <div className="relative mb-12 h-[300px] w-full overflow-hidden rounded-3xl sm:h-[400px] lg:h-[500px]">
         <Image
-          src="/images/digital_twin_center.png"
-          alt="Engineers monitoring a glowing 3D digital twin simulation of city infrastructure"
+          src="/media/photos/img-20230703-135608.webp"
+          alt="OLED display showing a question and the on-device assistant's answer"
           fill
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 text-white">
-          <p className="text-sm font-semibold uppercase tracking-widest text-white/80">Command Centers</p>
-          <p className="mt-2 font-display text-2xl sm:text-4xl">Visualizing Lagos Smart City Infrastructure.</p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-white/80">On the bench</p>
+          <p className="mt-2 font-display text-2xl sm:text-4xl">An assistant that answers offline.</p>
         </div>
       </div>
 
@@ -91,10 +91,10 @@ const ResearchSection = () => (
             ))}
           </div>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/research" className="btn-primary">
+            <Link href="/contact" className="btn-primary">
               Join Our Research
             </Link>
-            <Link href="/publications" className="btn-secondary">
+            <Link href="/about" className="btn-secondary">
               View Documentation
             </Link>
           </div>

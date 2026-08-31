@@ -16,42 +16,42 @@ const domains = [
   {
     title: "Artificial Intelligence",
     icon: BrainCircuit,
-    focus: "Responsible AI fabric, national models, and sector copilots with audit trails.",
+    focus: "Models and copilots you can audit.",
   },
   {
     title: "Robotics",
     icon: Bot,
-    focus: "Field-ready robotics for ports, energy, manufacturing, and precision agriculture.",
+    focus: "Robots for ports, energy, farms and factories.",
   },
   {
     title: "Internet of Things",
     icon: Network,
-    focus: "Secure sensor networks, telemetry gateways, and edge orchestration.",
+    focus: "Sensor networks and edge gateways.",
   },
   {
     title: "Data & Analytics",
     icon: Workflow,
-    focus: "Sovereign data lakes, governance frameworks, and intelligence dashboards.",
+    focus: "Data lakes, governance, dashboards.",
   },
   {
     title: "Cloud Infrastructure",
     icon: Cloud,
-    focus: "Hybrid cloud blueprints aligned with African regulations and uptime realities.",
+    focus: "Hybrid cloud that survives local uptime.",
   },
   {
     title: "Cybersecurity",
     icon: Shield,
-    focus: "Zero-trust policy, threat simulations, and readiness drills for ministries and enterprises.",
+    focus: "Zero-trust policy and readiness drills.",
   },
   {
     title: "Blockchain",
     icon: Fingerprint,
-    focus: "Trusted identity, supply-chain traceability, and public finance transparency.",
+    focus: "Identity, traceability, transparency.",
   },
   {
     title: "AR / VR",
     icon: Eye,
-    focus: "Immersive policy studios, workforce training, and human-centered storytelling.",
+    focus: "Training and storytelling that lands.",
   },
 ];
 

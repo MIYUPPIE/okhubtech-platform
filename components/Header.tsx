@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, PhoneCall, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { LogoLink } from "./Logo";
 
 const primaryNav = [
   { label: "About", href: "/about" },
@@ -40,9 +41,7 @@ const Header = () => {
         }`}
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
-        <Link href="/" className="font-display text-xl font-semibold text-black dark:text-white">
-          OKHub<span className="text-gradient">.tech</span>
-        </Link>
+        <LogoLink height={40} priority />
 
         <nav className="hidden items-center gap-8 lg:flex">
           <div
@@ -92,11 +91,8 @@ const Header = () => {
 
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
-          <Link href="/contact" className="btn-secondary">
-            <PhoneCall className="h-4 w-4" /> Consult
-          </Link>
           <Link href="/contact" className="btn-primary">
-            Start a Project
+            <PhoneCall className="h-4 w-4" /> Talk to us
           </Link>
         </div>
 
@@ -117,6 +113,9 @@ const Header = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
+            <div className="absolute left-4 top-5">
+              <LogoLink height={34} />
+            </div>
             <div className="absolute right-4 top-4">
               <button
                 className="rounded-full border border-black/20 text-black dark:border-white/20 dark:text-white p-2"
@@ -164,11 +163,8 @@ const Header = () => {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-3 pt-4">
-                  <Link href="/contact" className="btn-secondary" onClick={() => setMobileOpen(false)}>
-                    <PhoneCall className="h-4 w-4" /> Consult
-                  </Link>
                   <Link href="/contact" className="btn-primary" onClick={() => setMobileOpen(false)}>
-                    Start a Project
+                    <PhoneCall className="h-4 w-4" /> Talk to us
                   </Link>
                 </div>
               </div>

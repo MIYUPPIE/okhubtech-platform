@@ -4,7 +4,7 @@ export default function SignLanguageEducatorPortfolioPage() {
     return (
         <main className="container-default py-12">
             <h1 className="text-4xl font-bold mb-6 text-white">Sign Language Educator</h1>
-            <img src="/portfolio/sign-language-educator.png" alt="Sign Language Educator" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
+            <img src="/media/portfolio/sign-language-educator.webp" alt="Sign Language Educator" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
             <section className="mb-8">
                 <p className="text-lg text-white/80 mb-4">
                     An immersive computer vision AI system that acts as an interactive sign language educator. Using YOLO object detection and Convolutional Neural Networks (CNNs), it can instantly recognize and validate signed gestures in real-time.

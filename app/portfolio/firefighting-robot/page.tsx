@@ -4,7 +4,7 @@ export default function FirefightingRobotPortfolioPage() {
     return (
         <main className="container-default py-12">
             <h1 className="text-4xl font-bold mb-6 text-white">Firefighting Robot</h1>
-            <img src="/portfolio/firefighting-robot.png" alt="Firefighting Robot" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
+            <img src="/media/portfolio/firefighting-robot.webp" alt="Firefighting Robot" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
             <section className="mb-8">
                 <p className="text-lg text-white/80 mb-4">
                     A ruggedized, vision-based robotic safety system specialized in hazard mitigation. Using advanced thermal imaging and AI tracking, the robot navigates infernos, extinguishes flames, and locates victims autonomously.

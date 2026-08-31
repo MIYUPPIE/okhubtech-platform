@@ -18,7 +18,7 @@ import process from "node:process";
 
 const VERIFIER = new URL("./verify-export.mjs", import.meta.url).pathname;
 const HOST = "https://okhubtech.com";
-const PAGE = "<!DOCTYPE html><html><body>" + "x".repeat(3000) + "</body></html>";
+const PAGE = '<!DOCTYPE html><html><body><a href="/services/">Services</a>' + "x".repeat(3000) + "</body></html>";
 
 const HTACCESS = [
   "DirectoryIndex index.html",
@@ -226,6 +226,54 @@ test(
   (root) => {
     goodExport(root);
     write(join(root, "out"), "404/index.html", PAGE);
+  },
+  { code: 0 },
+);
+
+test(
+  "internal link to a page that was never exported is rejected",
+  (root) => {
+    goodExport(root);
+    write(
+      join(root, "out"),
+      "index.html",
+      '<!DOCTYPE html><html><body><a href="/programs/">Explore Programs</a>' +
+        "x".repeat(3000) +
+        "</body></html>",
+    );
+  },
+  { code: 1, contains: ["internal link goes nowhere", "/programs/"] },
+);
+
+test(
+  "a link built from an undefined slug is rejected",
+  (root) => {
+    goodExport(root);
+    write(
+      join(root, "out"),
+      "index.html",
+      '<!DOCTYPE html><html><body><a href="/services/undefined">Service</a>' +
+        "x".repeat(3000) +
+        "</body></html>",
+    );
+  },
+  { code: 1, contains: ["internal link goes nowhere", "undefined"] },
+);
+
+test(
+  "asset links are not treated as pages",
+  (root) => {
+    goodExport(root);
+    write(
+      join(root, "out"),
+      "index.html",
+      '<!DOCTYPE html><html><body>' +
+        '<a href="/media/video/clip.mp4">clip</a>' +
+        '<a href="/_next/static/x.js">js</a>' +
+        '<a href="/api/impact">data</a>' +
+        "x".repeat(3000) +
+        "</body></html>",
+    );
   },
   { code: 0 },
 );

@@ -18,13 +18,8 @@ import {
 const navItems = [
   { href: "/admin", label: "Overview", icon: LayoutGrid },
   { href: "/admin/programs", label: "Programs", icon: BookOpen },
-  { href: "/admin/solutions", label: "Solutions", icon: Sparkles },
   { href: "/admin/store", label: "Store", icon: Package },
-  { href: "/admin/research", label: "Research", icon: BarChart3 },
-  { href: "/admin/partners", label: "Partners", icon: Building2 },
-  { href: "/admin/impact", label: "Impact", icon: LineChart },
   { href: "/admin/communications", label: "Comms", icon: Mail },
-  { href: "/admin/settings", label: "Settings", icon: Users },
 ];
 
 export const AdminSidebar = () => {

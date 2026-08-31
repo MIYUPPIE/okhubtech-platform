@@ -8,22 +8,22 @@ const signals = [
   {
     icon: Globe,
     title: "Pan-African footprint",
-    copy: "Studios in Lagos, Kigali, Nairobi, Accra, and partnership pods across 18 nations.",
+    copy: "Rooted in Nigeria, working across the continent.",
   },
   {
     icon: ShieldCheck,
     title: "Sovereign-by-design",
-    copy: "Data fabrics, AI stacks, and robotics pipelines architected for African regulations.",
+    copy: "AI, data and robotics built for local rules.",
   },
   {
     icon: Sparkles,
     title: "Innovation with accountability",
-    copy: "We combine policy labs, talent guilds, and deployment sprints to deliver measurable impact.",
+    copy: "Teach it, build it, ship it.",
   },
   {
     icon: Users,
     title: "Community-first pedagogy",
-    copy: "Youth, ministries, investors, and industry operators co-create every pathway we launch.",
+    copy: "Students, schools and industry, in the same room.",
   },
 ];
 
@@ -31,17 +31,17 @@ const statements = [
   {
     heading: "Mission",
     detail:
-      "Equip African talent and institutions with the tools, methods, and confidence to deploy 4IR systems at continental scale.",
+      "Give people the tools and the confidence to build.",
   },
   {
     heading: "Vision",
     detail:
-      "An Africa where every community can train minds, build sovereign products, and export breakthrough solutions to the world.",
+      "Communities that build their own technology.",
   },
   {
     heading: "Why OKHub exists",
     detail:
-      "Because Africa cannot afford imported revolutions. We design campuses, academies, commerce engines, and civic-grade infrastructure that reflect local realities while meeting global benchmarks.",
+      "Imported solutions do not survive local conditions. We build for the conditions we have.",
   },
 ];
 
@@ -61,15 +61,15 @@ const AboutSection = () => (
 
       <div className="relative mb-12 h-[300px] w-full overflow-hidden rounded-3xl sm:h-[400px] lg:h-[500px]">
         <Image
-          src="/images/ai_academy_students.png"
-          alt="African students and engineers collaborating in a modern AI Academy"
+          src="/media/video/students-actuator-class-poster.webp"
+          alt="Students building an actuator circuit during a practical robotics class"
           fill
           className="object-cover object-center"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 text-white">
-          <p className="text-sm font-semibold uppercase tracking-widest text-white/80">Innovation Hubs</p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-white/80">In the room</p>
           <p className="mt-2 font-display text-2xl sm:text-4xl">Building Africa's Future, Today.</p>
         </div>
       </div>

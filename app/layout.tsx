@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import FloatingContact from "@/components/FloatingContact";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SITE_URL } from "@/lib/site";
+import { LOGO } from "@/lib/media";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -32,9 +33,9 @@ export const metadata: Metadata = {
     siteName: "OKHub Technology",
     images: [
       {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
+        url: LOGO.og.src,
+        width: LOGO.og.width,
+        height: LOGO.og.height,
         alt: "OKHub Technology",
       },
     ],
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
     title: "OKHub Technology | Africa’s 4IR Engine",
     description:
       "Training minds, building solutions, and powering Africa’s future through AI, robotics, IoT, data, and immersive ecosystems.",
-    images: ["/og-image.png"],
+    images: [LOGO.og.src],
   },
 };
 

@@ -81,6 +81,10 @@ directory somehow ends up without an `index.html` again, the server returns
 - **F** a sitemap entry on the wrong host, one that would 301, one with no
   exported page, or a gated route (`/admin`, `/login`, …) that should not be indexed
 - **G** a build artifact (`*.zip`, `.env`, `*.map`) left in the web root
+- **H** an internal link with no exported page behind it. The homepage used to
+  ship eight: `/programs`, `/partners`, `/store`, `/enroll`, `/research`,
+  `/publications`, `/cart`, and a `/services/undefined` produced by a service
+  title missing from the slug map
 
 ## Deploy
 
@@ -143,3 +147,58 @@ These do not work on this hosting and are inert in `out/`:
 
 A real admin dashboard needs a Node host (Vercel, a VPS, or cPanel's Node.js
 Selector) rather than this static export.
+
+## Media pipeline
+
+`public/` is the web root, so nothing raw belongs in it. Masters live in
+`assets/` and never ship:
+
+```
+assets/photos/         24 phone photos of real builds (33MB of masters)
+assets/portfolio/      12 project images
+assets/video/          7 training clips (56MB of masters)
+assets/brand/          okhub.png, the 500x500 logo master
+assets/illustrations/  parked, see below
+```
+
+`npm run media` (`scripts/build_media.py`) turns those into `public/media/`:
+
+| Output | What it does |
+|---|---|
+| `photos/*.webp` + `*-sm.webp` | 1600w and 640w. A 2.5MB JPEG lands at ~70KB |
+| `portfolio/*.webp` | 1200w |
+| `video/*.mp4` | muted, 640px, CRF 28, `+faststart`, trimmed to 20s |
+| `video/*-poster.webp` | frame from a third of the way in |
+| `brand/okhub-*.png` | wordmark and mark, trimmed, in light and dark |
+| `app/favicon.ico` | the mark on brand ink, 16/32/48/256 |
+| `brand/og-image.png` | 1200x630 share card |
+
+98MB of masters become 14MB of shipped derivatives. The script is idempotent —
+it rebuilds a derivative only when its master is newer — and writes
+`lib/media.generated.ts` with real pixel dimensions, so every `<Image>` and
+`<video>` reserves its space before the asset loads.
+
+`lib/media.ts` sits on top and holds the editorial decisions: which shot goes
+where, and the alt text. Re-running the pipeline never overwrites it. Asset ids
+are checked against the manifest's literal union, so deleting a master turns
+every stale reference into a compile error.
+
+### The logo
+
+The master is black ink plus gold, which disappears on the dark theme. The
+pipeline generates a dark variant by lifting greyscale pixels to near-white
+while leaving saturated pixels (the gold checker and circuit traces) alone.
+`components/Logo.tsx` renders both and swaps them with CSS rather than reading
+the theme in JS: next-themes resolves after hydration, so a JS swap flashes the
+wrong logo on first paint.
+
+### assets/illustrations/ is parked, not used
+
+Four AI-generated images shipped on the old site with other companies' branding
+rendered into them: "ADVANTECH INNOVATIONS", "SILICON SAVANNAH ROBOTICS |
+NAIROBI, KENYA", "AFRI-TECH SOLUTIONS", and a staff badge reading "SARAH
+OKONKWO". `ServicesSection` had copied "Silicon Savannah Robotics" into its own
+heading. Presenting those as OKHub's facilities is a misrepresentation, so they
+are parked in `assets/illustrations/` and every slot that used one now shows a
+real photograph or a frame from a real class. Delete them, or replace them with
+unbranded renders, but do not put them back as-is.

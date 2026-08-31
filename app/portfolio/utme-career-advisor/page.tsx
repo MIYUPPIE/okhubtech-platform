@@ -4,7 +4,7 @@ export default function UTMECareerAdvisorPortfolioPage() {
     return (
         <main className="container-default py-12">
             <h1 className="text-4xl font-bold mb-6 text-white">UTME Career Advisor</h1>
-            <img src="/portfolio/utme-career-advisor.png" alt="UTME Career Advisor" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
+            <img src="/media/portfolio/utme-career-advisor.webp" alt="UTME Career Advisor" className="rounded-xl mb-6 w-full h-[32rem] object-cover border border-white/10" />
             <section className="mb-8">
                 <p className="text-lg text-white/80 mb-4">
                     A Django and LLM-based academic guidance platform designed to assist students by providing personalized, robust career paths based on their UTME scores, interests, and academic strengths.

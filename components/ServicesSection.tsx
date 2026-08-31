@@ -43,23 +43,23 @@ const carouselTopics = [
 const innovations = [
   {
     title: "Digital Twin & Isaac Simulation",
-    detail: "Harness high-fidelity virtual replicas via NVIDIA Isaac Sim to simulate, train, and optimize African ports and smart campuses in real time.",
+    detail: "Virtual replicas that simulate and tune real sites before anyone builds them.",
   },
   {
     title: "ROS 2 & Cosmos Orchestration",
-    detail: "Deploy scalable autonomous fleets using ROS 2 and Cosmos to build interoperable, resilient robotic pipelines across cities.",
+    detail: "Fleets of robots that coordinate on ROS 2.",
   },
   {
     title: "Personalized 3D Printed Nutrition",
-    detail: "Create culturally relevant food products via additive manufacturing tailored to personalized nutrition profiles.",
+    detail: "Printed food matched to local diets.",
   },
   {
     title: "Energy-Generating Wearables",
-    detail: "Convert mobility into power so learners and field engineers can energize devices on the move.",
+    detail: "Movement charges the kit you carry.",
   },
   {
     title: "AI-Enhanced Genomic Sequencing",
-    detail: "Accelerate precision medicine for the continent through rapid, AI-guided genomic pipelines.",
+    detail: "AI-guided genomics, fast enough to matter.",
   },
 ];
 
@@ -231,15 +231,15 @@ const ServicesSection = () => (
 
       <div className="relative h-[250px] w-full overflow-hidden rounded-3xl sm:h-[350px] lg:h-[450px]">
         <Image
-          src="/images/robotics_lab.png"
-          alt="African engineers in a high-tech robotics laboratory"
+          src="/media/photos/img-20230629-151725.webp"
+          alt="Student-built rover chassis running under green indicator LEDs"
           fill
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 text-white">
-          <p className="text-sm font-semibold uppercase tracking-widest text-[#f7b801]">Silicon Savannah Robotics</p>
-          <p className="mt-2 font-display text-2xl sm:text-4xl">Hardware Meets Human Ingenuity.</p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-[#f7b801]">Robotics</p>
+          <p className="mt-2 font-display text-2xl sm:text-4xl">Built, wired and tested here.</p>
         </div>
       </div>
 
@@ -286,6 +286,7 @@ const ServicesSection = () => (
               "Renewable Energy": "renewable-energy",
               "Cybersecurity": "cybersecurity",
               "Networking": "networking",
+              "Digital Marketing": "digital-marketing",
             };
             const href = `/services/${slugMap[service.title as keyof typeof slugMap]}`;
             return (

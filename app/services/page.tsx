@@ -1,4 +1,8 @@
 import Link from "next/link";
+
+import DomainsSection from "@/components/DomainsSection";
+import SolutionCenterSection from "@/components/SolutionCenterSection";
+import ECommerceSection from "@/components/ECommerceSection";
 import { Globe, LineChart, Brain, Layers3, Bot, Video, Plane, Zap, ShieldCheck, Network, ActivitySquare } from "lucide-react";
 
 const services = [
@@ -79,22 +83,29 @@ const services = [
 export default function ServicesPage() {
   return (
     <main className="container-default py-12">
-      <h1 className="text-4xl font-bold mb-8 text-white">Our Services</h1>
+      <h1 className="mb-8 font-display text-4xl font-bold text-black dark:text-white">What we do</h1>
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (
           <Link
             key={service.title}
             href={service.href}
-            className="rounded-2xl border border-white/10 bg-black/70 p-6 flex flex-col gap-3 hover:border-gold-primary transition-colors"
+            className="flex flex-col gap-3 rounded-2xl border border-black/10 bg-white p-6 shadow-sm transition-colors hover:border-black/30 dark:border-white/10 dark:bg-black/70 dark:hover:border-white/40"
           >
             <div className="flex items-center gap-3 mb-2">
               <service.icon className="h-7 w-7" style={{ color: "var(--gold-primary)" }} />
-              <h2 className="text-xl font-semibold text-white">{service.title}</h2>
+              <h2 className="text-xl font-semibold text-black dark:text-white">{service.title}</h2>
             </div>
-            <p className="text-white/70">{service.description}</p>
+            <p className="text-black/70 dark:text-white/70">{service.description}</p>
           </Link>
         ))}
       </div>
+
+      {/* Moved off the homepage: someone on /services has already asked for
+          the capability detail, so it belongs here rather than in front of
+          every first-time visitor. */}
+      <DomainsSection />
+      <SolutionCenterSection />
+      <ECommerceSection />
     </main>
   );
 }
