@@ -25,7 +25,6 @@ const ok = (over = {}) => ({
   name: "Thing",
   tagline: "Does a thing.",
   sector: "Commerce",
-  status: "in-development",
   summary: ["one", "two"],
   highlights: ["a", "b", "c"],
   stack: ["X", "Y"],
@@ -34,10 +33,12 @@ const ok = (over = {}) => ({
 
 const cases = [
   ["a complete product passes", [ok()], 0],
-  ["live with no url fails", [ok({ status: "live" })], 1],
-  ["live with a url passes", [ok({ status: "live", url: "https://x.ng" })], 0],
+  ["no url passes — not everything has a public front door", [ok()], 0],
+  ["an https url passes", [ok({ url: "https://x.ng" })], 0],
   ["http url fails", [ok({ url: "http://x.ng" })], 1],
-  ["unknown status fails", [ok({ status: "shipped" })], 1],
+  ["a trailing slash fails — the url is rendered as a label", [ok({ url: "https://x.ng/" })], 1],
+  ["a placeholder host fails", [ok({ url: "https://example.com" })], 1],
+  ["localhost fails", [ok({ url: "https://localhost:3000" })], 1],
   ["duplicate slug fails", [ok(), ok()], 1],
   ["uppercase slug fails", [ok({ slug: "Thing" })], 1],
   ["slug with spaces fails", [ok({ slug: "two things" })], 1],
@@ -103,7 +104,6 @@ for (const [name, products, want] of cases) {
   const logsme = products.find((p) => p.slug === "logsme");
   if (!logsme) problems.push("did not find the logsme entry");
   else {
-    if (logsme.status !== "live") problems.push(`logsme status parsed as ${logsme.status}`);
     if (!logsme.url?.startsWith("https://")) problems.push("logsme url did not parse");
     if (logsme.summary.length < 2) problems.push("logsme summary did not parse");
     if (logsme.stack.length < 2) problems.push("logsme stack did not parse");

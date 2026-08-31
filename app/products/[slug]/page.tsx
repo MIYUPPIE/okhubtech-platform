@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { PRODUCTS, STATUS_LABEL, productBySlug } from "@/lib/products";
+import { PRODUCTS, productBySlug } from "@/lib/products";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -36,20 +36,9 @@ export default async function ProductPage({ params }: Params) {
         ← All products
       </Link>
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
-        <span className="text-xs uppercase tracking-[0.35em] text-black/50 dark:text-white/50">
-          {product.sector}
-        </span>
-        <span
-          className={
-            product.status === "live"
-              ? "rounded-full bg-gold-primary/15 px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.15em] text-gold-ink"
-              : "rounded-full border border-black/15 px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.15em] text-black/55 dark:border-white/15 dark:text-white/55"
-          }
-        >
-          {STATUS_LABEL[product.status]}
-        </span>
-      </div>
+      <p className="mt-6 text-xs uppercase tracking-[0.35em] text-black/50 dark:text-white/50">
+        {product.sector}
+      </p>
 
       <h1 className="mt-3 max-w-3xl font-display text-4xl font-bold text-black dark:text-white sm:text-5xl">
         {product.name}

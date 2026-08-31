@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { PRODUCTS, STATUS_LABEL } from "@/lib/products";
+import { PRODUCTS } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "Products | OKHub",
   description:
-    "Software OKHub has built: LogSME, Alajapa, VASIDAS, TeenBuddy, LOGOD, NURPAT, Loeko, GriotVid and more — across commerce, agriculture, health, language and automation.",
+    "Software OKHub has built: LogSME, Alajapa, VASIDAS, TeenBuddy, LOGOD, NURPAT, LAMIUK, UNC, Loeko, GriotVid and more — across commerce, agriculture, health, language, automation and the public sector.",
 };
 
 const sectors = [...new Set(PRODUCTS.map((p) => p.sector))];
@@ -22,10 +22,10 @@ export default function ProductsPage() {
       </h1>
       <p className="mt-6 max-w-3xl text-lg text-black/80 dark:text-white/80">
         {PRODUCTS.length} products across {sectors.length} sectors — commerce,
-        agriculture, health, language, automation and media. Most were built for
-        conditions the usual tooling assumes away: no signal in the field, no
-        broadband in the building, no GPU worth the name, and a customer who is
-        already on WhatsApp and not coming to your website.
+        agriculture, health, language, automation, media and the public sector.
+        Most were built for conditions the usual tooling assumes away: no signal
+        in the field, no broadband in the building, no GPU worth the name, and a
+        customer who is already on WhatsApp and not coming to your website.
       </p>
 
       <div className="mt-8 flex flex-wrap gap-3">
@@ -44,20 +44,9 @@ export default function ProductsPage() {
               href={`/products/${product.slug}`}
               className="group flex h-full flex-col rounded-2xl border border-black/15 bg-white p-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] transition-colors hover:border-black/40 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/40"
             >
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-xs uppercase tracking-[0.2em] text-black/50 dark:text-white/50">
-                  {product.sector}
-                </span>
-                <span
-                  className={
-                    product.status === "live"
-                      ? "rounded-full bg-gold-primary/15 px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.15em] text-gold-ink"
-                      : "rounded-full border border-black/15 px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.15em] text-black/55 dark:border-white/15 dark:text-white/55"
-                  }
-                >
-                  {STATUS_LABEL[product.status]}
-                </span>
-              </div>
+              <span className="text-xs uppercase tracking-[0.2em] text-black/50 dark:text-white/50">
+                {product.sector}
+              </span>
 
               <h2 className="mt-4 font-display text-2xl text-black dark:text-white">
                 {product.name}

@@ -10,9 +10,11 @@
  *     disagrees, or a slug is renamed and the old URL 404s. PUBLIC_ROUTES
  *     derives from PRODUCT_SLUGS to prevent this; this check proves it.
  *
- *  2. UNVERIFIED CLAIMS — a product marked `live` with no URL, or a URL that
- *     was never checked. /contact shipped six mailboxes on a domain OKHub does
- *     not own; a product page claiming a dead product is the same failure.
+ *  2. DEAD LINKS — a product linking a domain that does not resolve. /contact
+ *     shipped six mailboxes on a domain OKHub does not own; linking a dead
+ *     product domain is the same failure. Resolution itself is a network call
+ *     and cannot live in an offline gate, so what is enforced here is the
+ *     shape: https only, no trailing slash, no placeholder host.
  *
  *  3. THIN ENTRIES — a catalogue row with no summary, no highlights or no
  *     stack renders as an empty page. Better to fail the build than publish it.
@@ -52,7 +54,6 @@ export function readCatalogue(root) {
       name: field("name"),
       tagline: field("tagline"),
       sector: field("sector"),
-      status: field("status"),
       url: field("url"),
       summary: list("summary"),
       highlights: list("highlights"),
@@ -82,14 +83,14 @@ export function checkCatalogue(products) {
     if (!p.tagline) say("missing tagline — the index card would be blank");
     if (!p.sector) say("missing sector");
 
-    if (!["live", "in-development", "internal"].includes(p.status ?? "")) {
-      say(`status "${p.status}" is not one of live / in-development / internal`);
+    // A url is optional — plenty of this work has no public front door. But if
+    // one is set it becomes a link on the page, so it has to be a real https
+    // origin rather than a placeholder somebody meant to fill in later.
+    if (p.url !== undefined) {
+      if (!p.url.startsWith("https://")) say(`url "${p.url}" is not https`);
+      else if (/\/$/.test(p.url)) say(`url "${p.url}" has a trailing slash; it is rendered as a label`);
+      else if (/(example\.|localhost|127\.0\.0\.1|TODO|your-)/i.test(p.url)) say(`url "${p.url}" is a placeholder`);
     }
-    // "live" is a public claim about a running service, so it must name one.
-    if (p.status === "live" && !p.url) say('marked "live" with no url to back the claim');
-    if (p.url && !p.url.startsWith("https://")) say(`url "${p.url}" is not https`);
-    // A url without live status is fine (a repo, a demo); a live one must be reachable
-    // at publish time, which is checked by hand and recorded in the commit.
 
     if (p.summary.length < 2) say(`only ${p.summary.length} summary paragraph(s); needs at least 2`);
     if (p.highlights.length < 3) say(`only ${p.highlights.length} highlight(s); needs at least 3`);
@@ -139,9 +140,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const products = readCatalogue(ROOT);
   const problems = findProblems(ROOT);
   if (problems.length === 0) {
-    const live = products.filter((p) => p.status === "live");
-    console.log(`PASS  ${products.length} products, all complete and routed from ${CATALOGUE}`);
-    console.log(`      ${live.length} live: ${live.map((p) => `${p.name} (${p.url})`).join(", ")}`);
+    const linked = products.filter((p) => p.url);
+    const sectors = [...new Set(products.map((p) => p.sector))];
+    console.log(`PASS  ${products.length} products across ${sectors.length} sectors, routed from ${CATALOGUE}`);
+    console.log(`      ${linked.length} linked: ${linked.map((p) => p.url.replace("https://", "")).join(", ")}`);
     process.exit(0);
   }
   console.error(`FAIL  ${problems.length} catalogue problem(s)`);

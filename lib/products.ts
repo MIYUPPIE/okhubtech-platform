@@ -11,14 +11,12 @@
  *
  *  - OKHub-authored only. Forks and clones of other people's projects do not
  *    go on the site as our work.
- *  - `live` is only set where the URL was checked and answered. Everything
- *    else is honest about being in development.
+ *  - `url` is only set where the domain was actually resolved and answered.
+ *    A link to a dead domain is the okhub.tech mailbox failure again.
  *  - `stack` lists what the project actually depends on, read off its own
  *    manifest or README, not what would sound good.
  *  - No third-party client is named without their permission.
  */
-
-export type ProductStatus = "live" | "in-development" | "internal";
 
 export type Product = {
   /** URL segment under /products/. */
@@ -28,8 +26,7 @@ export type Product = {
   tagline: string;
   /** The domain it serves, used to group the index. */
   sector: string;
-  status: ProductStatus;
-  /** Public URL, only where it was verified to respond. */
+  /** Public URL. Only set where the domain was checked and answered. */
   url?: string;
   /** Two or three paragraphs for the detail page. */
   summary: string[];
@@ -44,7 +41,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "LogSME",
     tagline: "A business operating system for small and medium enterprises, driven from WhatsApp.",
     sector: "Commerce",
-    status: "live",
     url: "https://logsme.ng",
     summary: [
       "Most small businesses in Nigeria run on a notebook and a phone. LogSME replaces the notebook without asking anyone to stop using the phone: sales, inventory, production, procurement, services, bookings, customers and finances all live in one dashboard, and every one of them can be driven from WhatsApp instead.",
@@ -65,7 +61,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "Alajapa",
     tagline: "B2B agricultural aggregation and export, run through field agents.",
     sector: "Agriculture",
-    status: "live",
     url: "https://alajapa.com",
     summary: [
       "Alajapa connects smallholder farmers in Oyo State to exporters, processors and Lagos traders through a lean agent-driven model. Field agents buy produce at farm-gate prices; the platform converts local units to the metric bag, applies markup, and lists verified stock for buyers.",
@@ -84,7 +79,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "VASIDAS",
     tagline: "Desktop automation that runs entirely offline, including the language model.",
     sector: "Automation",
-    status: "in-development",
     summary: [
       "A cross-platform RPA studio for Windows and Linux: build, save and run workflows that drive other desktop applications through mouse, keyboard, window management, screenshots and native UI element interaction.",
       "The point of difference is that it does not lead with fixed-coordinate scripting. Elements are found through Windows UI Automation and Linux AT-SPI first, with OCR and template matching as fallbacks, so a workflow survives a window moving.",
@@ -104,7 +98,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "TeenBuddy",
     tagline: "A daily companion for teenagers, with the safety system designed in first.",
     sector: "Health",
-    status: "in-development",
     summary: [
       "TeenBuddy helps teenagers manage emotions, resist unhealthy impulses, build habits and ask for help. Six screens: home, check-in, help now, learn, journal and profile.",
       "The interesting constraint is that an AI coach talking to teenagers about their worst days cannot be allowed to improvise. The model is kept inside deterministic rails, risk is classified in two tiers, and crisis responses come from reviewed templates with region-aware resources rather than from generation.",
@@ -124,7 +117,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "LOGOD",
     tagline: "Local government revenue collection that works with no signal in the field.",
     sector: "Public sector",
-    status: "in-development",
     summary: [
       "An agent registers a market seller with GPS and a photo, collects a levy, and the seller gets an SMS and a digital receipt. All of it works offline in the field and syncs when connectivity returns. Supervisors and administrators watch it happen live from a web dashboard.",
       "The mobile app and the backend share nothing but an OpenAPI contract, so the two halves can be built and deployed independently.",
@@ -139,11 +131,68 @@ const PRODUCTS_DATA: Product[] = [
     stack: ["Phoenix 1.8", "Elixir", "LiveView", "Flutter", "PostgreSQL", "MinIO", "OpenAPI"],
   },
   {
+    slug: "tosaadecworld",
+    name: "TosaadecWorld Foundation",
+    tagline: "A donation platform for the Zero Out-of-School Children initiative.",
+    sector: "Nonprofit",
+    url: "https://tosaadecworld.org",
+    summary: [
+      "The public site and donation platform for a Nigerian foundation working to get children out of the street and into school, through education, work, food, water and a healthy environment.",
+      "Giving is the whole point of the build, so it takes money three ways — Paystack, PayPal and Flutterwave — rather than betting the foundation's income on one processor being up and one card working. Around that sit donor tracking, sponsorships, volunteer sign-up, a newsletter and a CMS the foundation runs itself.",
+      "The API and the site are separate applications that agree on a shared contract, so the public site can be redeployed without touching the machinery that handles donations.",
+    ],
+    highlights: [
+      "Three payment processors side by side, so a failing gateway is not a failed donation.",
+      "Donor tracking and recurring sponsorships, not just one-off payments.",
+      "A CMS the foundation edits directly, so campaign copy does not need a developer.",
+      "Volunteer and newsletter capture on the same contract as donations.",
+      "API and web app deploy independently against a shared contract.",
+    ],
+    stack: ["Elixir", "Phoenix", "Next.js", "TypeScript", "PostgreSQL", "Paystack", "PayPal", "Flutterwave"],
+  },
+  {
+    slug: "lamiuk",
+    name: "LAMIUK Portal",
+    tagline: "A private portal and calling platform for African migrants in the UK.",
+    sector: "Community",
+    summary: [
+      "A secure portal for legal African migrants in the UK: registration with email verification, profiles, support groups, scheduled meetings, direct chat with administrators, and audio and video calls that run in the browser.",
+      "Support groups are the reason the calling is in-browser rather than a link to somewhere else. Asking people in a vulnerable position to install an app, make an account somewhere new and trust a third party with who they are talking to is a barrier; opening a tab is not.",
+      "Calls are peer-to-peer over WebRTC with a TURN relay behind them, because the networks people actually use — mobile data, shared housing, public wifi — are exactly the ones that block direct connections.",
+    ],
+    highlights: [
+      "In-browser audio and video calls, with nothing to install and no third-party account.",
+      "A self-hosted TURN relay so calls still connect on restrictive mobile and shared networks.",
+      "Real-time chat and presence over Phoenix Channels rather than polling.",
+      "Support groups and scheduled meetings as first-class objects, not calendar links.",
+      "Email-verified registration, with administrator chat kept separate from group channels.",
+    ],
+    stack: ["Elixir", "Phoenix", "Phoenix Channels", "PostgreSQL", "Next.js", "TypeScript", "WebRTC", "Coturn"],
+  },
+  {
+    slug: "unc",
+    name: "UNC",
+    tagline: "A turn-based tactical RPG that is played entirely inside a group chat.",
+    sector: "Gaming",
+    summary: [
+      "UNC is a chat-native tactical RPG with a real rulebook behind it: clans, ranks, skill trees, item economy and a two-turn action-reaction battle cycle where an attack, the defence against it and the counter-attack are three distinct moves.",
+      "It grew as a play-by-post game moderated by people, and the moderators became the bottleneck. The backend exists to take the mechanical work off them — validating decks, enforcing cooldowns, resolving randomness and calculating damage — while leaving the human moderators to judge the things that need judgement.",
+      "It runs where the players already are. The game is played through WhatsApp messages, with battles held in a supervisor process per match so a long fight keeps its state without holding a connection open.",
+    ],
+    highlights: [
+      "A two-turn action-reaction battle cycle, so defending is a real move rather than a stat check.",
+      "Battles run as supervised processes, one per match, holding state across a fight that spans hours.",
+      "Automatic deck validation, cooldown enforcement and damage resolution, so moderators only judge edge cases.",
+      "Randomness resolved through several mechanics — rolls, spins and tie-break games — rather than one dice call.",
+      "Played through WhatsApp, with background jobs driving scheduled events and the economy.",
+    ],
+    stack: ["Elixir", "Phoenix 1.7", "PostgreSQL 15", "Oban", "Cachex", "Guardian", "WhatsApp Business API"],
+  },
+  {
     slug: "nurpat",
     name: "NURPAT",
     tagline: "Nurse-led telehealth, built to Nigeria's scope-of-practice rules.",
     sector: "Health",
-    status: "in-development",
     summary: [
       "A telehealth platform connecting licensed Nigerian nurses with patients for remote consultations over text, audio and video. It is built around the Nursing & Midwifery Act's scope-of-practice requirements rather than retrofitted to them.",
       "Consultations run peer-to-peer over WebRTC with a TURN server for the networks where that does not work, and an AI triage step sorts intake before a nurse's time is spent on it.",
@@ -162,7 +211,7 @@ const PRODUCTS_DATA: Product[] = [
     name: "NursePrep",
     tagline: "NMCN licensure exam preparation, delivered partly over WhatsApp.",
     sector: "Education",
-    status: "in-development",
+    url: "https://nurseprep.com.ng",
     summary: [
       "Exam preparation for Nigerian nursing licensure candidates: untimed practice with instant feedback, timed mock exams in the real NMCN format, a daily quiz delivered over WhatsApp, and an AI tutor.",
       "The output that matters is a readiness score with a weak-area breakdown, so a candidate knows where they actually stand rather than how many questions they have answered.",
@@ -180,7 +229,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "Loeko",
     tagline: "Speech-first Yoruba learning that scores your tones.",
     sector: "Language",
-    status: "in-development",
     summary: [
       "Yoruba is tonal, so a learning app that only reads and writes teaches the wrong half of the language. Every Loeko lesson is built around speaking: the app listens, scores pronunciation on tone, fluency and accuracy, gives specific feedback, and repeats the exercise until it is right.",
       "The speech stack is purpose-built for the language rather than borrowed — a Whisper model fine-tuned for Yoruba on the way in, YarnGPT on the way out.",
@@ -198,7 +246,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "GriotVid",
     tagline: "An idea in, a narrated video out — in your language.",
     sector: "Media",
-    status: "in-development",
     summary: [
       "A griot is a West African storyteller. GriotVid takes a topic or a script and returns a finished, narrated, captioned video: the script and scene plan are written in the chosen language, footage is pulled from Pexels and Pixabay, narration is generated as one continuous take, music is picked by mood, and FFmpeg assembles the result on the GPU.",
       "Narration uses Edge-TTS for English and several African languages, and YarnGPT for Yoruba, Igbo and Hausa. Paste your own script and it is narrated word for word — the model only picks footage and a title, and never rewrites your words.",
@@ -217,7 +264,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "Agora",
     tagline: "Live gatherings with captions as they happen and a transcript when they end.",
     sector: "Media",
-    status: "in-development",
     summary: [
       "A gatherings platform where every broadcast carries live captions while it is running, and produces an accurate final transcript, downloadable as an SRT file, once it ends.",
       "The two are deliberately different jobs: the live pass optimises for latency and the final pass for accuracy, rather than compromising on one model for both.",
@@ -234,7 +280,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "SmartEyes",
     tagline: "Retail floor surveillance that follows people, not frames.",
     sector: "Computer vision",
-    status: "in-development",
     summary: [
       "A real-time surveillance system for supermarkets. YOLO detects people and objects, a tracker assigns and holds a unique identity across frames, and the system writes a separate video file per tracked person alongside entry and exit times in a database.",
       "Recording per person rather than per camera is what makes the footage reviewable — you look up someone's visit instead of scrubbing an hour of floor.",
@@ -252,7 +297,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "Yoruba Live Voice",
     tagline: "An always-on Yoruba speech pipeline that never stops listening.",
     sector: "Language",
-    status: "in-development",
     summary: [
       "Speak Yoruba into a microphone and the system either captions what you said with correct accents, or answers you as a voice assistant and speaks the reply aloud.",
       "The engineering problem is that cloud calls are slow and microphones are not patient. Five stages run concurrently so a slow network round trip never blocks capture or live decoding — voice activity detection and speech-to-text stay local, and only correction and speech synthesis leave the machine.",
@@ -270,7 +314,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "Transcriber",
     tagline: "Any audio, any video, any language, transcribed locally.",
     sector: "Language",
-    status: "internal",
     summary: [
       "A local transcription tool built on faster-whisper. FFmpeg normalises every input to 16 kHz mono before the model sees it, so codec and container stop mattering, and voice-activity filtering removes the text Whisper otherwise hallucinates over silence.",
       "A backend ladder means a small GPU degrades to a slower path instead of crashing, which is the difference between a tool that works on the hardware you have and one that does not.",
@@ -289,7 +332,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "AR Art Gallery",
     tagline: "Point a phone at a painting and watch it move. No app, no QR code.",
     sector: "Immersive",
-    status: "in-development",
     summary: [
       "A marker-based augmented reality web app that animates artwork. Tracking is natural-feature based, so it locks onto the artwork itself rather than a printed QR code, and it runs in a browser, so there is nothing to install.",
       "The camera is only requested when someone taps to launch, never on page load. With the optional backend running, an uploaded artwork can be saved and shared as a link with a QR code that pins any phone to that piece.",
@@ -307,7 +349,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "FlowToIt",
     tagline: "Messaging across a room with no internet involved.",
     sector: "Networking",
-    status: "in-development",
     summary: [
       "A peer-to-peer communication app for a local network. Peers are discovered automatically, messages travel over WebSockets, and none of it needs an internet connection or a server anyone else controls.",
       "It installs as a progressive web app, and generates its own certificates so the secure-context requirements are met without a public domain.",
@@ -325,7 +366,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "Word Web Clone",
     tagline: "A document editor in the browser, ribbon and all.",
     sector: "Productivity",
-    status: "in-development",
     summary: [
       "A browser document editor that recreates the familiar ribbon interface and page-based layout: rich text, formatting, image insertion, zoom controls and keyboard shortcuts.",
       "The page-based layout is the hard part — most browser editors are one long scroll, which is fine until someone needs to know what will be on page three.",
@@ -343,7 +383,6 @@ const PRODUCTS_DATA: Product[] = [
     name: "WhatsApp Game",
     tagline: "A game platform that lives entirely inside a chat thread.",
     sector: "Education",
-    status: "in-development",
     summary: [
       "A gaming platform played through WhatsApp messages: four game types, clan assignment, player profiles with levels and points, and a global leaderboard. No app, no website, no download — the whole thing is a conversation.",
       "It is a teaching vehicle as much as a game. Reaching people where they already are, on the network they already pay for, is the same constraint most of our other work is built around.",
@@ -358,19 +397,10 @@ const PRODUCTS_DATA: Product[] = [
   },
 ];
 
-/** Ordered: live work first, then the rest as listed. */
-export const PRODUCTS: readonly Product[] = [...PRODUCTS_DATA].sort((a, b) => {
-  const rank = (p: Product) => (p.status === "live" ? 0 : 1);
-  return rank(a) - rank(b);
-});
+/** Declaration order is the curated order — edit PRODUCTS_DATA to reorder. */
+export const PRODUCTS: readonly Product[] = PRODUCTS_DATA;
 
 export const PRODUCT_SLUGS: readonly string[] = PRODUCTS.map((p) => p.slug);
 
 export const productBySlug = (slug: string): Product | undefined =>
   PRODUCTS.find((p) => p.slug === slug);
-
-export const STATUS_LABEL: Record<ProductStatus, string> = {
-  live: "Live",
-  "in-development": "In development",
-  internal: "Internal tool",
-};
