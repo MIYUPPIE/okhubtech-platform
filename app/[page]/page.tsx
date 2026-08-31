@@ -577,8 +577,19 @@ const MarketingPage = async ({ params }: PageParams) => {
   return (
     <main className="space-y-16 pb-24 pt-12">
       <section className="container-default section-shell space-y-6">
-        <span className={`inline-flex w-fit items-center rounded-full px-4 py-1 text-xs uppercase tracking-[0.3em] text-black/75 bg-gradient-to-r ${config.accent ?? accentFallback}`}>
-          {config.badge}
+        {/*
+          The accent ramp ranges from #ffd700 (light) to #0f2027 (near-black on
+          robotics), so no single text colour reads on all six. A solid fill
+          would need to special-case each one and break again the next time an
+          accent is added. Putting the gradient on a 1px ring instead — with the
+          text on a fixed white/black pill inside it — keeps the per-page colour
+          identity while the text sits on a background this file already knows
+          is legible in both themes.
+        */}
+        <span className={`inline-flex w-fit rounded-full bg-gradient-to-r p-px ${config.accent ?? accentFallback}`}>
+          <span className="rounded-full bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-black dark:bg-black dark:text-white">
+            {config.badge}
+          </span>
         </span>
         <h1 className="max-w-4xl font-display text-4xl leading-tight text-black dark:text-white md:text-5xl">
           {config.title}
