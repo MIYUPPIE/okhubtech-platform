@@ -56,6 +56,19 @@ VIDEO_CRF = 28
 # Marketing B-roll does not need three minutes. Anything longer is trimmed.
 VIDEO_MAX_SECONDS = 20
 
+# Schematics, flowcharts and CAD renders are line art on white. Downscaling
+# them like a photograph turns thin strokes to mush, so they get a wider
+# ceiling and a much higher quality floor, and they are never cropped.
+DIAGRAM_WIDTH = 1600
+DIAGRAM_QUALITY = 92
+
+# Per-clip overrides. The default strips audio because the class B-roll plays
+# as muted background loops; the branded showreel is narrated and is meant to
+# be played with sound, in full.
+VIDEO_POLICY: dict[str, dict[str, object]] = {
+    "okhub-showreel": {"audio": True, "max_seconds": None, "width": 720},
+}
+
 FORCE = "--force" in sys.argv
 CHECK = "--check" in sys.argv
 
@@ -123,6 +136,8 @@ photos: list[ImageEntry] = []
 portfolio: list[ImageEntry] = []
 videos: list[VideoEntry] = []
 brand: dict[str, ImageEntry] = {}
+projects: dict[str, list[ImageEntry]] = {}
+docs: list[dict[str, object]] = []
 
 
 # ---------------------------------------------------------------------------
@@ -153,7 +168,12 @@ def recolour_for_dark(im: Image.Image) -> Image.Image:
 
 
 def build_brand() -> None:
-    src = ASSETS / "brand" / "okhub.png"
+    # okhub-1080.png is the same mark at 1080x1080; its ink box is 1039x306
+    # against 434x127 in the 500x500 original, so the header logo stays crisp
+    # on a 2x display.
+    src = ASSETS / "brand" / "okhub-1080.png"
+    if not src.exists():
+        src = ASSETS / "brand" / "okhub.png"
     out = MEDIA / "brand"
     out.mkdir(parents=True, exist_ok=True)
 
@@ -246,6 +266,71 @@ def build_images(src_dir: Path, out_dir: Path, url_base: str,
     print(f"  {url_base}: {len(sink)} images")
 
 
+def build_projects() -> None:
+    """Engineering artefacts, one folder per project: schematics, flowcharts,
+    CAD renders, firmware screenshots, build photos."""
+    root = ASSETS / "projects"
+    if not root.exists():
+        return
+    for project_dir in sorted(d for d in root.iterdir() if d.is_dir()):
+        slug = slugify(project_dir.name)
+        out_dir = MEDIA / "projects" / slug
+        out_dir.mkdir(parents=True, exist_ok=True)
+        entries: list[ImageEntry] = []
+
+        for src in sorted(project_dir.iterdir()):
+            if src.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
+                continue
+            name = slugify(src.name)
+            dst = out_dir / f"{name}.webp"
+
+            im = Image.open(src)
+            # Flatten onto white: these are line drawings saved with alpha, and
+            # a transparent background renders as black on the dark theme.
+            if im.mode in ("RGBA", "LA", "P"):
+                im = im.convert("RGBA")
+                flat = Image.new("RGB", im.size, (255, 255, 255))
+                flat.paste(im, mask=im.getchannel("A"))
+                im = flat
+            else:
+                im = im.convert("RGB")
+
+            width = min(DIAGRAM_WIDTH, im.width)
+            size = (width, max(1, round(im.height * width / im.width)))
+            if newer(src, dst):
+                im.resize(size, Image.LANCZOS).save(
+                    dst, "WEBP", quality=DIAGRAM_QUALITY, method=6
+                )
+            entries.append(ImageEntry(
+                id=name, src=f"/media/projects/{slug}/{dst.name}",
+                width=size[0], height=size[1], thumb=None,
+            ))
+
+        if entries:
+            projects[slug] = entries
+    total = sum(len(v) for v in projects.values())
+    print(f"  /media/projects: {total} artefacts across {len(projects)} projects")
+
+
+def build_docs() -> None:
+    """PDFs are copied verbatim; there is nothing useful to re-encode."""
+    src_dir = ASSETS / "docs"
+    if not src_dir.exists():
+        return
+    out_dir = MEDIA / "docs"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for src in sorted(src_dir.glob("*.pdf")):
+        dst = out_dir / f"{slugify(src.name)}.pdf"
+        if newer(src, dst):
+            shutil.copy2(src, dst)
+        docs.append({
+            "id": slugify(src.name),
+            "src": f"/media/docs/{dst.name}",
+            "bytes": dst.stat().st_size,
+        })
+    print(f"  /media/docs: {len(docs)} file(s)")
+
+
 # ---------------------------------------------------------------------------
 # video
 # ---------------------------------------------------------------------------
@@ -264,15 +349,22 @@ def build_videos() -> None:
         mp4 = out_dir / f"{slug}.mp4"
         poster = out_dir / f"{slug}-poster.webp"
 
+        policy = VIDEO_POLICY.get(slug, {})
+        keep_audio = bool(policy.get("audio", False))
+        max_seconds = policy.get("max_seconds", VIDEO_MAX_SECONDS)
+        width = int(policy.get("width", VIDEO_WIDTH))
+
         if newer(src, mp4):
-            # Audio is stripped on purpose: these play as muted background loops,
-            # and dropping the track is most of the size saving. Long clips are
-            # trimmed - a 2:42 master encodes to megabytes no visitor watches.
+            # Audio is stripped by default: the class clips play as muted
+            # background loops, and dropping the track is most of the size
+            # saving. Long clips are trimmed - a 2:42 master encodes to
+            # megabytes no visitor watches. VIDEO_POLICY opts specific clips out.
             src_duration = probe_video(src)[2]
-            cmd = ["ffmpeg", "-v", "error", "-i", str(src), "-an"]
-            if src_duration > VIDEO_MAX_SECONDS * 1.5:
-                cmd += ["-t", str(VIDEO_MAX_SECONDS)]
-            cmd += ["-vf", f"scale={VIDEO_WIDTH}:-2",
+            cmd = ["ffmpeg", "-v", "error", "-i", str(src)]
+            cmd += ["-c:a", "aac", "-b:a", "128k"] if keep_audio else ["-an"]
+            if max_seconds is not None and src_duration > float(max_seconds) * 1.5:
+                cmd += ["-t", str(max_seconds)]
+            cmd += ["-vf", f"scale={width}:-2",
                     "-c:v", "libx264", "-crf", str(VIDEO_CRF), "-preset", "slow",
                     "-pix_fmt", "yuv420p", "-movflags", "+faststart",
                     str(mp4), "-y"]
@@ -327,6 +419,13 @@ export type VideoAsset = {
 };
 
 export type MediaAsset = ImageAsset | VideoAsset;
+
+/** A file offered for download rather than rendered. */
+export type DocAsset = {
+  readonly id: string;
+  readonly src: string;
+  readonly bytes: number;
+};
 """
 
 
@@ -362,10 +461,24 @@ def write_manifest() -> None:
     lines.extend(ts_video(e) + "," for e in videos)
     lines.append("] as const satisfies readonly VideoAsset[];\n")
 
+    lines.append("export const PROJECT_MEDIA = {")
+    for slug, entries in sorted(projects.items()):
+        lines.append(f'  "{slug}": [')
+        lines.extend("  " + ts_image(e) + "," for e in entries)
+        lines.append("  ],")
+    lines.append("} as const satisfies Record<string, readonly ImageAsset[]>;\n")
+
+    lines.append("export const DOCS = [")
+    for d in docs:
+        lines.append(f'  {{ id: "{d["id"]}", src: "{d["src"]}", bytes: {d["bytes"]} }},')
+    lines.append("] as const satisfies readonly DocAsset[];\n")
+
     lines.append("export type PhotoId = (typeof PHOTOS)[number][\"id\"];")
     lines.append("export type PortfolioImageId = (typeof PORTFOLIO_IMAGES)[number][\"id\"];")
     lines.append("export type VideoId = (typeof VIDEOS)[number][\"id\"];")
     lines.append("export type BrandId = keyof typeof BRAND;")
+    lines.append("export type ProjectSlug = keyof typeof PROJECT_MEDIA;")
+    lines.append("export type DocId = (typeof DOCS)[number][\"id\"];")
 
     MANIFEST_TS.write_text("\n".join(lines) + "\n")
     print(f"  manifest: {MANIFEST_TS.relative_to(ROOT)}")
@@ -390,6 +503,8 @@ def main() -> int:
     build_images(ASSETS / "portfolio", MEDIA / "portfolio", "/media/portfolio",
                  {"lg": PORTFOLIO_WIDTH}, portfolio)
     build_videos()
+    build_projects()
+    build_docs()
     write_manifest()
 
     total = sum(f.stat().st_size for f in MEDIA.rglob("*") if f.is_file())

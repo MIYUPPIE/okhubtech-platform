@@ -27,11 +27,18 @@ export type VideoAsset = {
 
 export type MediaAsset = ImageAsset | VideoAsset;
 
+/** A file offered for download rather than rendered. */
+export type DocAsset = {
+  readonly id: string;
+  readonly src: string;
+  readonly bytes: number;
+};
+
 export const BRAND = {
-  "wordmark-light": { kind: "image", id: "wordmark-light", src: "/media/brand/okhub-wordmark-light.png", width: 434, height: 127, thumb: null },
-  "wordmark-dark": { kind: "image", id: "wordmark-dark", src: "/media/brand/okhub-wordmark-dark.png", width: 434, height: 127, thumb: null },
-  "mark-light": { kind: "image", id: "mark-light", src: "/media/brand/okhub-mark-light.png", width: 134, height: 127, thumb: null },
-  "mark-dark": { kind: "image", id: "mark-dark", src: "/media/brand/okhub-mark-dark.png", width: 134, height: 127, thumb: null },
+  "wordmark-light": { kind: "image", id: "wordmark-light", src: "/media/brand/okhub-wordmark-light.png", width: 1039, height: 306, thumb: null },
+  "wordmark-dark": { kind: "image", id: "wordmark-dark", src: "/media/brand/okhub-wordmark-dark.png", width: 1039, height: 306, thumb: null },
+  "mark-light": { kind: "image", id: "mark-light", src: "/media/brand/okhub-mark-light.png", width: 324, height: 306, thumb: null },
+  "mark-dark": { kind: "image", id: "mark-dark", src: "/media/brand/okhub-mark-dark.png", width: 324, height: 306, thumb: null },
   "og": { kind: "image", id: "og", src: "/media/brand/og-image.png", width: 1200, height: 630, thumb: null },
 } as const satisfies Record<string, ImageAsset>;
 
@@ -70,7 +77,7 @@ export const PORTFOLIO_IMAGES = [
   { kind: "image", id: "firefighting-robot", src: "/media/portfolio/firefighting-robot.webp", width: 640, height: 640, thumb: null },
   { kind: "image", id: "hydroponics", src: "/media/portfolio/hydroponics.webp", width: 640, height: 640, thumb: null },
   { kind: "image", id: "iot-home", src: "/media/portfolio/iot-home.webp", width: 640, height: 640, thumb: null },
-  { kind: "image", id: "serving-robot", src: "/media/portfolio/serving-robot.webp", width: 640, height: 640, thumb: null },
+  { kind: "image", id: "serving-robot", src: "/media/portfolio/serving-robot.webp", width: 246, height: 340, thumb: null },
   { kind: "image", id: "sign-language-educator", src: "/media/portfolio/sign-language-educator.webp", width: 640, height: 640, thumb: null },
   { kind: "image", id: "smart-campus", src: "/media/portfolio/smart-campus.webp", width: 640, height: 640, thumb: null },
   { kind: "image", id: "speech-emotion", src: "/media/portfolio/speech-emotion.webp", width: 640, height: 640, thumb: null },
@@ -81,13 +88,48 @@ export const VIDEOS = [
   { kind: "video", id: "actuator-serial-test", src: "/media/video/actuator-serial-test.mp4", poster: "/media/video/actuator-serial-test-poster.webp", width: 640, height: 640, duration: 20.0 },
   { kind: "video", id: "components-workbench", src: "/media/video/components-workbench.mp4", poster: "/media/video/components-workbench-poster.webp", width: 640, height: 640, duration: 20.0 },
   { kind: "video", id: "computer-vision-class", src: "/media/video/computer-vision-class.mp4", poster: "/media/video/computer-vision-class-poster.webp", width: 640, height: 640, duration: 20.0 },
+  { kind: "video", id: "okhub-showreel", src: "/media/video/okhub-showreel.mp4", poster: "/media/video/okhub-showreel-poster.webp", width: 720, height: 720, duration: 55.52 },
   { kind: "video", id: "robotics-training-cohort", src: "/media/video/robotics-training-cohort.mp4", poster: "/media/video/robotics-training-cohort-poster.webp", width: 640, height: 662, duration: 20.0 },
   { kind: "video", id: "school-robotics-class", src: "/media/video/school-robotics-class.mp4", poster: "/media/video/school-robotics-class-poster.webp", width: 640, height: 640, duration: 20.0 },
   { kind: "video", id: "students-actuator-class", src: "/media/video/students-actuator-class.mp4", poster: "/media/video/students-actuator-class-poster.webp", width: 640, height: 640, duration: 4.9 },
   { kind: "video", id: "why-children-learn-tech", src: "/media/video/why-children-learn-tech.mp4", poster: "/media/video/why-children-learn-tech-poster.webp", width: 640, height: 1130, duration: 20.0 },
 ] as const satisfies readonly VideoAsset[];
 
+export const PROJECT_MEDIA = {
+  "health-monitor": [
+    { kind: "image", id: "01-circuit", src: "/media/projects/health-monitor/01-circuit.webp", width: 1248, height: 843, thumb: null },
+    { kind: "image", id: "02-block-diagram", src: "/media/projects/health-monitor/02-block-diagram.webp", width: 1194, height: 577, thumb: null },
+    { kind: "image", id: "03-arduino-flow", src: "/media/projects/health-monitor/03-arduino-flow.webp", width: 702, height: 716, thumb: null },
+    { kind: "image", id: "04-esp8266-flow", src: "/media/projects/health-monitor/04-esp8266-flow.webp", width: 566, height: 696, thumb: null },
+  ],
+  "hydroponics": [
+    { kind: "image", id: "01-schematic", src: "/media/projects/hydroponics/01-schematic.webp", width: 1393, height: 830, thumb: null },
+  ],
+  "serving-robot": [
+    { kind: "image", id: "01-cad-concept", src: "/media/projects/serving-robot/01-cad-concept.webp", width: 767, height: 763, thumb: null },
+    { kind: "image", id: "02-circuit-and-uml", src: "/media/projects/serving-robot/02-circuit-and-uml.webp", width: 600, height: 745, thumb: null },
+    { kind: "image", id: "03-order-flow", src: "/media/projects/serving-robot/03-order-flow.webp", width: 481, height: 703, thumb: null },
+    { kind: "image", id: "04-order-and-chef-pages", src: "/media/projects/serving-robot/04-order-and-chef-pages.webp", width: 400, height: 678, thumb: null },
+    { kind: "image", id: "05-assembled-robot", src: "/media/projects/serving-robot/05-assembled-robot.webp", width: 720, height: 797, thumb: null },
+    { kind: "image", id: "06-cad-assembly", src: "/media/projects/serving-robot/06-cad-assembly.webp", width: 686, height: 770, thumb: null },
+    { kind: "image", id: "07-laser-cut-layout", src: "/media/projects/serving-robot/07-laser-cut-layout.webp", width: 1426, height: 799, thumb: null },
+    { kind: "image", id: "08-esp32-web-firmware", src: "/media/projects/serving-robot/08-esp32-web-firmware.webp", width: 1057, height: 946, thumb: null },
+    { kind: "image", id: "09-motion-firmware", src: "/media/projects/serving-robot/09-motion-firmware.webp", width: 1142, height: 880, thumb: null },
+    { kind: "image", id: "10-navigation-flow", src: "/media/projects/serving-robot/10-navigation-flow.webp", width: 536, height: 736, thumb: null },
+    { kind: "image", id: "11-yoruba-order-form", src: "/media/projects/serving-robot/11-yoruba-order-form.webp", width: 714, height: 943, thumb: null },
+  ],
+  "yoruba-nlp": [
+    { kind: "image", id: "01-lstm-architecture", src: "/media/projects/yoruba-nlp/01-lstm-architecture.webp", width: 1280, height: 720, thumb: null },
+  ],
+} as const satisfies Record<string, readonly ImageAsset[]>;
+
+export const DOCS = [
+  { id: "beginners-guide-to-autonomous-robots", src: "/media/docs/beginners-guide-to-autonomous-robots.pdf", bytes: 1235491 },
+] as const satisfies readonly DocAsset[];
+
 export type PhotoId = (typeof PHOTOS)[number]["id"];
 export type PortfolioImageId = (typeof PORTFOLIO_IMAGES)[number]["id"];
 export type VideoId = (typeof VIDEOS)[number]["id"];
 export type BrandId = keyof typeof BRAND;
+export type ProjectSlug = keyof typeof PROJECT_MEDIA;
+export type DocId = (typeof DOCS)[number]["id"];

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   ActivitySquare,
@@ -269,7 +270,7 @@ const ServicesSection = () => (
               From AI copilots to renewable energy systems, we architect, train, and deploy the core capabilities modern Africa needs to thrive in the Fourth Industrial Revolution.
             </p>
           </div>
-          <a href="/services" className="btn-secondary">Learn More</a>
+          <Link href="/services" className="btn-secondary">Learn More</Link>
         </div>
         <div className="grid gap-5 md:grid-cols-2">
           {serviceCatalog.map((service) => {

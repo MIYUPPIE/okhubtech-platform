@@ -294,6 +294,81 @@ for (const entry of readdirSync(OUT, { withFileTypes: true })) {
   }
 }
 
+// I. Every media file the pages reference was actually exported. The manifest
+//    is generated from assets/, so deleting a master and rebuilding the site
+//    without re-running `npm run media` would leave dead src attributes.
+{
+  const mediaRe = /(?:src|href)="(\/media\/[^"]+)"/g;
+  const missing = new Map();
+  const seen = new Set();
+
+  const htmlFiles = [];
+  const collect = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!entry.name.startsWith(".") && entry.name !== "_next") collect(full);
+      } else if (entry.name.endsWith(".html")) {
+        htmlFiles.push(full);
+      }
+    }
+  };
+  collect(OUT);
+
+  for (const file of htmlFiles) {
+    const html = readFileSync(file, "utf8");
+    for (const match of html.matchAll(mediaRe)) {
+      const ref = match[1];
+      seen.add(ref);
+      if (!existsSync(join(OUT, ref.replace(/^\//, "")))) {
+        const from = missing.get(ref) ?? new Set();
+        from.add(relative(OUT, file) || "index.html");
+        missing.set(ref, from);
+      }
+    }
+  }
+
+  // Route handlers export JSON, not HTML, so asset paths inside them are
+  // invisible to the sweep above. The whole portfolio index broke this way:
+  // out/api/portfolio still served /portfolio/*.png after those files moved.
+  const dataFiles = [];
+  const collectData = (dir) => {
+    if (!existsSync(dir)) return;
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) collectData(full);
+      else if (!/\.(html|js|css|map|png|jpe?g|webp|avif|svg|ico|mp4|webm|woff2?|pdf)$/i.test(entry.name)) {
+        dataFiles.push(full);
+      }
+    }
+  };
+  collectData(join(OUT, "api"));
+
+  const pathRe = /"(\/[A-Za-z0-9._\/-]+\.(?:webp|png|jpe?g|avif|svg|mp4|webm|pdf))"/g;
+  for (const file of dataFiles) {
+    const body = readFileSync(file, "utf8");
+    for (const match of body.matchAll(pathRe)) {
+      const ref = match[1];
+      seen.add(ref);
+      if (!existsSync(join(OUT, ref.replace(/^\//, "")))) {
+        const from = missing.get(ref) ?? new Set();
+        from.add(relative(OUT, file));
+        missing.set(ref, from);
+      }
+    }
+  }
+
+  for (const [ref, from] of [...missing].sort()) {
+    fail(
+      "I: referenced media file was not exported",
+      `${ref} is referenced by ${[...from].slice(0, 3).join(", ")} - re-run \`npm run media\``,
+    );
+  }
+  if (missing.size === 0 && seen.size > 0) {
+    notes.push(`all ${seen.size} referenced media files are present`);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------

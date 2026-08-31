@@ -85,6 +85,10 @@ directory somehow ends up without an `index.html` again, the server returns
   ship eight: `/programs`, `/partners`, `/store`, `/enroll`, `/research`,
   `/publications`, `/cart`, and a `/services/undefined` produced by a service
   title missing from the slug map
+- **I** a referenced media file that was never exported. This scans exported
+  JSON as well as HTML: route handlers emit JSON, so `out/api/portfolio` kept
+  serving `/portfolio/*.png` after those files moved, and every thumbnail on
+  the portfolio index broke without a single HTML reference being wrong
 
 ## Deploy
 
@@ -155,11 +159,24 @@ Selector) rather than this static export.
 
 ```
 assets/photos/         24 phone photos of real builds (33MB of masters)
-assets/portfolio/      12 project images
-assets/video/          7 training clips (56MB of masters)
-assets/brand/          okhub.png, the 500x500 logo master
+assets/portfolio/      12 project card images
+assets/video/          8 clips: 7 class recordings + the branded showreel
+assets/brand/          okhub-1080.png (primary), okhub.png, okhub-3d-alt.png
+assets/projects/       engineering artefacts, one folder per project
+assets/docs/           PDFs offered as downloads
 assets/illustrations/  parked, see below
 ```
+
+`assets/projects/<slug>/` holds the build files behind a portfolio page:
+schematics, flowcharts, CAD renders, firmware screenshots, build photos. They
+are line art on white, so they are encoded at a wider ceiling (1600px) and a
+much higher quality floor (92) than photographs, flattened onto white so they
+do not render as black-on-black under the dark theme, and never cropped.
+
+**Name the master after what it actually shows.** The first pass named these
+files from a contact sheet and got six of eleven wrong, so the serving robot
+page captioned a laser-cutter screenshot as "parts before assembly" and the
+firmware as "structural frame". Open the file, then name it.
 
 `npm run media` (`scripts/build_media.py`) turns those into `public/media/`:
 

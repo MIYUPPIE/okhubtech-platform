@@ -70,7 +70,7 @@ const AboutSection = () => (
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 text-white">
           <p className="text-sm font-semibold uppercase tracking-widest text-white/80">In the room</p>
-          <p className="mt-2 font-display text-2xl sm:text-4xl">Building Africa's Future, Today.</p>
+          <p className="mt-2 font-display text-2xl sm:text-4xl">Building Africa&rsquo;s Future, Today.</p>
         </div>
       </div>
 

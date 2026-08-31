@@ -69,6 +69,7 @@ export function MediaFrame({
           className={className}
           sizes={sizes}
           ratio={ratio}
+          priority={priority}
         />
       );
 
@@ -84,13 +85,14 @@ type PlayableVideoProps = {
   readonly className: string;
   readonly sizes: string;
   readonly ratio: string;
+  readonly priority: boolean;
 };
 
 /**
  * Poster until asked. Nothing here autoplays: these clips carry burned-in
  * captions and are meant to be watched, not used as wallpaper.
  */
-function PlayableVideo({ item, className, sizes, ratio }: PlayableVideoProps) {
+function PlayableVideo({ item, className, sizes, ratio, priority }: PlayableVideoProps) {
   const [playing, setPlaying] = useState(false);
   const { asset, alt, caption } = item;
 
@@ -116,7 +118,14 @@ function PlayableVideo({ item, className, sizes, ratio }: PlayableVideoProps) {
           className="absolute inset-0 h-full w-full cursor-pointer"
           aria-label={`Play: ${alt}`}
         >
-          <Image src={asset.poster} alt={alt} fill sizes={sizes} className="object-cover" />
+          <Image
+            src={asset.poster}
+            alt={alt}
+            fill
+            sizes={sizes}
+            priority={priority}
+            className="object-cover"
+          />
           <span className="absolute inset-0 bg-black/25 transition group-hover:bg-black/10" />
           <span
             className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/55 backdrop-blur transition group-hover:scale-110"

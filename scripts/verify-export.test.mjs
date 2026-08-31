@@ -264,6 +264,8 @@ test(
   "asset links are not treated as pages",
   (root) => {
     goodExport(root);
+    // check I also inspects /media/ references, so the file has to exist
+    write(join(root, "out"), "media/video/clip.mp4", "ftyp");
     write(
       join(root, "out"),
       "index.html",
@@ -273,6 +275,68 @@ test(
         '<a href="/api/impact">data</a>' +
         "x".repeat(3000) +
         "</body></html>",
+    );
+  },
+  { code: 0 },
+);
+
+test(
+  "a referenced media file that was never exported is rejected",
+  (root) => {
+    goodExport(root);
+    write(
+      join(root, "out"),
+      "index.html",
+      '<!DOCTYPE html><html><body><img src="/media/photos/gone.webp">' +
+        '<a href="/services/">Services</a>' +
+        "x".repeat(3000) +
+        "</body></html>",
+    );
+  },
+  { code: 1, contains: ["referenced media file was not exported", "gone.webp"] },
+);
+
+test(
+  "a referenced media file that exists passes",
+  (root) => {
+    goodExport(root);
+    write(join(root, "out"), "media/photos/real.webp", "RIFF");
+    write(
+      join(root, "out"),
+      "index.html",
+      '<!DOCTYPE html><html><body><img src="/media/photos/real.webp">' +
+        '<a href="/services/">Services</a>' +
+        "x".repeat(3000) +
+        "</body></html>",
+    );
+  },
+  { code: 0 },
+);
+
+test(
+  "an asset path inside an exported API route is checked too",
+  (root) => {
+    goodExport(root);
+    // Route handlers export JSON with no extension; the HTML sweep cannot see
+    // these, which is how every portfolio thumbnail broke.
+    write(
+      join(root, "out"),
+      "api/portfolio",
+      '[{"id":1,"image":"/portfolio/gone.png"}]',
+    );
+  },
+  { code: 1, contains: ["referenced media file was not exported", "gone.png"] },
+);
+
+test(
+  "a valid asset path inside an exported API route passes",
+  (root) => {
+    goodExport(root);
+    write(join(root, "out"), "media/portfolio/real.webp", "RIFF");
+    write(
+      join(root, "out"),
+      "api/portfolio",
+      '[{"id":1,"image":"/media/portfolio/real.webp"}]',
     );
   },
   { code: 0 },
