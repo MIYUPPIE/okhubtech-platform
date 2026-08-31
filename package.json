@@ -4,23 +4,54 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "prebuild": "node scripts/clean-out.mjs",
+    "build": "next build && npm run verify:export",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node scripts/verify-export.test.mjs",
+    "verify:export": "node scripts/verify-export.mjs",
+    "verify:live": "node scripts/verify-live.mjs",
+    "deploy:pack": "npm run build && node scripts/pack-deploy.mjs",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^1.6.0",
+    "@prisma/client": "^5.22.0",
+    "@react-three/fiber": "^9.4.2",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.5.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.18.1",
+    "lucide-react": "^0.468.0",
+    "next": "16.0.1",
+    "next-auth": "5.0.0-beta.30",
+    "next-themes": "^0.4.6",
+    "nodemailer": "^7.0.11",
+    "paystack": "^2.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "next": "16.0.1"
+    "resend": "^4.0.0",
+    "sqlite3": "^5.1.7",
+    "stripe": "^16.6.0",
+    "tailwind-merge": "^3.5.0",
+    "three": "^0.170.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.15",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "@types/three": "^0.183.1",
     "eslint": "^9",
-    "eslint-config-next": "16.0.1"
+    "eslint-config-next": "16.0.1",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.19.1",
+    "typescript": "^5"
   }
 }

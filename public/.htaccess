@@ -1,0 +1,109 @@
+# ---------------------------------------------------------------------------
+# okhubtech.com - static Next.js export served by LiteSpeed / Apache (cPanel)
+#
+# Source of truth: public/.htaccess in the repo. Next copies public/ into out/
+# on build, and scripts/deploy-check.sh verifies it landed. Do not hand-edit
+# this file on the server - the next deploy overwrites it.
+#
+# Every block is wrapped in <IfModule> so a host missing a module degrades
+# instead of returning 500 for the whole site.
+# ---------------------------------------------------------------------------
+
+# --- Directory handling ----------------------------------------------------
+# The export writes every route as <route>/index.html (next.config.ts sets
+# trailingSlash: true), so a directory request must resolve to index.html.
+DirectoryIndex index.html
+
+# Never serve an autoindex listing. Without this, any directory that ends up
+# without an index.html leaks its contents (this is exactly what happened when
+# trailingSlash was off and only the RSC .txt payloads lived in the directory).
+<IfModule mod_autoindex.c>
+  Options -Indexes
+</IfModule>
+
+# Next exports the 404 route to /404.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Canonical scheme: force HTTPS. The second condition keeps this from looping
+  # if the site is ever moved behind a TLS-terminating proxy.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Canonical host: apex, matching metadataBase / SITE_URL in the app.
+  # Drop this block if www should be canonical instead.
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# --- Caching ---------------------------------------------------------------
+<IfModule mod_headers.c>
+  # Content-hashed build assets: safe to cache forever.
+  <FilesMatch "\.(js|css|woff2|woff|ttf|otf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # HTML and the RSC payloads that pair with it must revalidate together.
+  # If the .txt payloads go stale while the HTML is fresh, client-side
+  # navigation renders the previous deploy's content.
+  <FilesMatch "\.(html|txt|xml|json)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  <FilesMatch "\.(png|jpe?g|gif|svg|webp|avif|ico|mp4|webm)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+
+  # --- Security headers ---
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  # HSTS is intentionally OFF by default: once a browser sees a 1-year
+  # max-age it refuses plain HTTP for that domain until it expires, which is
+  # not something you can undo by editing this file. Enable only when you are
+  # sure every subdomain has a valid certificate.
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# --- Compression -----------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- MIME types ------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType application/javascript            .js .mjs
+  AddType text/css                          .css
+  AddType image/svg+xml                     .svg
+  AddType image/webp                        .webp
+  AddType image/avif                        .avif
+  AddType font/woff2                        .woff2
+  AddType application/manifest+json         .webmanifest
+  AddDefaultCharset UTF-8
+</IfModule>
+
+# --- Static JSON exported by app/api/*/route.ts -----------------------------
+# `output: 'export'` writes these as extensionless files (out/api/impact,
+# out/api/portfolio), so the server has no extension to infer a type from.
+# fetch().json() parses them regardless, but sending the right type is correct
+# and keeps them compressible.
+<IfModule mod_mime.c>
+  <FilesMatch "^(impact|portfolio)$">
+    ForceType application/json
+  </FilesMatch>
+</IfModule>
+
+# --- Block source / config files that should never be public ---------------
+<IfModule mod_authz_core.c>
+  <FilesMatch "^(\.env.*|\.git.*|.*\.tsx|.*\.ts|package(-lock)?\.json|tsconfig\.json|.*\.md)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>

@@ -1,0 +1,733 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import ContactSection from "@/components/ContactSection";
+
+const accentFallback = "from-[var(--gold-primary)] via-[#ff8a1f] to-[#ffd166]";
+
+type Highlight = {
+  label: string;
+  value: string;
+  caption: string;
+};
+
+type Section = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  bullets: string[];
+};
+
+type Spotlight = {
+  title: string;
+  description: string;
+  items: { title: string; detail: string }[];
+};
+
+type CaseStudy = {
+  title: string;
+  sector: string;
+  impact: string;
+  summary: string;
+};
+
+type Resource = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
+
+type ContactBlock = {
+  title: string;
+  detail: string;
+  meta: string;
+};
+
+type PageContent = {
+  badge: string;
+  title: string;
+  description: string;
+  accent?: string;
+  highlights: Highlight[];
+  sections: Section[];
+  spotlight?: Spotlight;
+  caseStudies?: CaseStudy[];
+  resources?: Resource[];
+  contactBlocks?: ContactBlock[];
+  cta?: { label: string; href: string };
+};
+
+const pageContent: Record<string, PageContent> = {
+  about: {
+    badge: "About OKHub",
+    title: "Building Africa's sovereign 4IR operating system.",
+    description:
+      "We are a pan-African skunkworks bridging research, venture studios, and public infrastructure to deliver climate-resilient, economically sovereign technologies for the continent.",
+    accent: "from-[var(--gold-primary)] via-[#f97316] to-[#ffcd5a]",
+    highlights: [
+      {
+        label: "Innovation Districts",
+        value: "12",
+        caption: "Living labs across Lagos, Kigali, Nairobi, Accra, Cairo, and Johannesburg.",
+      },
+      {
+        label: "Partner Organizations",
+        value: "180+",
+        caption: "Governments, DFIs, OEMs, universities, venture studios, and philanthropies.",
+      },
+      {
+        label: "Talent Network",
+        value: "48K",
+        caption: "Engineers, product strategists, researchers, and creative technologists.",
+      },
+    ],
+    sections: [
+      {
+        eyebrow: "Mandate",
+        title: "A pan-African 4IR compact",
+        description:
+          "OKHub convenes sovereign capital, policy leaders, and frontier builders to ship initiatives that absorb global IP, retain value on the continent, and export African design intelligence.",
+        bullets: [
+          "Localized playbooks for coastal, Sahelian, and peri-urban markets.",
+          "Shared venture studio to convert research breakthroughs into fundable businesses.",
+          "Predictive data engines supporting resilient government decision-making.",
+        ],
+      },
+      {
+        eyebrow: "Operating Model",
+        title: "Studios, labs, and field teams",
+        description:
+          "Cross-functional squads blend strategy partners, design researchers, engineers, and growth operators who remain embedded until the initiative hits its KPI gate.",
+        bullets: [
+          "Country pods orchestrate delivery across policy, talent, and infrastructure lenses.",
+          "Methodology spans discovery, co-design, deployment, and in-market stabilization phases.",
+          "Impact instrumentation ties every sprint to economic inclusion and climate metrics.",
+        ],
+      },
+      {
+        eyebrow: "Leadership",
+        title: "Accountability with board-level governance",
+        description:
+          "An independent governing council spanning public, private, and civic leaders approves investment theses, program charters, and ESG guardrails.",
+        bullets: [
+          "Quarterly stewardship reviews and continent-wide listening tours.",
+          "Diversity mandate ensures women-led and youth-led organizations sit in every workstream.",
+          "Transparent reporting dashboard connected to our Prisma-powered admin studio.",
+        ],
+      },
+    ],
+    spotlight: {
+      title: "Continental innovation lanes",
+      description:
+        "Each lane blends policy, technology, and financing vehicles to accelerate regional competitiveness.",
+      items: [
+        { title: "Sovereign Tech", detail: "Cyber-physical infrastructure, energy grids, satellite, and agro supply chains." },
+        { title: "GovTech", detail: "Citizen services, revenue automation, and data-driven public safety stacks." },
+        { title: "Civic Infrastructure", detail: "Learning cities, community labs, and digital public goods." },
+        { title: "Capital & Climate", detail: "Climate adaptation ventures, catalytic funds, and blended finance vehicles." },
+      ],
+    },
+    cta: { label: "Explore services", href: "/services" },
+  },
+  services: {
+    badge: "Offerings",
+    title: "Advisory, build, and managed services for bold African transformations.",
+    description:
+      "From blueprint to deployment, we help governments, enterprises, and ecosystem builders design resilient 4IR programs that deliver measurable returns.",
+    accent: "from-[#ff6f61] via-[#ffb347] to-[#ffd700]",
+    highlights: [
+      {
+        label: "Advisory Playbooks",
+        value: "30+",
+        caption: "Sector-specific compasses for energy, health, mobility, fintech, and creative economies.",
+      },
+      {
+        label: "Delivery Studios",
+        value: "8",
+        caption: "Cross-border teams pairing strategists, engineers, creatives, and growth operators.",
+      },
+      {
+        label: "Support Cycles",
+        value: "18 weeks",
+        caption: "Average time from discovery to operational pilot in market.",
+      },
+    ],
+    sections: [
+      {
+        eyebrow: "Strategy",
+        title: "Boardroom-to-ground advisory",
+        description:
+          "We translate national digital economy goals into pragmatic roadmaps while structuring financing, partnerships, and procurement vehicles.",
+        bullets: [
+          "4IR readiness audits layered with climate, gender, and youth lenses.",
+          "Policy sandboxes and regulatory architecture to unlock frontier sectors.",
+          "Capital stack design including sovereign funds, DFIs, and venture vehicles.",
+        ],
+      },
+      {
+        eyebrow: "Delivery",
+        title: "Integrated build partners",
+        description:
+          "Product, data, and engineering teams stay embedded through co-design, prototyping, deployment, and capability transfer.",
+        bullets: [
+          "Experience labs, digital twins, and immersive simulations to de-risk execution.",
+          "Interoperable architectures built on modern DevOps, security, and observability standards.",
+          "Capacity building programs and workforce academies to sustain operations locally.",
+        ],
+      },
+      {
+        eyebrow: "Managed Services",
+        title: "Run + evolve",
+        description:
+          "OKHub maintains uptime SLAs, delivers continuous optimization, and plugs in specialist squads for advanced analytics, AI, or commercialization.",
+        bullets: [
+          "Command centers with live impact telemetry.",
+          "24/7 support pods covering product, infra, and citizen engagement.",
+          "Venture commercialization, licensing, and export pathways.",
+        ],
+      },
+    ],
+    spotlight: {
+      title: "Engagement flow",
+      description: "A transparent pipeline keeps every stakeholder aligned from intake to scale.",
+      items: [
+        { title: "Discovery", detail: "Immersive fieldwork, ethnography, and data digestion." },
+        { title: "Design", detail: "Experience mapping, architecture decisions, and investment gating." },
+        { title: "Build", detail: "Agile delivery, QA automation, and site-readiness orchestration." },
+        { title: "Transfer", detail: "Capability academies, documentation, and runbooks for local teams." },
+      ],
+    },
+    resources: [
+      { label: "Download service catalog", href: "/contact" },
+      { label: "Request executive briefing", href: "/contact" },
+    ],
+    cta: { label: "Book a strategy call", href: "/contact" },
+  },
+  portfolio: {
+    badge: "Case Studies",
+    title: "Flagship programs proving Africa's 4IR advantage.",
+    description:
+      "Our portfolio spans sovereign infrastructure, cultural economies, and industrial transformation initiatives already live across the continent.",
+    highlights: [
+      {
+        label: "Flagship Deployments",
+        value: "26",
+        caption: "From digital public infrastructure to carbon-negative industrial corridors.",
+      },
+      {
+        label: "Capital Mobilized",
+        value: "$420M",
+        caption: "Blended finance spanning sovereign, catalytic, and private vehicles.",
+      },
+      {
+        label: "Communities Impacted",
+        value: "2.1M",
+        caption: "Entrepreneurs, civil servants, students, and creative workers.",
+      },
+    ],
+    sections: [
+      {
+        eyebrow: "Proof points",
+        title: "From prototype to continental scale",
+        description:
+          "We build for radical practicality—programs only graduate when they show economic uplift and resilience across multiple states.",
+        bullets: [
+          "Climate-positive manufacturing corridors spanning West and East Africa.",
+          "Creative economy pipelines exporting African IP globally.",
+          "GovTech stacks digitizing permitting, licensing, and civic participation.",
+        ],
+      },
+      {
+        eyebrow: "How we measure",
+        title: "Impact telemetry",
+        description:
+          "Our admin dashboard tracks financial, social, and environmental indicators per program, enabling radical accountability.",
+        bullets: [
+          "Impact-weighted scorecards tied to SDGs and Agenda 2063.",
+          "Net-new job creation, inclusion, and gender metrics per cohort.",
+          "Open data rooms for investors and regulators.",
+        ],
+      },
+    ],
+    caseStudies: [
+      {
+        title: "Infinite Rail",
+        sector: "Logistics + Mobility",
+        impact: "32% reduction in inland freight timelines",
+        summary:
+          "A rail automation initiative built with West African transport authorities, featuring predictive maintenance, smart ports, and customs integrations.",
+      },
+      {
+        title: "Nile BioCities",
+        sector: "Green Manufacturing",
+        impact: "150MW renewable micro-grids over five sites",
+        summary:
+          "Circular manufacturing zones activating biotech, agro-processing, and climate innovation with blended finance.",
+      },
+      {
+        title: "Afroverse Campus",
+        sector: "Creative Economy",
+        impact: "65 creative ventures accelerated, 40% led by women",
+        summary:
+          "Immersive media studio, digital fashion lab, and Web3 licensing stack powering cultural exports.",
+      },
+    ],
+    cta: { label: "Discuss a pilot", href: "/contact" },
+  },
+  contact: {
+    badge: "Partner with OKHub",
+    title: "Every conversation starts with ambition, data, and discretion.",
+    description:
+      "Share the mission, urgency, and constraints—our concierge team orchestrates the right studio within hours and protects your confidentiality end-to-end.",
+    accent: "from-[#00c6ff] via-[#0072ff] to-[var(--gold-primary)]",
+    highlights: [
+      { label: "Response Window", value: "<12h", caption: "Dedicated intake leads triage strategic opportunities around the clock." },
+      { label: "HQ", value: "Abuja", caption: "Continental nerve center with satellites in Lagos, Kigali, Nairobi, and Cape Town." },
+      { label: "Regional Studios", value: "6", caption: "Localized pods align with ECOWAS, EAC, SADC, Maghreb, and diaspora corridors." },
+    ],
+    sections: [
+      {
+        eyebrow: "Concierge",
+        title: "Embassy-level handling",
+        description:
+          "Briefings route through a secure CRM, legal intake, and senior partner review. We coordinate NDAs, analysts, and domain experts before the first workshop.",
+        bullets: [
+          "Encrypted data rooms and red-team verification for sensitive bids.",
+          "Same-week immersion sessions hosted virtually or on-site.",
+          "Single point of contact throughout diligence and execution.",
+        ],
+      },
+      {
+        eyebrow: "What to include",
+        title: "Help us move faster",
+        description:
+          "Outline the mission, market, stakeholders, and existing constraints. Attach briefings, decks, or RFPs when possible.",
+        bullets: [
+          "Desired impact metrics and policy mandates.",
+          "Budget envelopes, funding sources, and decision timelines.",
+          "Known partners, vendors, or civic actors already involved.",
+        ],
+      },
+    ],
+    contactBlocks: [
+      { title: "Enterprise & Public Sector", detail: "partners@okhub.tech", meta: "Programs $5M+ or national mandates." },
+      { title: "Investors & DFIs", detail: "capital@okhub.tech", meta: "Blended finance, venture spin-outs, project finance." },
+      { title: "Media & Speaking", detail: "press@okhub.tech", meta: "Keynotes, studio tours, brand collaborations." },
+      { title: "Careers", detail: "talent@okhub.tech", meta: "Residencies, fellowships, specialist call-ups." },
+    ],
+    resources: [
+      { label: "Download media kit", href: "https://okhub.tech/media-kit", external: true },
+      { label: "Request NDA", href: "mailto:legal@okhub.tech", external: true },
+    ],
+    cta: { label: "Email hello@okhub.tech", href: "mailto:hello@okhub.tech" },
+  },
+  ai: {
+    badge: "AI & ML Studio",
+    title: "From policy-aligned AI roadmaps to sovereign LLM deployment.",
+    description:
+      "We craft localized models, evaluation harnesses, and operating standards that respect African data residency, language diversity, and cultural nuance.",
+    accent: "from-[#7f00ff] via-[#e100ff] to-[#ff8c37]",
+    highlights: [
+      { label: "Custom LLMs", value: "9", caption: "Arabic, Hausa, Kiswahili, Amharic, Yoruba, and French corpora." },
+      { label: "Edge Sites", value: "42", caption: "AI workloads tuned for hospitals, ports, and mini-grid deployments." },
+      { label: "Responsible AI", value: "100%", caption: "Scorecards covering governance, bias, and audit readiness." },
+    ],
+    sections: [
+      {
+        eyebrow: "Strategy",
+        title: "AI readiness sprints",
+        description:
+          "Policy, data, and infra assessments feed a prioritized backlog spanning copilots, automation, and citizen-facing services.",
+        bullets: [
+          "AI governance charters aligned with continental data policies.",
+          "Capability academies for executives, product teams, and regulators.",
+          "Vendor and open-source stack assessments with TCO modeling.",
+        ],
+      },
+      {
+        eyebrow: "Build",
+        title: "Model engineering",
+        description:
+          "Our ML engineers fine-tune foundation models, build retrieval pipelines, and wire evaluation harnesses for mission-critical use cases.",
+        bullets: [
+          "Domain-adapted LLMs with Guardrails + policy enforcement.",
+          "Speech, vision, and geospatial models for defense, agri, and health.",
+          "Automated evaluation labs with red-teaming and audit trails.",
+        ],
+      },
+      {
+        eyebrow: "Operate",
+        title: "MLOps & assurance",
+        description:
+          "We deploy observability, drift detection, and continuous training loops while keeping data sovereign and secure.",
+        bullets: [
+          "Hybrid cloud, sovereign cloud, and offline-capable options.",
+          "Operational playbooks for regulators and compliance officers.",
+          "Cyber, privacy, and ethics review boards chaired by OKHub.",
+        ],
+      },
+    ],
+    spotlight: {
+      title: "Delivery accelerators",
+      description: "Reusable assets cut launch timelines by half.",
+      items: [
+        { title: "ModelOps control plane", detail: "Opinionated pipelines for training, evaluation, and approvals." },
+        { title: "Multilingual data engine", detail: "Curated corpora across dialects, sectors, and civic datasets." },
+        { title: "AI assurance toolkit", detail: "Bias, fairness, privacy, and safety test suites." },
+        { title: "Edge deployment kits", detail: "Ruggedized hardware + offline orchestration." },
+      ],
+    },
+    resources: [
+      { label: "AI readiness checklist", href: "/contact" },
+      { label: "Book an AI deep-dive", href: "/contact" },
+    ],
+    cta: { label: "Engage AI architects", href: "/contact" },
+  },
+  data: {
+    badge: "Data Science",
+    title: "Mission-critical intelligence, observability, and policy dashboards.",
+    description:
+      "We harmonize fragmented datasets, ship predictive models, and design executive-grade decision rooms for public and private sector clients.",
+    accent: "from-[#00b09b] via-[#96c93d] to-[var(--gold-primary)]",
+    highlights: [
+      { label: "Data Lakes", value: "14", caption: "National and enterprise data estates unified with governance." },
+      { label: "Real-time Pipelines", value: "280+", caption: "Telemetry across energy, mobility, finance, and civic services." },
+      { label: "Policy Dashboards", value: "35", caption: "Cabinet-ready insights with scenario planning." },
+    ],
+    sections: [
+      {
+        eyebrow: "Foundation",
+        title: "Modern data estates",
+        description:
+          "We inventory legacy systems, harmonize schemas, and deploy governance frameworks with lineage, quality, and access controls.",
+        bullets: [
+          "Data mesh architectures with federated governance.",
+          "Metadata catalogs and privacy engineering baked into pipelines.",
+          "Cloud, hybrid, or sovereign deployments with disaster recovery.",
+        ],
+      },
+      {
+        eyebrow: "Intelligence",
+        title: "Applied analytics",
+        description:
+          "Economists, quants, and behavioral scientists co-build models that power credit systems, pricing, and strategic planning.",
+        bullets: [
+          "Time-series, geospatial, and agent-based simulations.",
+          "Risk, ESG, and inclusion scoring linked to policy incentives.",
+          "Embedded decision-support apps for operators and citizens.",
+        ],
+      },
+      {
+        eyebrow: "Activation",
+        title: "Command rooms",
+        description:
+          "Immersive data theaters fuse large displays, tactile interfaces, and mixed reality overlays for executives and field teams.",
+        bullets: [
+          "Digital twins of cities, ports, and utilities.",
+          "Playbooks for crisis management, election readiness, and capital deployment.",
+          "Upskilling academies for analysts, controllers, and ministers.",
+        ],
+      },
+    ],
+    resources: [
+      { label: "See data playbooks", href: "/portfolio" },
+      { label: "Request reference architecture", href: "/contact" },
+    ],
+    cta: { label: "Design an intelligence stack", href: "/contact" },
+  },
+  web: {
+    badge: "Web Engineering",
+    title: "Luxury-grade digital products with African aesthetics and reliability.",
+    description:
+      "We craft omni-channel experiences, commerce ecosystems, and digital public services that feel cinematic, performant, and trustworthy.",
+    accent: "from-[#1d976c] via-[#93f9b9] to-[var(--gold-primary)]",
+    highlights: [
+      { label: "Experience Blueprints", value: "50+", caption: "User journeys crafted for citizen, enterprise, and culture brands." },
+      { label: "Performance", value: "<1s", caption: "Median load time across core experiences on 3G networks." },
+      { label: "Accessibility", value: "AA+", caption: "Inclusive standards across language, ability, and connectivity." },
+    ],
+    sections: [
+      {
+        eyebrow: "Product Vision",
+        title: "Narratives, systems, and craft",
+        description:
+          "Strategy partners translate brand purpose or public mandate into modular design languages, content systems, and experimentation roadmaps.",
+        bullets: [
+          "Design research across multiple cities and diasporas.",
+          "Component libraries with localization, dark mode, and offline states.",
+          "Content ops with storytelling, editorial governance, and immersive media.",
+        ],
+      },
+      {
+        eyebrow: "Engineering",
+        title: "Full-stack delivery",
+        description:
+          "We build with Next.js, edge networks, headless CMS, and composable commerce while integrating legacy or sovereign systems.",
+        bullets: [
+          "Streaming, personalization, and AI-assisted customer journeys.",
+          "DevSecOps, automated testing, and observability baked in.",
+          "VR/AR extensions, voice interfaces, and immersive retail.",
+        ],
+      },
+      {
+        eyebrow: "Growth",
+        title: "Lifecycle operations",
+        description:
+          "Cross-functional pods manage experimentation, SEO, performance marketing, and community activation.",
+        bullets: [
+          "Experimentation pipelines with analytics and CRM integration.",
+          "Commerce ops: payments, logistics, local compliance.",
+          "Playbooks for ambassadors, creators, and loyalty ecosystems.",
+        ],
+      },
+    ],
+    resources: [
+      { label: "View flagship builds", href: "/portfolio" },
+      { label: "Brief the studio", href: "/contact" },
+    ],
+    cta: { label: "Launch a digital flagship", href: "/contact" },
+  },
+  robotics: {
+    badge: "Robotics & Intelligent Hardware",
+    title: "Automation built for African terrain, industries, and civic needs.",
+    description:
+      "From agritech to defense, we prototype, test, and deploy rugged hardware integrated with AI, IoT, and cloud orchestration.",
+    accent: "from-[#0f2027] via-[#203a43] to-[#2c5364]",
+    highlights: [
+      { label: "Field Pilots", value: "68", caption: "Across agriculture, mining, healthcare, and mobility." },
+      {
+        label: "Manufacturing Partners",
+        value: "22",
+        caption: "Local fabs, OEM alliances, and rapid prototyping labs.",
+      },
+      { label: "Autonomy Stack", value: "Level 4", caption: "Mission planning, sensor fusion, and control systems." },
+    ],
+    sections: [
+      {
+        eyebrow: "Discovery",
+        title: "Terrain-aware research",
+        description:
+          "We co-create with field operators to understand payload, power, and connectivity constraints before a single chassis is welded.",
+        bullets: [
+          "On-site diagnostics across farms, factories, and ports.",
+          "Safety, compliance, and export-readiness reviews.",
+          "Supply chain modeling for components and servicing.",
+        ],
+      },
+      {
+        eyebrow: "Engineering",
+        title: "Robotics stack",
+        description:
+          "Electrical, mechanical, and software teams iterate on digital twins before fabricating modular hardware ready for harsh environments.",
+        bullets: [
+          "Navigation, perception, and manipulation systems tuned to local conditions.",
+          "Interchangeable payloads for inspection, delivery, and manufacturing.",
+          "Secure command centers with live teleoperation capabilities.",
+        ],
+      },
+      {
+        eyebrow: "Commercialization",
+        title: "Scale and sustain",
+        description:
+          "We secure certifications, structure service models, and train technicians through OKHub academies and partner universities.",
+        bullets: [
+          "Financing models including leasing, PPPs, and revenue share.",
+          "Field maintenance networks and spare-part logistics.",
+          "Export playbooks for other emerging markets.",
+        ],
+      },
+    ],
+    spotlight: {
+      title: "Reference deployments",
+      description: "Sample missions currently in production.",
+      items: [
+        { title: "Agro Swarm", detail: "Autonomous planters, soil analytics, and drone scouting for climate-smart farms." },
+        { title: "Sentry Grid", detail: "Border security and emergency response rovers with mesh comms." },
+        { title: "MedExpress", detail: "Cold-chain delivery bots servicing peri-urban clinics." },
+        { title: "Atlas Mine", detail: "Inspection and haulage robotics operating 24/7 in subterranean environments." },
+      ],
+    },
+    resources: [
+      { label: "Download hardware spec", href: "/contact" },
+      { label: "Tour the mechatronics lab", href: "/contact" },
+    ],
+    cta: { label: "Prototype with OKHub", href: "/contact" },
+  },
+};
+
+type PageKey = keyof typeof pageContent;
+
+type PageParams = {
+  params: Promise<{
+    page: string;
+  }>;
+};
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return (Object.keys(pageContent) as PageKey[]).map((page) => ({ page }));
+}
+
+export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+  const resolvedParams = await params;
+  const config = pageContent[resolvedParams.page as PageKey];
+  if (!config) {
+    return {};
+  }
+
+  return {
+    title: `${config.title} | OKHub`,
+    description: config.description,
+  };
+}
+
+const MarketingPage = async ({ params }: PageParams) => {
+  const resolvedParams = await params;
+  const config = pageContent[resolvedParams.page as PageKey];
+
+  if (!config) {
+    notFound();
+  }
+
+  return (
+    <main className="space-y-16 bg-gradient-to-b from-black via-[#050505] to-black pb-24 pt-12 text-white">
+      <section className="container-default section-shell space-y-6">
+        <span className={`inline-flex w-fit items-center rounded-full px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/70 bg-gradient-to-r ${config.accent ?? accentFallback}`}>
+          {config.badge}
+        </span>
+        <h1 className="max-w-4xl font-display text-4xl leading-tight text-white md:text-5xl">
+          {config.title}
+        </h1>
+        <p className="max-w-3xl text-lg text-white/70">{config.description}</p>
+        {config.cta && (
+          <Link href={config.cta.href} className="btn-primary w-fit">
+            {config.cta.label}
+          </Link>
+        )}
+      </section>
+
+      <section className="container-default">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {config.highlights.map((highlight) => (
+            <div key={highlight.label} className="rounded-3xl border border-white/10 bg-white/5 px-6 py-6 backdrop-blur">
+              <p className="text-xs uppercase tracking-[0.3em] text-white/60">{highlight.label}</p>
+              <p className="mt-3 font-display text-3xl text-white">{highlight.value}</p>
+              <p className="mt-2 text-sm text-white/70">{highlight.caption}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="container-default space-y-10">
+        {config.sections.map((section) => (
+          <div key={section.title} className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.3em] text-white/50">{section.eyebrow}</p>
+            <h2 className="mt-3 font-display text-2xl text-white">{section.title}</h2>
+            <p className="mt-3 text-white/70">{section.description}</p>
+            <ul className="mt-4 space-y-2 text-white/80">
+              {section.bullets.map((bullet) => (
+                <li key={bullet} className="flex items-start gap-3">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[var(--gold-primary)]" />
+                  <span>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      {config.spotlight && (
+        <section className="container-default">
+          <div className="grid gap-6 rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-8 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-white/60">Spotlight</p>
+              <h3 className="mt-3 font-display text-3xl text-white">{config.spotlight.title}</h3>
+              <p className="mt-3 text-white/70">{config.spotlight.description}</p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {config.spotlight.items.map((item) => (
+                <div key={item.title} className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                  <p className="text-sm uppercase tracking-[0.2em] text-white/50">{item.title}</p>
+                  <p className="mt-2 text-white/80">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {config.caseStudies && (
+        <section className="container-default space-y-6">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-white/60">Case Studies</p>
+            <h3 className="mt-2 font-display text-3xl text-white">Outcomes across sectors</h3>
+          </div>
+          <div className="grid gap-6 lg:grid-cols-3">
+            {config.caseStudies.map((study) => (
+              <div key={study.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+                <p className="text-sm uppercase tracking-[0.3em] text-white/50">{study.sector}</p>
+                <h4 className="mt-3 font-display text-2xl text-white">{study.title}</h4>
+                <p className="mt-2 text-sm text-[var(--gold-primary)]">{study.impact}</p>
+                <p className="mt-3 text-white/70">{study.summary}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {config.resources && (
+        <section className="container-default space-y-4">
+          <p className="text-xs uppercase tracking-[0.3em] text-white/60">Resources</p>
+          <div className="flex flex-wrap gap-3">
+            {config.resources.map((resource) => (
+              resource.external ? (
+                <a
+                  key={resource.label}
+                  href={resource.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl border border-white/10 px-4 py-2 text-sm text-white hover:border-white/40"
+                >
+                  {resource.label}
+                </a>
+              ) : (
+                <Link
+                  key={resource.label}
+                  href={resource.href}
+                  className="rounded-2xl border border-white/10 px-4 py-2 text-sm text-white hover:border-white/40"
+                >
+                  {resource.label}
+                </Link>
+              )
+            ))}
+          </div>
+        </section>
+      )}
+
+      {config.contactBlocks && (
+        <section className="container-default space-y-4">
+          <p className="text-xs uppercase tracking-[0.3em] text-white/60">Direct channels</p>
+          <div className="grid gap-4 md:grid-cols-2">
+            {config.contactBlocks.map((block) => (
+              <div key={block.title} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                <p className="text-sm uppercase tracking-[0.2em] text-white/60">{block.title}</p>
+                <p className="mt-2 text-2xl font-display text-white">{block.detail}</p>
+                <p className="mt-1 text-sm text-white/70">{block.meta}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {resolvedParams.page === "contact" && (
+        <div className="pt-4">
+          <ContactSection />
+        </div>
+      )}
+    </main>
+  );
+};
+
+export default MarketingPage;

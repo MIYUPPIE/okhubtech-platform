@@ -1,65 +1,104 @@
-import Image from "next/image";
+"use client";
+
+import { motion } from "framer-motion";
+import { ShieldCheck, Sparkles, Users } from "lucide-react";
+import HeroSection from "@/components/HeroSection";
+import AboutSection from "@/components/AboutSection";
+import EducationSection from "@/components/EducationSection";
+import ServicesSection from "@/components/ServicesSection";
+import SolutionCenterSection from "@/components/SolutionCenterSection";
+import DomainsSection from "@/components/DomainsSection";
+import ECommerceSection from "@/components/ECommerceSection";
+import ResearchSection from "@/components/ResearchSection";
+import PartnershipsSection from "@/components/PartnershipsSection";
+import ImpactSection from "@/components/ImpactSection";
+import ContactSection from "@/components/ContactSection";
+import InnovationSection from "@/components/InnovationSection";
+import LoadingScreen from "@/components/LoadingScreen";
+import { useEffect, useState } from "react";
+
+const credibilityStats = [
+  { label: "Global delivery hubs", value: "6", icon: Users },
+  { label: "Security certifications", value: "ISO27001", icon: ShieldCheck },
+  { label: "Innovation awards", value: "14", icon: Sparkles },
+];
 
 export default function Home() {
+  const [showLoader, setShowLoader] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setShowLoader(false), 2800);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <LoadingScreen active={showLoader} />
+      <section className="relative pb-20">
+        <div className="mx-auto mt-10 w-full max-w-[1300px] px-4 sm:px-6 lg:px-8">
+          <HeroSection />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <div className="container-default mt-16">
+          <motion.div
+            className="grid gap-4 rounded-3xl border border-black/15 bg-white shadow-sm dark:border-white/10 dark:bg-black/60 p-6 md:grid-cols-3"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.5 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {credibilityStats.map((stat) => (
+              <div key={stat.label} className="flex items-center gap-3">
+                <div
+                  className="rounded-2xl border border-black/15 dark:border-white/10 p-3"
+                  style={{ color: "var(--gold-primary)" }}
+                >
+                  <stat.icon className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-black/65 dark:text-white/50">
+                    {stat.label}
+                  </p>
+                  <p className="text-xl font-semibold text-black dark:text-white">{stat.value}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
         </div>
-      </main>
-    </div>
+
+        <AboutSection />
+        <EducationSection />
+        <SolutionCenterSection />
+        <DomainsSection />
+
+        <ServicesSection />
+        <ECommerceSection />
+        <ResearchSection />
+        <InnovationSection />
+        <PartnershipsSection />
+        <ImpactSection />
+        <ContactSection />
+
+        <div className="container-default section-shell">
+          <div className="rounded-3xl border border-black/15 dark:border-white/10 bg-gradient-to-br from-white via-gray-50 to-white dark:from-black dark:via-black dark:to-[#050505] p-10 text-center shadow-lg dark:shadow-none">
+            <p className="section-heading">Engage the studio</p>
+            <h3 className="mt-4 text-3xl font-semibold text-black dark:text-white">
+              Commission a flagship program or rapid innovation pod.
+            </h3>
+            <p className="mt-4 text-black/70 dark:text-white/70">
+              Every OKHub engagement includes premium creative direction, secure data fabric, and AI-first delivery teams.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-4">
+              <a href="/contact" className="btn-primary">
+                Launch a Program
+              </a>
+              <a href="/services" className="btn-secondary">
+                Explore Services
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

@@ -16,6 +16,9 @@
 # next.js
 /.next/
 /out/
+# static export artifacts
+/out.previous/
+/dist/
 
 # production
 /build
