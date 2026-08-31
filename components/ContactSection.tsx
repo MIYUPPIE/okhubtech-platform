@@ -4,22 +4,23 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import { submitContact, type ContactFormState } from "@/server/contact/actions";
+import { EMAIL, MAILTO, PHONE_DISPLAY, TEL } from "@/lib/contact";
 
 const formOptions = [
   {
-    label: "Partner with OKHub",
+    label: "Build something",
     value: "PARTNER",
-    summary: "For governments, enterprises, NGOs, or investors building 4IR ecosystems.",
+    summary: "You have a system, product or deployment you want us to build.",
   },
   {
-    label: "Enroll in programs",
+    label: "Join a programme",
     value: "ENROLL",
-    summary: "Students, professionals, and institutions seeking OKHub education pathways.",
+    summary: "Cohort places for individuals, teams, schools and campuses.",
   },
   {
-    label: "Support community programs",
+    label: "Back a programme",
     value: "SUPPORT",
-    summary: "Funders and philanthropies sponsoring scholarships, labs, and civic builds.",
+    summary: "Fund or sponsor scholarships, labs and community builds.",
   },
 ];
 
@@ -49,12 +50,20 @@ const ContactSection = () => {
         >
           <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
-              <h2 className="section-title text-black dark:text-white">Let’s architect Africa’s next decade together.</h2>
+              <h2 className="section-title text-black dark:text-white">Send us a message.</h2>
               <p className="mt-4 text-black/70 dark:text-white/70">
-                Collaboration requests trigger role-based workflows, email notifications, and spam-protected intake forms. Responses surface inside the admin dashboard for faster decision-making.
+                Pick what you are here for, tell us what you need, and a person will come back to you. Nothing here is automated away.
               </p>
               <p className="mt-4 text-black/60 dark:text-white/60">
-                Email: <a href="mailto:hello@okhub.tech" className="text-black dark:text-white">hello@okhub.tech</a>
+                Prefer not to use the form?{" "}
+                <a href={MAILTO} className="text-black underline-offset-4 hover:underline dark:text-white">
+                  {EMAIL}
+                </a>{" "}
+                or{" "}
+                <a href={TEL} className="text-black underline-offset-4 hover:underline dark:text-white">
+                  {PHONE_DISPLAY}
+                </a>
+                .
               </p>
             </div>
             <div>

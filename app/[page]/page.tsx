@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import ContactSection from "@/components/ContactSection";
+import { BANK, EMAIL, LOCATION, MAILTO, PHONE_DISPLAY, TEL, whatsappLink } from "@/lib/contact";
 
 const accentFallback = "from-[var(--gold-primary)] via-[#ff8a1f] to-[#ffd166]";
 
@@ -42,6 +43,9 @@ type ContactBlock = {
   title: string;
   detail: string;
   meta: string;
+  /** Makes the block actionable. mailto:, tel: and https: are all fine. */
+  href?: string;
+  external?: boolean;
 };
 
 type PageContent = {
@@ -276,51 +280,63 @@ const pageContent: Record<string, PageContent> = {
     cta: { label: "Discuss a pilot", href: "/contact" },
   },
   contact: {
-    badge: "Partner with OKHub",
-    title: "Every conversation starts with ambition, data, and discretion.",
+    badge: "Contact",
+    title: "Tell us what you want to build, or learn.",
     description:
-      "Share the mission, urgency, and constraints—our concierge team orchestrates the right studio within hours and protects your confidentiality end-to-end.",
+      "One inbox, one number, one team. Whether it is a cohort place, a system you need built, or a programme you want to back, it all comes to the same place and a person reads it.",
     accent: "from-[#00c6ff] via-[#0072ff] to-[var(--gold-primary)]",
     highlights: [
-      { label: "Response Window", value: "<12h", caption: "Dedicated intake leads triage strategic opportunities around the clock." },
-      { label: "HQ", value: "Abuja", caption: "Continental nerve center with satellites in Lagos, Kigali, Nairobi, and Cape Town." },
-      { label: "Regional Studios", value: "6", caption: "Localized pods align with ECOWAS, EAC, SADC, Maghreb, and diaspora corridors." },
+      { label: "Call or WhatsApp", value: PHONE_DISPLAY, caption: "Same number for both." },
+      { label: "Email", value: EMAIL, caption: "Reaches the whole team, not a queue." },
+      { label: "Find us", value: "Ibadan", caption: LOCATION },
     ],
     sections: [
       {
-        eyebrow: "Concierge",
-        title: "Embassy-level handling",
+        eyebrow: "What we take on",
+        title: "Three kinds of conversation",
         description:
-          "Briefings route through a secure CRM, legal intake, and senior partner review. We coordinate NDAs, analysts, and domain experts before the first workshop.",
+          "The form below routes on which of these you pick. Say which one you are in the first line and we can skip a round of questions.",
         bullets: [
-          "Encrypted data rooms and red-team verification for sensitive bids.",
-          "Same-week immersion sessions hosted virtually or on-site.",
-          "Single point of contact throughout diligence and execution.",
+          "Training: cohort places, team upskilling, school and campus programmes.",
+          "Build: AI, robotics, web, data and networking work, from prototype to deployed system.",
+          "Support: funding or sponsoring scholarships, labs and community builds.",
         ],
       },
       {
-        eyebrow: "What to include",
-        title: "Help us move faster",
+        eyebrow: "Before you write",
+        title: "What helps us reply properly",
         description:
-          "Outline the mission, market, stakeholders, and existing constraints. Attach briefings, decks, or RFPs when possible.",
+          "A short brief beats a long one. These four lines are usually enough for us to come back with something concrete rather than a request for more detail.",
         bullets: [
-          "Desired impact metrics and policy mandates.",
-          "Budget envelopes, funding sources, and decision timelines.",
-          "Known partners, vendors, or civic actors already involved.",
+          "What you are trying to build or learn, in plain terms.",
+          "When you need it by, and whether a budget is already set.",
+          "Who else is involved: team, school, vendor, funder.",
+          "Anything already built or bought that we should work around.",
         ],
       },
     ],
     contactBlocks: [
-      { title: "Enterprise & Public Sector", detail: "partners@okhub.tech", meta: "Programs $5M+ or national mandates." },
-      { title: "Investors & DFIs", detail: "capital@okhub.tech", meta: "Blended finance, venture spin-outs, project finance." },
-      { title: "Media & Speaking", detail: "press@okhub.tech", meta: "Keynotes, studio tours, brand collaborations." },
-      { title: "Careers", detail: "talent@okhub.tech", meta: "Residencies, fellowships, specialist call-ups." },
+      { title: "Email", detail: EMAIL, meta: "Training, projects, partnerships. All of it.", href: MAILTO },
+      { title: "Call", detail: PHONE_DISPLAY, meta: "Speak to someone directly.", href: TEL },
+      {
+        title: "WhatsApp",
+        detail: PHONE_DISPLAY,
+        meta: "Fastest route for a quick question.",
+        href: whatsappLink("Hi OKHub, I would like to talk about "),
+        external: true,
+      },
+      { title: "Visit", detail: "Ibadan", meta: LOCATION },
+      {
+        title: "Bank transfer",
+        detail: `${BANK.accountNumber} · ${BANK.name}`,
+        meta: `Account name: ${BANK.accountName}. For course fees and invoices. Send the receipt to ${EMAIL}.`,
+      },
     ],
     resources: [
-      { label: "Download media kit", href: "https://okhub.tech/media-kit", external: true },
-      { label: "Request NDA", href: "mailto:legal@okhub.tech", external: true },
+      { label: "See what we do", href: "/services" },
+      { label: "Recent work", href: "/portfolio" },
     ],
-    cta: { label: "Email hello@okhub.tech", href: "mailto:hello@okhub.tech" },
+    cta: { label: `Email ${EMAIL}`, href: MAILTO },
   },
   ai: {
     badge: "AI & ML Studio",
@@ -710,13 +726,31 @@ const MarketingPage = async ({ params }: PageParams) => {
         <section className="container-default space-y-4">
           <p className="text-xs uppercase tracking-[0.3em] text-white/60">Direct channels</p>
           <div className="grid gap-4 md:grid-cols-2">
-            {config.contactBlocks.map((block) => (
-              <div key={block.title} className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <p className="text-sm uppercase tracking-[0.2em] text-white/60">{block.title}</p>
-                <p className="mt-2 text-2xl font-display text-white">{block.detail}</p>
-                <p className="mt-1 text-sm text-white/70">{block.meta}</p>
-              </div>
-            ))}
+            {config.contactBlocks.map((block) => {
+              const body = (
+                <>
+                  <p className="text-sm uppercase tracking-[0.2em] text-white/60">{block.title}</p>
+                  <p className="mt-2 break-words font-display text-2xl text-white">{block.detail}</p>
+                  <p className="mt-1 text-sm text-white/70">{block.meta}</p>
+                </>
+              );
+              const className = "rounded-3xl border border-white/10 bg-white/5 p-5";
+
+              return block.href ? (
+                <a
+                  key={block.title}
+                  href={block.href}
+                  {...(block.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                  className={`${className} transition hover:border-white/40`}
+                >
+                  {body}
+                </a>
+              ) : (
+                <div key={block.title} className={className}>
+                  {body}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}

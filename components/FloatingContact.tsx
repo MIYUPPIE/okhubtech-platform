@@ -4,21 +4,19 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, Phone, X, Send } from "lucide-react";
 
-const WHATSAPP_NUMBER = "2348081130222";
-const PHONE_NUMBER = "+2348081130222";
+import { TEL, whatsappLink } from "@/lib/contact";
 
 const predefinedMessages = [
-    "Hi, I'm interested in Okhub Technology's services. Can you provide more info?",
-    "Could you tell me more about your tech solutions and training programs?",
-    "I'd like to schedule a meeting to discuss what Okhub Technology offers. Thanks!",
+    "Hi OKHub, I'd like to know more about your training programmes.",
+    "Hi OKHub, I have a project I'd like built. Can we talk?",
+    "Hi OKHub, I'd like to schedule a call.",
 ];
 
 export default function FloatingContact() {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleWhatsApp = (message: string) => {
-        const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, "_blank");
+        window.open(whatsappLink(message), "_blank");
         setIsOpen(false);
     };
 
@@ -73,7 +71,7 @@ export default function FloatingContact() {
             <div className="flex gap-3">
                 {/* Phone Call Button */}
                 <a
-                    href={`tel:${PHONE_NUMBER}`}
+                    href={TEL}
                     className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition hover:scale-110 hover:bg-blue-700"
                     aria-label="Call Us"
                 >

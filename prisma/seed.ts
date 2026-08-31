@@ -16,7 +16,7 @@ async function seedRoles() {
 }
 
 async function seedAdmin() {
-  const email = process.env.SEED_ADMIN_EMAIL ?? "admin@okhub.tech";
+  const email = process.env.SEED_ADMIN_EMAIL ?? "admin@okhubtech.com";
   const password = process.env.SEED_ADMIN_PASSWORD ?? "ChangeMe123!";
   const hashPassword = await hash(password, 10);
 

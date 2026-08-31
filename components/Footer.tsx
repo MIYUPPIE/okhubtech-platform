@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { Linkedin, Mail, PhoneCall, Twitter, Youtube } from "lucide-react";
+import { Linkedin, Mail, MapPin, PhoneCall, Twitter, Youtube } from "lucide-react";
+
+import { EMAIL, LOCATION_SHORT, MAILTO, PHONE_DISPLAY, TEL } from "@/lib/contact";
+
+import { Logo } from "./Logo";
 
 const footerLinks = [
   {
@@ -41,24 +45,28 @@ const Footer = () => (
   <footer className="mt-20 border-t border-black/15 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:border-white/10 dark:bg-black/60">
     <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-16 md:grid-cols-3">
       <div className="space-y-4">
-        <p className="font-display text-2xl font-semibold text-black dark:text-white">OKHub Technology</p>
+        <Logo height={34} />
         <p className="text-sm text-black/70 dark:text-white/70">
-          Fourth Industrial Revolution studio engineering premium AI, immersive web, robotics, and intelligent data systems for elite enterprises.
+          AI, robotics and engineering, built and taught in Nigeria.
         </p>
-        <div className="flex items-center gap-2 text-sm text-black/80 dark:text-white/80">
+        <a href={MAILTO} className="flex items-center gap-2 text-sm text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white">
           <Mail className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
-          info@okhubtech.com
-        </div>
-        <div className="flex items-center gap-2 text-sm text-black/80 dark:text-white/80">
+          {EMAIL}
+        </a>
+        <a href={TEL} className="flex items-center gap-2 text-sm text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white">
           <PhoneCall className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
-          +2349069958990
-        </div>
+          {PHONE_DISPLAY}
+        </a>
+        <p className="flex items-center gap-2 text-sm text-black/80 dark:text-white/80">
+          <MapPin className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
+          {LOCATION_SHORT}
+        </p>
       </div>
 
       <div className="space-y-4">
         <p className="font-display text-xl text-black dark:text-white">Newsletter</p>
         <p className="text-sm text-black/70 dark:text-white/70">
-          Monthly intelligence briefing on AI acceleration, autonomy, and premium product launches.
+          One email a month. New builds, open cohorts.
         </p>
         <form className="flex gap-2" action="#" method="post">
           <input

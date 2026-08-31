@@ -42,6 +42,9 @@ npm run dev
 - `npm run dev` — local development server
 - `npm run build` / `npm start` — production build + start
 - `npm run lint` — ESLint
+- `npm test` — gate tests for the export verifier and the contact-detail verifier
+- `npm run verify:export` — assert `out/` cannot serve a directory listing
+- `npm run verify:contact` — assert no contact detail is hardcoded outside `lib/contact.ts`
 - `npm run prisma:generate` — regenerate Prisma client
 - `npm run prisma:migrate` — run migrations in dev
 - `npm run prisma:seed` — seed roles + bootstrap admin account
@@ -49,8 +52,26 @@ npm run dev
 ### Authentication & Roles
 
 - Credentials auth powered by NextAuth + Prisma adapter; login UI lives at `/login`.
-- Seed script creates all roles and an admin account using `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` (defaults `admin@okhub.tech` / `ChangeMe123!`). Update these in `.env.local` before running `npm run prisma:seed` in production environments.
+- Seed script creates all roles and an admin account using `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` (defaults `admin@okhubtech.com` / `ChangeMe123!`). Update these in `.env.local` before running `npm run prisma:seed` in production environments.
 - Registration form defaults to Student role; promote users by attaching roles via admin dashboard or Prisma.
+
+### Contact Details
+
+Every phone number, email address, location and bank detail on the site comes
+from `lib/contact.ts`. Nothing else may hardcode one — `npm run verify:contact`
+(also part of `npm run build`) fails the build on a second copy.
+
+| | |
+| --- | --- |
+| Email | info@okhubtech.com |
+| Phone / WhatsApp | +234 906 995 8990 (one number for both) |
+| Location | Mokola, Ibadan, Oyo State, Nigeria |
+| Bank transfer | OKHUB TECHNOLOGY · Paystack MFB · 0102106463 |
+
+The site previously shipped four conflicting answers, including six mailboxes on
+`okhub.tech` — a domain OKHub does not own, so every one of them bounced — and a
+second phone number nobody answers. Change a detail in `lib/contact.ts` and every
+surface follows.
 
 ### Key Modules
 
