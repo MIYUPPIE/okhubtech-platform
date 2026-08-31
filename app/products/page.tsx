@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PRODUCTS } from "@/lib/products";
+import ReelsSection from "@/components/ReelsSection";
 
 export const metadata: Metadata = {
   title: "Products | OKHub",
@@ -78,6 +79,8 @@ export default function ProductsPage() {
           </li>
         ))}
       </ul>
+
+      <ReelsSection heading="A few of them, on video." />
     </main>
   );
 }

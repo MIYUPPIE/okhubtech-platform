@@ -26,6 +26,7 @@ export const WHATSAPP_NUMBER = PHONE_E164.replace(/\\D/g, "");
 export const LOCATION = "Mokola, Ibadan, Oyo State, Nigeria";
 export const FACEBOOK = "https://www.facebook.com/okhubtech";
 export const INSTAGRAM = "https://www.instagram.com/okhubtech";
+export const reelEmbed = (id) => \`https://www.instagram.com/reel/\${id}/embed/\`;
 export const LOCATION_SHORT = "Ibadan, Nigeria";
 export const MAILTO = \`mailto:\${EMAIL}\`;
 export const TEL = \`tel:\${PHONE_E164}\`;
@@ -120,6 +121,11 @@ const cases = [
     name: "duplicated facebook profile is caught",
     body: 'export const X = () => "https://www.facebook.com/okhubtech";',
     expect: ["https://www.facebook.com/okhubtech"],
+  },
+  {
+    name: "a hardcoded reel url is caught",
+    body: 'export const X = () => "https://www.instagram.com/reel/ABC123/embed/";',
+    expect: ["instagram.com/reel/"],
   },
   {
     name: "a real profile url imported, not inlined, passes",

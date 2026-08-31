@@ -197,6 +197,10 @@ export function findViolations(root) {
     { value: "wa.me/", why: `import whatsappLink from ${SOURCE_OF_TRUTH}` },
     { value: truth.FACEBOOK, why: `import FACEBOOK from ${SOURCE_OF_TRUTH}` },
     { value: truth.INSTAGRAM, why: `import INSTAGRAM from ${SOURCE_OF_TRUTH}` },
+    { value: "instagram.com/reel/", why: `derive it with reelEmbed / reelPermalink from ${SOURCE_OF_TRUTH}` },
+    // Feed videos live at /p/ rather than /reel/. Both forms embed, so both
+    // have to be derived rather than pasted.
+    { value: "instagram.com/p/", why: `derive it with reelEmbed / reelPermalink from ${SOURCE_OF_TRUTH}` },
   ];
 
   for (const path of sourceFiles(root)) {

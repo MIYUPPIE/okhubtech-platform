@@ -15,7 +15,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
 
-import { checkCatalogue, checkRouting, readCatalogue, findProblems } from "./verify-products.mjs";
+import { checkCatalogue, checkReels, checkRouting, readCatalogue, findProblems } from "./verify-products.mjs";
 
 const ROOT = new URL("..", import.meta.url).pathname.replace(/\/$/, "");
 
@@ -56,6 +56,33 @@ for (const [name, products, want] of cases) {
   const got = checkCatalogue(products).length;
   if (got === want) passed += 1;
   else failed.push({ name, problems: [`got ${got} problem(s), expected ${want}`] });
+}
+
+// A product's reel must name one that actually exists in lib/contact.ts.
+{
+  const root = mkdtempSync(join(tmpdir(), "products-gate-"));
+  const write = (rel, body) => {
+    mkdirSync(join(root, "lib"), { recursive: true });
+    writeFileSync(join(root, rel), body);
+  };
+  const problems = [];
+  try {
+    write("lib/contact.ts", 'export const REELS = [{ id: "AAA111", title: "x" }, { id: "BBB222", title: "y" }];');
+
+    if (checkReels(root, [ok()]).length !== 0) problems.push("a product with no reel should report nothing");
+    if (checkReels(root, [ok({ reel: "AAA111" })]).length !== 0) problems.push("a known reel id should pass");
+    if (checkReels(root, [ok({ reel: "ZZZ999" })]).length === 0) problems.push("an unknown reel id should fail");
+
+    // If REELS is renamed or restructured, nothing parses — that must fail loudly
+    // rather than quietly accepting every id as unknown-but-unchecked.
+    write("lib/contact.ts", "export const NOTHING = 1;");
+    if (checkReels(root, [ok({ reel: "AAA111" })]).length === 0) problems.push("an unparseable contact.ts should fail");
+
+    if (problems.length) failed.push({ name: "reel references", problems });
+    else passed += 1;
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 }
 
 // Routing: site.ts must derive from the catalogue rather than repeat it.
@@ -119,7 +146,7 @@ for (const [name, products, want] of cases) {
   else failed.push({ name: "repository is clean", problems: problems.map((p) => `${p.slug}: ${p.problem}`) });
 }
 
-const total = cases.length + 3;
+const total = cases.length + 4;
 if (failed.length === 0) {
   console.log(`PASS  ${passed}/${total} product-catalogue tests`);
   process.exit(0);

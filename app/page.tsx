@@ -1,52 +1,133 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
-import HeroSection from "@/components/HeroSection";
-import BuildLogSection from "@/components/BuildLogSection";
-import ShowreelSection from "@/components/ShowreelSection";
+import OfficeStage from "@/components/office3d/OfficeStage";
 import ReelsSection from "@/components/ReelsSection";
-import BootcampSection from "@/components/BootcampSection";
-import ServicesSection from "@/components/ServicesSection";
-import ImpactSection from "@/components/ImpactSection";
-import ContactSection from "@/components/ContactSection";
+import { STATIONS } from "@/components/office3d/stations";
+import { LOCATION_SHORT } from "@/lib/contact";
+
+export const metadata: Metadata = {
+  title: "OKHub Technology — AI, robotics and data systems, built in Ibadan",
+  description:
+    "Step into the OKHub office: the training floor, the robotics bench, the project wall, the data rack, the dev pod and the front desk. AI, robotics, data and the people we train to build them.",
+  alternates: { canonical: "/" },
+};
 
 /**
- * Server component, six sections.
+ * The front door.
  *
- * It previously stacked thirteen sections and ~1,665 rendered words, behind a
- * 2,800ms loading screen. The seven sections that were mostly capability lists
- * now live on /about and /services, where someone reading about capabilities
- * has already asked for them. Nothing was deleted.
+ * The old home page was the robotics and training floor and nothing else -
+ * good work, badly placed, because it made a company that also ships data
+ * systems and software products read as a robotics school. That page moved to
+ * /studio unchanged. This one is the whole office, and every part of it is a
+ * door into the part of the business that lives there.
+ *
+ * `OfficeStage` is a client component: the WebGL canvas mounts inside it with
+ * ssr:false, but the copy, the six station links and everything below the fold
+ * are ordinary server-rendered markup in the static export.
  */
+
+const elsewhere = [
+  {
+    label: "About OKHub",
+    href: "/about",
+    detail: "Who is in the building, and what we are trying to build for the continent.",
+  },
+  {
+    label: "Services",
+    href: "/services",
+    detail: "Twelve practices, from robotics and automation to networking and renewable energy.",
+  },
+  {
+    label: "Expertise",
+    href: "/expertise/ai-ml",
+    detail: "The four disciplines the work is actually made of: AI/ML, data, web, robotics.",
+  },
+];
+
 export default function Home() {
   return (
-    <section className="relative pb-20">
-      <div className="mx-auto mt-10 w-full max-w-[1300px] px-4 sm:px-6 lg:px-8">
-        <HeroSection />
-      </div>
+    <>
+      <OfficeStage />
 
-      <BuildLogSection />
-      <ShowreelSection />
-      <ReelsSection />
-      <BootcampSection />
-      <ServicesSection />
-      <ImpactSection />
-      <ContactSection />
+      <section className="container-default section-shell">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="section-heading">The floor plan</p>
+            <h2 className="section-title mt-3">Six places, six answers.</h2>
+          </div>
+          <p className="max-w-xs text-sm text-black/60 dark:text-white/60">
+            Everything in the room above is a real part of the business in {LOCATION_SHORT}.
+            Here it is as a list, for anyone who would rather read than walk.
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {STATIONS.map((station, i) => (
+            <Link
+              key={station.id}
+              href={station.href}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-black/12 bg-white p-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] transition hover:-translate-y-1 hover:border-black/25 hover:shadow-[0_18px_50px_rgba(0,0,0,0.10)] dark:border-white/10 dark:bg-black/60 dark:hover:border-white/30"
+            >
+              <div>
+                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-gold-ink">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-3 font-display text-xl font-semibold text-black dark:text-white">
+                  {station.label}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-black/65 dark:text-white/65">
+                  {station.blurb}
+                </p>
+              </div>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-black/70 transition group-hover:gap-3 group-hover:text-black dark:text-white/70 dark:group-hover:text-white">
+                {station.cta}
+                <ArrowUpRight className="h-4 w-4" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <ReelsSection heading="What came off the bench lately." />
+
+      <section className="container-default pb-4">
+        <div className="grid gap-4 sm:grid-cols-3">
+          {elsewhere.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group rounded-3xl border border-black/12 bg-gradient-to-br from-white to-gray-50 p-6 transition hover:border-black/25 dark:border-white/10 dark:from-black dark:to-[#080808] dark:hover:border-white/30"
+            >
+              <p className="font-display text-lg font-semibold text-black dark:text-white">
+                {item.label}
+              </p>
+              <p className="mt-2 text-sm text-black/60 dark:text-white/60">{item.detail}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <div className="container-default section-shell">
         <div className="rounded-3xl border border-black/15 bg-gradient-to-br from-white via-gray-50 to-white p-10 text-center shadow-lg dark:border-white/10 dark:from-black dark:via-black dark:to-[#050505] dark:shadow-none">
-          <h3 className="font-display text-3xl font-semibold text-black dark:text-white">
+          <h2 className="font-display text-3xl font-semibold text-black dark:text-white">
             Start something.
-          </h3>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-black/65 dark:text-white/65">
+            Tell us what you are building or who you need trained. One inbox, one number,
+            and somebody who answers both.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-4">
             <Link href="/contact" className="btn-primary">
-              Talk to us
+              Talk to us <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/services" className="btn-secondary">
-              See services
+            <Link href="/studio" className="btn-secondary">
+              See the build log
             </Link>
           </div>
         </div>
       </div>
-    </section>
+    </>
   );
 }

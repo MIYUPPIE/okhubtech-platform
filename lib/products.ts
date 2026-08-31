@@ -28,6 +28,8 @@ export type Product = {
   sector: string;
   /** Public URL. Only set where the domain was checked and answered. */
   url?: string;
+  /** Instagram shortcode of a reel showing this working — see REELS in lib/contact.ts. */
+  reel?: string;
   /** Two or three paragraphs for the detail page. */
   summary: string[];
   /** The engineering decisions worth reading about. */
@@ -189,6 +191,46 @@ const PRODUCTS_DATA: Product[] = [
     stack: ["Elixir", "Phoenix 1.7", "PostgreSQL 15", "Oban", "Cachex", "Guardian", "WhatsApp Business API"],
   },
   {
+    slug: "gamblealert",
+    name: "GambleAlert",
+    tagline: "Gambling-harm prevention: a tracker, a counselling AI, and a way out into tech.",
+    sector: "Social impact",
+    url: "https://gamblealert.org",
+    summary: [
+      "GambleAlert works on underage and problem gambling in Oyo State. The software side is a set of tools that support that work rather than one app: a phone tracker that logs betting behaviour and can lock the apps a user is trying to stay away from, a counselling assistant that handles the conversations no one has capacity to staff around the clock, and a scanner that turns paper field questionnaires into data.",
+      "The financial side matters as much as the clinical one. Problem gambling is a money problem before it is anything else, so the assistant carries its own financial models and prompts rather than treating spending as a footnote to the counselling.",
+      "Around the tools sit the programme's public surfaces — the Responsible Gaming Symposium site, an attendee directory, and a registration platform for a regional capacity-building programme run with a state gaming authority.",
+    ],
+    highlights: [
+      "A tracker that both records betting behaviour and locks the apps behind it, so the intervention is not only a report.",
+      "A counselling assistant with dedicated financial reasoning, because the harm shows up in money first.",
+      "Field questionnaires scanned into structured data, with offline storage in the browser for use away from a desk.",
+      "Programme registration and attendee search built as their own deployable sites.",
+      "A Tech Prevention Academy pilot that moves children caught betting into software, robotics and AI training — the intervention OKHub is actually equipped to run.",
+    ],
+    stack: ["Flutter", "Dart", "Python", "FastAPI", "Next.js", "PostgreSQL", "Docker"],
+  },
+  {
+    slug: "voting-kiosk",
+    name: "Hands-Free Voting Kiosk",
+    tagline: "Biometric registration and a ballot you cast with your face and your hand.",
+    sector: "Civic tech",
+    reel: "DbjAWTsgMuh",
+    summary: [
+      "A biometric voter registration desk and a voting kiosk with no keyboard and no mouse, built around Nigeria's actual election structure. You pick a language — English, Yoruba, Igbo or Hausa — look at the camera, point at the party you want, hold for a second, confirm, and move to the next office. A full review screen comes before anything is submitted.",
+      "Face recognition and hand tracking do the input. Every voice prompt is pre-rendered rather than synthesised on demand, which means the kiosk needs no internet connection at any point during voting.",
+      "This is a prototype and not election infrastructure, and it is not affiliated with INEC. Building it was a way to think hard about ballot secrecy, accessibility, language and lighting — and about how easily you can build something that looks impressive and still fails the people who need it most.",
+    ],
+    highlights: [
+      "No keyboard and no mouse: registration and voting run on face recognition and hand tracking alone.",
+      "Four languages at the point of use, chosen by the voter before anything else happens.",
+      "Voice prompts pre-rendered, so the kiosk is fully offline while a vote is being cast.",
+      "A review screen before submission, with each office voted separately.",
+      "Built as a prototype to interrogate ballot secrecy and accessibility, not as a product to sell to anyone.",
+    ],
+    stack: ["Python", "InsightFace", "MediaPipe", "Computer vision", "Offline TTS"],
+  },
+  {
     slug: "nurpat",
     name: "NURPAT",
     tagline: "Nurse-led telehealth, built to Nigeria's scope-of-practice rules.",
@@ -278,25 +320,29 @@ const PRODUCTS_DATA: Product[] = [
   {
     slug: "smarteyes",
     name: "SmartEyes",
-    tagline: "Retail floor surveillance that follows people, not frames.",
+    tagline: "An edge-AI layer that makes the CCTV you already own actually think.",
     sector: "Computer vision",
+    reel: "DaSXdAOitWP",
     summary: [
-      "A real-time surveillance system for supermarkets. YOLO detects people and objects, a tracker assigns and holds a unique identity across frames, and the system writes a separate video file per tracked person alongside entry and exit times in a database.",
-      "Recording per person rather than per camera is what makes the footage reviewable — you look up someone's visit instead of scrubbing an hour of floor.",
+      "Security cameras are everywhere in Nigeria. Intelligence is not. The cameras most businesses already own record problems rather than prevent them — by the time anyone reviews the footage, the theft has happened and the intruder is gone.",
+      "SmartEyes is the layer that closes that gap, and it plugs into the cameras that are already on the wall. No rip-and-replace, no new hardware bill: intrusion, loitering and unusual movement are detected as they happen, and the alert reaches a phone in the moment rather than hours later.",
+      "It runs on affordable edge hardware rather than streaming everything to a cloud, which is what makes it viable on the bandwidth an estate, a warehouse or a retail shop actually has. Underneath, detection holds a person's identity across frames and can record their visit as its own clip, so reviewing an incident means opening one file instead of scrubbing an hour of floor.",
     ],
     highlights: [
-      "Per-person identity held across frames, with a video file recorded per person.",
-      "Entry and exit times, video paths and activity logged to a database.",
-      "AI analysis of frames layered on top of detection for higher-level insight.",
-      "Clean resource teardown on shutdown, so recordings are never left truncated.",
+      "Retrofits existing CCTV — the business keeps the cameras it already paid for.",
+      "Real-time detection of intrusion, loitering and unusual movement, not after-the-fact review.",
+      "Alerts pushed to a phone the moment something happens.",
+      "Runs on affordable edge hardware, so it does not depend on upload bandwidth.",
+      "Per-person identity held across frames, with entry and exit times logged and a clip recorded per visit.",
     ],
-    stack: ["Python", "YOLO", "OpenCV", "SQLite"],
+    stack: ["Python", "YOLO", "OpenCV", "Edge inference", "SQLite"],
   },
   {
     slug: "yoruba-live-voice",
     name: "Yoruba Live Voice",
     tagline: "An always-on Yoruba speech pipeline that never stops listening.",
     sector: "Language",
+    reel: "DbdIjVDlIxe",
     summary: [
       "Speak Yoruba into a microphone and the system either captions what you said with correct accents, or answers you as a voice assistant and speaks the reply aloud.",
       "The engineering problem is that cloud calls are slow and microphones are not patient. Five stages run concurrently so a slow network round trip never blocks capture or live decoding — voice activity detection and speech-to-text stay local, and only correction and speech synthesis leave the machine.",
@@ -306,6 +352,7 @@ const PRODUCTS_DATA: Product[] = [
       "Streaming voice-activity detection emits live partial snapshots and finalises on a pause.",
       "Speech-to-text runs locally; only the correction and synthesis steps are remote.",
       "Two modes from the same pipeline: accented captioning, or spoken conversation.",
+      "Now drives hardware: wired to an ESP32-S3 with motor drivers, spoken Yoruba becomes movement with no English step in between.",
     ],
     stack: ["Python", "faster-whisper", "Silero VAD", "YarnGPT", "PortAudio"],
   },

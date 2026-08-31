@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PRODUCTS, productBySlug } from "@/lib/products";
+import { REELS } from "@/lib/contact";
+import { ReelCard } from "@/components/ReelsSection";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -26,6 +28,7 @@ export default async function ProductPage({ params }: Params) {
   if (!product) notFound();
 
   const others = PRODUCTS.filter((p) => p.slug !== product.slug).slice(0, 3);
+  const reel = product.reel ? REELS.find((r) => r.id === product.reel) : undefined;
 
   return (
     <main className="container-default py-12">
@@ -80,7 +83,15 @@ export default async function ProductPage({ params }: Params) {
           </section>
         </div>
 
-        <aside className="lg:sticky lg:top-8 lg:self-start">
+        <aside className="space-y-6 lg:sticky lg:top-8 lg:self-start">
+          {reel && (
+            <div>
+              <p className="mb-3 text-xs uppercase tracking-[0.2em] text-black/50 dark:text-white/50">
+                See it working
+              </p>
+              <ReelCard reel={reel} />
+            </div>
+          )}
           <div className="rounded-2xl border border-black/15 bg-white p-5 shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:border-white/10 dark:bg-white/5">
             <p className="text-xs uppercase tracking-[0.2em] text-black/50 dark:text-white/50">
               Built with

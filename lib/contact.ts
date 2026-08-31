@@ -52,16 +52,75 @@ export const INSTAGRAM = "https://www.instagram.com/okhubtech";
 /**
  * Reels published on the Instagram account, newest first.
  *
- * Only the permalink is stored. Instagram serves captions behind a login wall,
- * so any title written here would be guesswork; the embed renders the real
- * video with its real caption instead, and falls back to a plain link to the
- * post if the embed script does not load.
+ * Stored by shortcode, not by full permalink, because the two Instagram URL
+ * forms are not interchangeable: the account-scoped one people copy from the
+ * app (/okhubtech/reel/<id>/) is what a human shares, while the embed only
+ * takes the bare /reel/<id>/embed/ form. Deriving both from the shortcode
+ * means the link and the player can never disagree.
+ *
+ * Titles are the opening line of each reel's own caption, read off the embed
+ * payload rather than written here — see scripts/verify-contact.mjs for why
+ * nothing on this site gets a caption somebody invented.
  */
-export const INSTAGRAM_REELS = [
-  "https://www.instagram.com/okhubtech/reel/DbjAWTsgMuh/",
-  "https://www.instagram.com/okhubtech/reel/DbdIjVDlIxe/",
-  "https://www.instagram.com/okhubtech/reel/DaSXdAOitWP/",
-] as const;
+/**
+ * Which permalink form Instagram serves a clip under. Reels sit at /reel/,
+ * feed videos at /p/. Both accept the /embed/ suffix, but the link a reader
+ * clicks should be the one Instagram itself hands out for that post.
+ */
+export type ReelKind = "reel" | "post";
+
+export type Reel = {
+  /** Instagram shortcode: the segment after /reel/ or /p/. */
+  id: string;
+  /** Defaults to "reel". */
+  kind?: ReelKind;
+  title: string;
+  blurb: string;
+  /** Runtime in seconds, from the post's own metadata. */
+  seconds: number;
+};
+
+export const REELS: readonly Reel[] = [
+  {
+    id: "DbjAWTsgMuh",
+    title: "A hands-free voting kiosk",
+    blurb:
+      "Biometric voter registration and a voting kiosk with no keyboard and no mouse — pick a language, look at the camera, point at a party.",
+    seconds: 151,
+  },
+  {
+    id: "DbdIjVDlIxe",
+    title: "A robot that takes orders in Yoruba",
+    blurb:
+      "Yoruba Live Voice wired to an ESP32-S3 with motor drivers: spoken Yoruba to understanding to movement, with no English in the middle.",
+    seconds: 164,
+  },
+  {
+    id: "C5nPiNiNdc9",
+    kind: "post",
+    title: "A submersible pump, drawn part by part",
+    blurb:
+      "Bearing, impeller stack and housing modelled in SolidWorks 2023 — the CAD that has to be right before anything gets cut or printed.",
+    seconds: 15,
+  },
+  {
+    id: "DaSXdAOitWP",
+    title: "Making CCTV cameras think",
+    blurb:
+      "Most Nigerian businesses already own cameras that only record problems. SmartEyes is the edge-AI layer that makes them prevent one.",
+    seconds: 95,
+  },
+];
+
+/** What a person opens when they tap the post. */
+const reelSegment = (kind: ReelKind = "reel") => (kind === "post" ? "p" : "reel");
+
+export const reelPermalink = (id: string, kind: ReelKind = "reel") =>
+  `${INSTAGRAM}/${reelSegment(kind)}/${id}/`;
+
+/** What the iframe player loads. Only the bare form works here. */
+export const reelEmbed = (id: string, kind: ReelKind = "reel") =>
+  `https://www.instagram.com/${reelSegment(kind)}/${id}/embed/`;
 
 /**
  * Bank transfer details for course fees and invoices.

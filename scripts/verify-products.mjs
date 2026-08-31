@@ -51,6 +51,7 @@ export function readCatalogue(root) {
     if (!slug) continue;
     products.push({
       slug,
+      reel: field("reel"),
       name: field("name"),
       tagline: field("tagline"),
       sector: field("sector"),
@@ -100,6 +101,29 @@ export function checkCatalogue(products) {
   return problems;
 }
 
+/**
+ * A product may point at a reel that shows it working. The reel data lives in
+ * lib/contact.ts, so a typo here would render an empty slot rather than fail,
+ * which is exactly the kind of silent break worth a gate.
+ */
+export function checkReels(root, products) {
+  const contact = readFileSync(join(root, "lib/contact.ts"), "utf8");
+  const known = new Set([...contact.matchAll(/\bid: "([A-Za-z0-9_-]+)"/g)].map((m) => m[1]));
+  const problems = [];
+
+  for (const p of products) {
+    if (!p.reel) continue;
+    if (known.size === 0) {
+      problems.push({ slug: p.slug, problem: "no reels parsed from lib/contact.ts - did REELS change shape?" });
+      break;
+    }
+    if (!known.has(p.reel)) {
+      problems.push({ slug: p.slug, problem: `reel "${p.reel}" is not in REELS in lib/contact.ts` });
+    }
+  }
+  return problems;
+}
+
 /** The routes file must derive from the catalogue, not repeat it. */
 export function checkRouting(root, products) {
   const site = readFileSync(join(root, "lib/site.ts"), "utf8");
@@ -133,7 +157,7 @@ export function checkRouting(root, products) {
 
 export function findProblems(root) {
   const products = readCatalogue(root);
-  return [...checkCatalogue(products), ...checkRouting(root, products)];
+  return [...checkCatalogue(products), ...checkReels(root, products), ...checkRouting(root, products)];
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -144,6 +168,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const sectors = [...new Set(products.map((p) => p.sector))];
     console.log(`PASS  ${products.length} products across ${sectors.length} sectors, routed from ${CATALOGUE}`);
     console.log(`      ${linked.length} linked: ${linked.map((p) => p.url.replace("https://", "")).join(", ")}`);
+    const withReels = products.filter((p) => p.reel);
+    if (withReels.length) console.log(`      ${withReels.length} with a reel: ${withReels.map((p) => p.name).join(", ")}`);
     process.exit(0);
   }
   console.error(`FAIL  ${problems.length} catalogue problem(s)`);

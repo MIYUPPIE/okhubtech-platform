@@ -28,7 +28,7 @@ export const TOP_LEVEL_PAGES = [
  * that template paints a permanent black gradient, so anything living in it
  * ignores the light theme.
  */
-export const STANDALONE_PAGES = ["bootcamp", "data", "products"] as const;
+export const STANDALONE_PAGES = ["bootcamp", "data", "products", "studio"] as const;
 
 /** Mirrors the directories under app/services/. */
 export const SERVICE_SLUGS = [
