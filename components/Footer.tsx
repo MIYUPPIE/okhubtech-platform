@@ -27,8 +27,8 @@ const footerLinks = [
   {
     title: "Resources",
     links: [
+      { label: "Products", href: "/products" },
       { label: "Portfolio", href: "/portfolio" },
-      { label: "Insights", href: "#" },
       { label: "Security", href: "#" },
       { label: "Contact", href: "/contact" },
     ],

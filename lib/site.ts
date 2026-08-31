@@ -1,3 +1,5 @@
+import { PRODUCT_SLUGS } from "./products";
+
 /**
  * Canonical site configuration.
  *
@@ -26,7 +28,7 @@ export const TOP_LEVEL_PAGES = [
  * that template paints a permanent black gradient, so anything living in it
  * ignores the light theme.
  */
-export const STANDALONE_PAGES = ["data"] as const;
+export const STANDALONE_PAGES = ["data", "products"] as const;
 
 /** Mirrors the directories under app/services/. */
 export const SERVICE_SLUGS = [
@@ -82,6 +84,7 @@ export const PUBLIC_ROUTES: string[] = [
   "",
   ...TOP_LEVEL_PAGES.map((p) => `/${p}`),
   ...STANDALONE_PAGES.map((p) => `/${p}`),
+  ...PRODUCT_SLUGS.map((s) => `/products/${s}`),
   ...SERVICE_SLUGS.map((s) => `/services/${s}`),
   ...PORTFOLIO_SLUGS.map((s) => `/portfolio/${s}`),
   ...EXPERTISE_SLUGS.map((s) => `/expertise/${s}`),

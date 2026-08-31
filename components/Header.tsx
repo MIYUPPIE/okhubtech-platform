@@ -9,6 +9,7 @@ import { LogoLink } from "./Logo";
 
 const primaryNav = [
   { label: "About", href: "/about" },
+  { label: "Products", href: "/products" },
   { label: "Services", href: "/services" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Contact", href: "/contact" },
