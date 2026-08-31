@@ -23,7 +23,7 @@
  * Deterministic, offline, no dependencies.  node scripts/verify-bootcamp.mjs
  */
 
-import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, extname } from "node:path";
 
 const ROOT = new URL("..", import.meta.url).pathname.replace(/\/$/, "");

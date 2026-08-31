@@ -77,7 +77,7 @@ export default function BootcampPage() {
               <div className="flex items-start justify-between gap-3">
                 <span
                   className="rounded-2xl border border-black/10 p-3 dark:border-white/10"
-                  style={{ color: "var(--gold-primary)" }}
+                  style={{ color: "var(--gold-ink)" }}
                 >
                   <project.icon className="h-6 w-6" />
                 </span>
@@ -102,7 +102,7 @@ export default function BootcampPage() {
                     key={capability}
                     className="flex gap-2 text-sm text-black/65 dark:text-white/65"
                   >
-                    <span aria-hidden style={{ color: "var(--gold-primary)" }}>
+                    <span aria-hidden style={{ color: "var(--gold-ink)" }}>
                       &bull;
                     </span>
                     {capability}
@@ -129,7 +129,7 @@ export default function BootcampPage() {
             <p className="mt-2 text-black/60 dark:text-white/60">{YOUTUBE_HANDLE}</p>
           </div>
           <span className="inline-flex items-center gap-2 rounded-full border border-black/15 px-5 py-3 text-sm text-black transition group-hover:border-black/40 dark:border-white/15 dark:text-white dark:group-hover:border-white/40">
-            <Youtube className="h-4 w-4" style={{ color: "var(--gold-primary)" }} />
+            <Youtube className="h-4 w-4" style={{ color: "var(--gold-ink)" }} />
             Open the channel
           </span>
         </a>

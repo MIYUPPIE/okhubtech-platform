@@ -64,8 +64,9 @@ directory somehow ends up without an `index.html` again, the server returns
 | Command | What it does | When |
 |---|---|---|
 | `npm test` | Tests the export verifier against fixture builds, including a reconstruction of the exact broken layout above | every commit |
-| `npm run build` | `next build` then `verify:export`; **fails the build** if the export is not deployable | every build |
+| `npm run build` | `next build`, then every `verify:*` gate; **fails the build** if the export is not deployable | every build |
 | `npm run verify:export` | Checks `out/` on its own | ad hoc |
+| `npm run verify:bootcamp` | Cohort data, the `/bootcamp` route, and placeholder social links | every build |
 | `npm run deploy:pack` | Builds, verifies, writes `dist/okhubtech-<stamp>.zip` | before upload |
 | `npm run verify:live` | Probes the live site for directory listings, wrong hosts, bad robots | after upload |
 
@@ -151,6 +152,38 @@ These do not work on this hosting and are inert in `out/`:
 
 A real admin dashboard needs a Node host (Vercel, a VPS, or cPanel's Node.js
 Selector) rather than this static export.
+
+## The 4IR Bootcamp
+
+`lib/bootcamp.ts` is the single source of truth for `/bootcamp`, the homepage
+band and the footer's channel link — same pattern as `lib/contact.ts` and
+`lib/products.ts`. It is a **live list**: when the cohort changes, this file
+changes and the page follows.
+
+Rules for what belongs in it:
+
+- Only projects the cohort actually builds.
+- Describe the behaviour, not the bill of materials. "Temperature and humidity
+  monitoring" is what was specified; naming a DHT22 would be inventing a part
+  number nobody confirmed.
+- `board` is set only where the controller was actually named — two of the six
+  have one, four do not.
+
+`scripts/verify-bootcamp.mjs` fails the build on a project id that is not a
+usable anchor (the homepage links `/bootcamp#<id>`), a duplicate id, a summary
+under five words, a project with no capabilities, `/bootcamp` missing from
+`STANDALONE_PAGES`, a `YOUTUBE_CHANNEL` that is not a real channel URL, or a
+handle that disagrees with it.
+
+### Placeholder social links
+
+The same check scans every `.ts`/`.tsx` file for social URLs with no path.
+The footer shipped `https://www.linkedin.com` and `https://twitter.com` —
+those sites' own home pages, presented as OKHub profiles. They were removed
+rather than shipped as if real; only `https://www.youtube.com/@okhubtech`,
+which was verified to resolve, remains. Add the others back to
+`components/Footer.tsx` once the real profile URLs are known; a bare host
+fails the build.
 
 ## Media pipeline
 

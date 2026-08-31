@@ -44,7 +44,7 @@ const BootcampSection = () => (
             >
               <project.icon
                 className="h-5 w-5 shrink-0"
-                style={{ color: "var(--gold-primary)" }}
+                style={{ color: "var(--gold-ink)" }}
                 aria-hidden
               />
               <span className="text-sm text-black dark:text-white">{project.title}</span>
