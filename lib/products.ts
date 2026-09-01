@@ -1,5 +1,5 @@
 /**
- * The product catalogue — the software OKHub has actually built.
+ * The product catalogue: the software OKHub has actually built.
  *
  * Single source of truth for /products and every product detail page, in the
  * same spirit as lib/contact.ts: one place to change a fact, and a gate test
@@ -28,7 +28,7 @@ export type Product = {
   sector: string;
   /** Public URL. Only set where the domain was checked and answered. */
   url?: string;
-  /** Instagram shortcode of a reel showing this working — see REELS in lib/contact.ts. */
+  /** Instagram shortcode of a reel showing this working: see REELS in lib/contact.ts. */
   reel?: string;
   /** Two or three paragraphs for the detail page. */
   summary: string[];
@@ -53,7 +53,7 @@ const PRODUCTS_DATA: Product[] = [
       "Inventory is dual-layer: raw materials tracked by batch, finished goods derived from production runs.",
       "FIFO cost allocation through production, so profit per item is calculated rather than estimated.",
       "Multi-tenant with full data isolation per business, plus store and branch support.",
-      "Marketplace ranking is organic — view and complaint signals, with promotion kept separate and visible.",
+      "Marketplace ranking is organic: view and complaint signals, with promotion kept separate and visible.",
       "Paystack-backed subscriptions and per-tenant feature flags for staged rollout.",
     ],
     stack: ["Django 6", "Next.js 16", "PostgreSQL 15", "Redis", "Celery", "Docker", "Paystack", "WhatsApp Business API"],
@@ -84,7 +84,7 @@ const PRODUCTS_DATA: Product[] = [
     summary: [
       "A cross-platform RPA studio for Windows and Linux: build, save and run workflows that drive other desktop applications through mouse, keyboard, window management, screenshots and native UI element interaction.",
       "The point of difference is that it does not lead with fixed-coordinate scripting. Elements are found through Windows UI Automation and Linux AT-SPI first, with OCR and template matching as fallbacks, so a workflow survives a window moving.",
-      "Everything runs offline, including the optional AI. Intent classification and workflow generation use a local Qwen2.5 model through llama.cpp bindings — no hosted API, no network call.",
+      "Everything runs offline, including the optional AI. Intent classification and workflow generation use a local Qwen2.5 model through llama.cpp bindings: no hosted API, no network call.",
     ],
     highlights: [
       "Native element finding via Windows UI Automation and Linux AT-SPI before any coordinate fallback.",
@@ -110,7 +110,7 @@ const PRODUCTS_DATA: Product[] = [
       "440 deterministic gate tests that run in about two seconds at zero cost.",
       "A 42-case labelled safety corpus plus a model-judged rubric for the coach.",
       "25 lessons, a 28-day challenge rotation and 8 coping interventions as structured content.",
-      "Runs with no configuration — no account, no Firebase project, no API key needed to start it.",
+      "Runs with no configuration: no account, no Firebase project, no API key needed to start it.",
     ],
     stack: ["Next.js", "TypeScript", "Firebase"],
   },
@@ -140,7 +140,7 @@ const PRODUCTS_DATA: Product[] = [
     url: "https://tosaadecworld.org",
     summary: [
       "The public site and donation platform for a Nigerian foundation working to get children out of the street and into school, through education, work, food, water and a healthy environment.",
-      "Giving is the whole point of the build, so it takes money three ways — Paystack, PayPal and Flutterwave — rather than betting the foundation's income on one processor being up and one card working. Around that sit donor tracking, sponsorships, volunteer sign-up, a newsletter and a CMS the foundation runs itself.",
+      "Giving is the whole point of the build, so it takes money three ways (Paystack, PayPal and Flutterwave) rather than betting the foundation's income on one processor being up and one card working. Around that sit donor tracking, sponsorships, volunteer sign-up, a newsletter and a CMS the foundation runs itself.",
       "The API and the site are separate applications that agree on a shared contract, so the public site can be redeployed without touching the machinery that handles donations.",
     ],
     highlights: [
@@ -160,7 +160,7 @@ const PRODUCTS_DATA: Product[] = [
     summary: [
       "A secure portal for legal African migrants in the UK: registration with email verification, profiles, support groups, scheduled meetings, direct chat with administrators, and audio and video calls that run in the browser.",
       "Support groups are the reason the calling is in-browser rather than a link to somewhere else. Asking people in a vulnerable position to install an app, make an account somewhere new and trust a third party with who they are talking to is a barrier; opening a tab is not.",
-      "Calls are peer-to-peer over WebRTC with a TURN relay behind them, because the networks people actually use — mobile data, shared housing, public wifi — are exactly the ones that block direct connections.",
+      "Calls are peer-to-peer over WebRTC with a TURN relay behind them, because the networks people actually use (mobile data, shared housing, public wifi) are exactly the ones that block direct connections.",
     ],
     highlights: [
       "In-browser audio and video calls, with nothing to install and no third-party account.",
@@ -178,14 +178,14 @@ const PRODUCTS_DATA: Product[] = [
     sector: "Gaming",
     summary: [
       "UNC is a chat-native tactical RPG with a real rulebook behind it: clans, ranks, skill trees, item economy and a two-turn action-reaction battle cycle where an attack, the defence against it and the counter-attack are three distinct moves.",
-      "It grew as a play-by-post game moderated by people, and the moderators became the bottleneck. The backend exists to take the mechanical work off them — validating decks, enforcing cooldowns, resolving randomness and calculating damage — while leaving the human moderators to judge the things that need judgement.",
+      "It grew as a play-by-post game moderated by people, and the moderators became the bottleneck. The backend exists to take the mechanical work off them (validating decks, enforcing cooldowns, resolving randomness and calculating damage) while leaving the human moderators to judge the things that need judgement.",
       "It runs where the players already are. The game is played through WhatsApp messages, with battles held in a supervisor process per match so a long fight keeps its state without holding a connection open.",
     ],
     highlights: [
       "A two-turn action-reaction battle cycle, so defending is a real move rather than a stat check.",
       "Battles run as supervised processes, one per match, holding state across a fight that spans hours.",
       "Automatic deck validation, cooldown enforcement and damage resolution, so moderators only judge edge cases.",
-      "Randomness resolved through several mechanics — rolls, spins and tie-break games — rather than one dice call.",
+      "Randomness resolved through several mechanics (rolls, spins and tie-break games) rather than one dice call.",
       "Played through WhatsApp, with background jobs driving scheduled events and the economy.",
     ],
     stack: ["Elixir", "Phoenix 1.7", "PostgreSQL 15", "Oban", "Cachex", "Guardian", "WhatsApp Business API"],
@@ -199,14 +199,14 @@ const PRODUCTS_DATA: Product[] = [
     summary: [
       "GambleAlert works on underage and problem gambling in Oyo State. The software side is a set of tools that support that work rather than one app: a phone tracker that logs betting behaviour and can lock the apps a user is trying to stay away from, a counselling assistant that handles the conversations no one has capacity to staff around the clock, and a scanner that turns paper field questionnaires into data.",
       "The financial side matters as much as the clinical one. Problem gambling is a money problem before it is anything else, so the assistant carries its own financial models and prompts rather than treating spending as a footnote to the counselling.",
-      "Around the tools sit the programme's public surfaces — the Responsible Gaming Symposium site, an attendee directory, and a registration platform for a regional capacity-building programme run with a state gaming authority.",
+      "Around the tools sit the programme's public surfaces: the Responsible Gaming Symposium site, an attendee directory, and a registration platform for a regional capacity-building programme run with a state gaming authority.",
     ],
     highlights: [
       "A tracker that both records betting behaviour and locks the apps behind it, so the intervention is not only a report.",
       "A counselling assistant with dedicated financial reasoning, because the harm shows up in money first.",
       "Field questionnaires scanned into structured data, with offline storage in the browser for use away from a desk.",
       "Programme registration and attendee search built as their own deployable sites.",
-      "A Tech Prevention Academy pilot that moves children caught betting into software, robotics and AI training — the intervention OKHub is actually equipped to run.",
+      "A Tech Prevention Academy pilot that moves children caught betting into software, robotics and AI training: the intervention OKHub is actually equipped to run.",
     ],
     stack: ["Flutter", "Dart", "Python", "FastAPI", "Next.js", "PostgreSQL", "Docker"],
   },
@@ -217,9 +217,9 @@ const PRODUCTS_DATA: Product[] = [
     sector: "Civic tech",
     reel: "DbjAWTsgMuh",
     summary: [
-      "A biometric voter registration desk and a voting kiosk with no keyboard and no mouse, built around Nigeria's actual election structure. You pick a language — English, Yoruba, Igbo or Hausa — look at the camera, point at the party you want, hold for a second, confirm, and move to the next office. A full review screen comes before anything is submitted.",
+      "A biometric voter registration desk and a voting kiosk with no keyboard and no mouse, built around Nigeria's actual election structure. You pick a language (English, Yoruba, Igbo or Hausa), look at the camera, point at the party you want, hold for a second, confirm, and move to the next office. A full review screen comes before anything is submitted.",
       "Face recognition and hand tracking do the input. Every voice prompt is pre-rendered rather than synthesised on demand, which means the kiosk needs no internet connection at any point during voting.",
-      "This is a prototype and not election infrastructure, and it is not affiliated with INEC. Building it was a way to think hard about ballot secrecy, accessibility, language and lighting — and about how easily you can build something that looks impressive and still fails the people who need it most.",
+      "This is a prototype and not election infrastructure, and it is not affiliated with INEC. Building it was a way to think hard about ballot secrecy, accessibility, language and lighting, and about how easily you can build something that looks impressive and still fails the people who need it most.",
     ],
     highlights: [
       "No keyboard and no mouse: registration and voting run on face recognition and hand tracking alone.",
@@ -261,7 +261,7 @@ const PRODUCTS_DATA: Product[] = [
     highlights: [
       "Timed mocks that reproduce the real NMCN exam format rather than a generic quiz shell.",
       "Daily quiz pushed over WhatsApp, where the candidates already are.",
-      "Login is WhatsApp OTP — no password, no email round trip.",
+      "Login is WhatsApp OTP: no password, no email round trip.",
       "Readiness scoring with a weak-area breakdown instead of a raw percentage.",
     ],
     stack: ["Phoenix", "Elixir", "PostgreSQL", "WhatsApp API"],
@@ -273,7 +273,7 @@ const PRODUCTS_DATA: Product[] = [
     sector: "Language",
     summary: [
       "Yoruba is tonal, so a learning app that only reads and writes teaches the wrong half of the language. Every Loeko lesson is built around speaking: the app listens, scores pronunciation on tone, fluency and accuracy, gives specific feedback, and repeats the exercise until it is right.",
-      "The speech stack is purpose-built for the language rather than borrowed — a Whisper model fine-tuned for Yoruba on the way in, YarnGPT on the way out.",
+      "The speech stack is purpose-built for the language rather than borrowed: a Whisper model fine-tuned for Yoruba on the way in, YarnGPT on the way out.",
     ],
     highlights: [
       "Pronunciation scored on tone as a first-class dimension, not just word accuracy.",
@@ -286,11 +286,11 @@ const PRODUCTS_DATA: Product[] = [
   {
     slug: "griotvid",
     name: "GriotVid",
-    tagline: "An idea in, a narrated video out — in your language.",
+    tagline: "An idea in, a narrated video out, in your language.",
     sector: "Media",
     summary: [
       "A griot is a West African storyteller. GriotVid takes a topic or a script and returns a finished, narrated, captioned video: the script and scene plan are written in the chosen language, footage is pulled from Pexels and Pixabay, narration is generated as one continuous take, music is picked by mood, and FFmpeg assembles the result on the GPU.",
-      "Narration uses Edge-TTS for English and several African languages, and YarnGPT for Yoruba, Igbo and Hausa. Paste your own script and it is narrated word for word — the model only picks footage and a title, and never rewrites your words.",
+      "Narration uses Edge-TTS for English and several African languages, and YarnGPT for Yoruba, Igbo and Hausa. Paste your own script and it is narrated word for word: the model only picks footage and a title, and never rewrites your words.",
     ],
     highlights: [
       "Narration rendered as one continuous take rather than stitched per scene, so the pacing holds.",
@@ -324,12 +324,12 @@ const PRODUCTS_DATA: Product[] = [
     sector: "Computer vision",
     reel: "DaSXdAOitWP",
     summary: [
-      "Security cameras are everywhere in Nigeria. Intelligence is not. The cameras most businesses already own record problems rather than prevent them — by the time anyone reviews the footage, the theft has happened and the intruder is gone.",
+      "Security cameras are everywhere in Nigeria. Intelligence is not. The cameras most businesses already own record problems rather than prevent them: by the time anyone reviews the footage, the theft has happened and the intruder is gone.",
       "SmartEyes is the layer that closes that gap, and it plugs into the cameras that are already on the wall. No rip-and-replace, no new hardware bill: intrusion, loitering and unusual movement are detected as they happen, and the alert reaches a phone in the moment rather than hours later.",
       "It runs on affordable edge hardware rather than streaming everything to a cloud, which is what makes it viable on the bandwidth an estate, a warehouse or a retail shop actually has. Underneath, detection holds a person's identity across frames and can record their visit as its own clip, so reviewing an incident means opening one file instead of scrubbing an hour of floor.",
     ],
     highlights: [
-      "Retrofits existing CCTV — the business keeps the cameras it already paid for.",
+      "Retrofits existing CCTV: the business keeps the cameras it already paid for.",
       "Real-time detection of intrusion, loitering and unusual movement, not after-the-fact review.",
       "Alerts pushed to a phone the moment something happens.",
       "Runs on affordable edge hardware, so it does not depend on upload bandwidth.",
@@ -345,7 +345,7 @@ const PRODUCTS_DATA: Product[] = [
     reel: "DbdIjVDlIxe",
     summary: [
       "Speak Yoruba into a microphone and the system either captions what you said with correct accents, or answers you as a voice assistant and speaks the reply aloud.",
-      "The engineering problem is that cloud calls are slow and microphones are not patient. Five stages run concurrently so a slow network round trip never blocks capture or live decoding — voice activity detection and speech-to-text stay local, and only correction and speech synthesis leave the machine.",
+      "The engineering problem is that cloud calls are slow and microphones are not patient. Five stages run concurrently so a slow network round trip never blocks capture or live decoding: voice activity detection and speech-to-text stay local, and only correction and speech synthesis leave the machine.",
     ],
     highlights: [
       "Five concurrent stages, so the microphone is never deaf while a slow stage is working.",
@@ -384,7 +384,7 @@ const PRODUCTS_DATA: Product[] = [
       "The camera is only requested when someone taps to launch, never on page load. With the optional backend running, an uploaded artwork can be saved and shared as a link with a QR code that pins any phone to that piece.",
     ],
     highlights: [
-      "Natural-feature tracking on the artwork itself — no markers or QR codes in the frame.",
+      "Natural-feature tracking on the artwork itself: no markers or QR codes in the frame.",
       "Runs in the browser on a phone or a laptop webcam, with no app install.",
       "Camera permission requested on tap, not on page load.",
       "Degrades cleanly: without the backend the share features hide themselves and the app is otherwise unchanged.",
@@ -415,7 +415,7 @@ const PRODUCTS_DATA: Product[] = [
     sector: "Productivity",
     summary: [
       "A browser document editor that recreates the familiar ribbon interface and page-based layout: rich text, formatting, image insertion, zoom controls and keyboard shortcuts.",
-      "The page-based layout is the hard part — most browser editors are one long scroll, which is fine until someone needs to know what will be on page three.",
+      "The page-based layout is the hard part: most browser editors are one long scroll, which is fine until someone needs to know what will be on page three.",
     ],
     highlights: [
       "Page-based layout rather than a single scrolling document.",
@@ -431,7 +431,7 @@ const PRODUCTS_DATA: Product[] = [
     tagline: "A game platform that lives entirely inside a chat thread.",
     sector: "Education",
     summary: [
-      "A gaming platform played through WhatsApp messages: four game types, clan assignment, player profiles with levels and points, and a global leaderboard. No app, no website, no download — the whole thing is a conversation.",
+      "A gaming platform played through WhatsApp messages: four game types, clan assignment, player profiles with levels and points, and a global leaderboard. No app, no website, no download: the whole thing is a conversation.",
       "It is a teaching vehicle as much as a game. Reaching people where they already are, on the network they already pay for, is the same constraint most of our other work is built around.",
     ],
     highlights: [
@@ -444,7 +444,7 @@ const PRODUCTS_DATA: Product[] = [
   },
 ];
 
-/** Declaration order is the curated order — edit PRODUCTS_DATA to reorder. */
+/** Declaration order is the curated order: edit PRODUCTS_DATA to reorder. */
 export const PRODUCTS: readonly Product[] = PRODUCTS_DATA;
 
 export const PRODUCT_SLUGS: readonly string[] = PRODUCTS.map((p) => p.slug);

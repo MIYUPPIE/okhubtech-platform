@@ -13,7 +13,7 @@ const runtime = (seconds: number) => {
  *
  * This deliberately does not use Instagram's embed.js. That script rewrites a
  * <blockquote> into an iframe on the client, which means the players only
- * appear if the script loads — an ad blocker, a strict network or a slow
+ * appear if the script loads: an ad blocker, a strict network or a slow
  * connection and the section renders as three empty boxes. The /reel/<id>/embed/
  * iframe is Instagram's own player and is plain markup, so it ships in the
  * static export and works with no JavaScript of ours at all.

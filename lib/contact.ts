@@ -5,7 +5,7 @@
  * answers to "how do I reach OKHub": the footer had info@okhubtech.com and
  * +2349069958990, ContactSection had hello@okhub.tech, FloatingContact dialled
  * +2348081130222, and /contact listed partners@/capital@/press@/talent@/legal@
- * on okhub.tech plus an "Abuja HQ" — a domain OKHub does not own and an office
+ * on okhub.tech plus an "Abuja HQ": a domain OKHub does not own and an office
  * that does not exist.
  *
  * Every component that renders a phone number, an email address or a location
@@ -40,7 +40,7 @@ export const whatsappLink = (message?: string) =>
 
 /**
  * Social accounts. Every one of these was requested and answered 200 before it
- * was put here — the footer previously carried links to linkedin.com and
+ * was put here: the footer previously carried links to linkedin.com and
  * twitter.com, which are those sites' own front pages and not OKHub at all.
  *
  * www.facebook.com and web.facebook.com serve the same page; www is the
@@ -59,7 +59,7 @@ export const INSTAGRAM = "https://www.instagram.com/okhubtech";
  * means the link and the player can never disagree.
  *
  * Titles are the opening line of each reel's own caption, read off the embed
- * payload rather than written here — see scripts/verify-contact.mjs for why
+ * payload rather than written here: see scripts/verify-contact.mjs for why
  * nothing on this site gets a caption somebody invented.
  */
 /**
@@ -85,7 +85,7 @@ export const REELS: readonly Reel[] = [
     id: "DbjAWTsgMuh",
     title: "A hands-free voting kiosk",
     blurb:
-      "Biometric voter registration and a voting kiosk with no keyboard and no mouse — pick a language, look at the camera, point at a party.",
+      "Biometric voter registration and a voting kiosk with no keyboard and no mouse: pick a language, look at the camera, point at a party.",
     seconds: 151,
   },
   {
@@ -100,7 +100,7 @@ export const REELS: readonly Reel[] = [
     kind: "post",
     title: "A submersible pump, drawn part by part",
     blurb:
-      "Bearing, impeller stack and housing modelled in SolidWorks 2023 — the CAD that has to be right before anything gets cut or printed.",
+      "Bearing, impeller stack and housing modelled in SolidWorks 2023: the CAD that has to be right before anything gets cut or printed.",
     seconds: 15,
   },
   {
@@ -127,7 +127,7 @@ export const reelEmbed = (id: string, kind: ReelKind = "reel") =>
  *
  * Public by design: an account name, bank and account number are what you hand
  * out to *receive* money, not credentials. Nothing here authorises a debit.
- * Keep the account name exact — payers match it before they send.
+ * Keep the account name exact: payers match it before they send.
  */
 export const BANK = {
   name: "Paystack MFB",

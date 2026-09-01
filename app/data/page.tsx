@@ -5,14 +5,14 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Data | OKHub",
   description:
-    "OKHub's data practice: sequence models, computer vision and LLM-backed tools, built to run on small, patchy, real-world data — and taught the same way.",
+    "OKHub's data practice: sequence models, computer vision and LLM-backed tools, built to run on small, patchy, real-world data, and taught the same way.",
 };
 
 /**
  * /data used to be one of eight routes rendered from the shared pageContent map
  * in app/[page]/page.tsx. That template paints a permanent black gradient and
  * claimed "14 data lakes", "280+ real-time pipelines" and "35 cabinet-ready
- * policy dashboards" — none of which exist. This page is theme-aware and every
+ * policy dashboards", none of which exist. This page is theme-aware and every
  * claim on it traces to a project with a page of its own under /portfolio.
  */
 
@@ -99,7 +99,7 @@ export default function DataPracticePage() {
         Most of the data work that reaches us starts small and messy: a few
         thousand rows, a sensor that drops out overnight, a spreadsheet someone
         maintains by hand. We build for that rather than for the dataset we
-        wish existed, and we teach it the same way — the architecture matters
+        wish existed, and we teach it the same way: the architecture matters
         less than whether it survives contact with the data you can really get.
       </p>
 

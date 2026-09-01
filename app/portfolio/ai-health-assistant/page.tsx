@@ -44,7 +44,7 @@ export default function VitalsMonitorPortfolioPage() {
           Arduino reads temperature, heart rate and ECG and puts them on an LCD.
           An ESP8266 takes the same readings over serial, publishes them to a
           small web server, and sends an SMS the moment a reading goes out of
-          range — so nobody has to be standing at the bedside to know.
+          range, so nobody has to be standing at the bedside to know.
         </p>
 
         <dl className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-black/10 bg-black/10 sm:grid-cols-2 dark:border-white/10 dark:bg-white/10">

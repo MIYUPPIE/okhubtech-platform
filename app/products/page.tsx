@@ -7,7 +7,7 @@ import ReelsSection from "@/components/ReelsSection";
 export const metadata: Metadata = {
   title: "Products | OKHub",
   description:
-    "Software OKHub has built: LogSME, Alajapa, VASIDAS, TeenBuddy, LOGOD, NURPAT, LAMIUK, UNC, Loeko, GriotVid and more — across commerce, agriculture, health, language, automation and the public sector.",
+    "Software OKHub has built: LogSME, Alajapa, VASIDAS, TeenBuddy, LOGOD, NURPAT, LAMIUK, UNC, Loeko, GriotVid and more, across commerce, agriculture, health, language, automation and the public sector.",
 };
 
 const sectors = [...new Set(PRODUCTS.map((p) => p.sector))];
@@ -22,7 +22,7 @@ export default function ProductsPage() {
         Software we have built and shipped.
       </h1>
       <p className="mt-6 max-w-3xl text-lg text-black/80 dark:text-white/80">
-        {PRODUCTS.length} products across {sectors.length} sectors — commerce,
+        {PRODUCTS.length} products across {sectors.length} sectors: commerce,
         agriculture, health, language, automation, media and the public sector.
         Most were built for conditions the usual tooling assumes away: no signal
         in the field, no broadband in the building, no GPU worth the name, and a

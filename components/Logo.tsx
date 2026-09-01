@@ -64,7 +64,7 @@ export function LogoLink({
   className = "",
 }: LogoProps) {
   return (
-    <Link href="/" aria-label={`${LOGO_ALT} — home`} className={className}>
+    <Link href="/" aria-label={`${LOGO_ALT} home`} className={className}>
       <Logo variant={variant} height={height} priority={priority} />
     </Link>
   );

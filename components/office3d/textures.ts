@@ -286,7 +286,7 @@ export function whiteboardTexture(): CanvasTexture {
   ctx.fillStyle = "#1f2933";
   ctx.lineWidth = 3;
   ctx.font = "600 22px 'Space Grotesk', system-ui, sans-serif";
-  ctx.fillText("COHORT BUILD — OBSTACLE AVOIDANCE", 48, 56);
+  ctx.fillText("COHORT BUILD: OBSTACLE AVOIDANCE", 48, 56);
   ctx.fillRect(48, 68, 420, 3);
 
   const nodes = [

@@ -30,8 +30,8 @@ export default function DataScienceExpertisePage() {
           </div>
         </div>
         <p className="mt-6 text-black/70 dark:text-white/70">
-          For the projects behind this — the architectures, what they run on and
-          why — see the{" "}
+          For the projects behind this (the architectures, what they run on and
+          why), see the{" "}
           <Link href="/data" className="text-gold-ink underline underline-offset-4 hover:opacity-80">
             data practice page
           </Link>

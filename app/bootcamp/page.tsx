@@ -62,7 +62,7 @@ export default function BootcampPage() {
             <h2 className="section-title mt-3">Six systems, start to finish.</h2>
           </div>
           <p className="max-w-xs text-sm text-black/60 dark:text-white/60">
-            Sensing, decisions and actuation — the same loop, six different
+            Sensing, decisions and actuation: the same loop, six different
             problems.
           </p>
         </div>

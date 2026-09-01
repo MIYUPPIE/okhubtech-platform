@@ -13,7 +13,7 @@ const signals = [
   {
     icon: ShieldCheck,
     title: "Built for local rules",
-    copy: "AI, data and robotics built to the regulations that actually apply, not retrofitted to them.",
+    copy: "Software and hardware built to the regulations that actually apply, not retrofitted to them.",
   },
   {
     icon: Sparkles,
@@ -86,10 +86,11 @@ const AboutSection = () => (
             We teach the skills, then build with them.
           </h2>
           <p className="mt-6 text-black/70 dark:text-white/70">
-            OKHub Technology trains people in AI, robotics and software, and
-            builds systems for people who need them, out of the same building
-            in Ibadan. Trainees work on real problems, not exercises invented
-            for a classroom.
+            OKHub Technology trains people and builds systems, out of the same
+            building in Ibadan. The work spans commerce, health, agriculture,
+            civic tech and more. Robotics is one part of it, not the whole of
+            it. Trainees work on real problems, not exercises invented for a
+            classroom.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {statements.map((statement) => (

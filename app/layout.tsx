@@ -21,9 +21,9 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "OKHub Technology — Training Minds. Building Solutions. Powering Africa’s Future.",
+  title: "OKHub Technology: Training Minds. Building Solutions. Powering Africa’s Future.",
   description:
-    "Africa-first 4IR studio delivering AI, robotics, immersive learning, and sovereign data systems for governments, enterprises, and communities.",
+    "OKHub Technology trains people in AI, robotics and software, and builds systems across commerce, agriculture, health, civic tech and more, out of Ibadan, Nigeria.",
   metadataBase: new URL(SITE_URL),
   openGraph: {
     title: "OKHub Technology | Fourth Industrial Revolution for Africa",

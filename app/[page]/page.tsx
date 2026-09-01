@@ -6,6 +6,18 @@ import ContactSection from "@/components/ContactSection";
 import AboutSection from "@/components/AboutSection";
 import { BANK, EMAIL, FACEBOOK, INSTAGRAM, LOCATION, LOCATION_SHORT, MAILTO, PHONE_DISPLAY, TEL, whatsappLink } from "@/lib/contact";
 import { PRODUCTS } from "@/lib/products";
+
+/**
+ * Every sector represented in the real catalogue, in the order products were
+ * added. Used so /about's claim about what OKHub builds cannot narrow back to
+ * "AI and robotics" the way the page it replaced did - it is the actual list,
+ * not five sectors picked to sound good.
+ */
+const ABOUT_SECTORS = [...new Set(PRODUCTS.map((p) => p.sector))].map((s) => s.toLowerCase());
+const ABOUT_SECTORS_LIST =
+  ABOUT_SECTORS.length > 1
+    ? `${ABOUT_SECTORS.slice(0, -1).join(", ")}, and ${ABOUT_SECTORS[ABOUT_SECTORS.length - 1]}`
+    : ABOUT_SECTORS[0];
 import { BOOTCAMP_PROJECTS } from "@/lib/bootcamp";
 import { ROBOTICS_GUIDE, fileSize } from "@/lib/media";
 
@@ -69,15 +81,15 @@ type PageContent = {
 const pageContent: Record<string, PageContent> = {
   about: {
     badge: "About OKHub",
-    title: "AI, robotics and data systems — built and taught in Ibadan.",
+    title: "Whatever the problem is, we build for it.",
     description:
-      "OKHub Technology is a training and engineering studio. We teach the skills in the same rooms where we ship the work, so a lesson is never far from a real deploy.",
+      "OKHub Technology trains people and builds systems, out of the same building in Ibadan. Robotics and AI are part of that work. They are not the whole of it.",
     accent: "from-[var(--gold-primary)] via-[#f97316] to-[#ffcd5a]",
     highlights: [
       {
         label: "Products shipped",
         value: String(PRODUCTS.length),
-        caption: "Live software across commerce, agriculture, health, language and civic tech — see them at /products.",
+        caption: `Across ${ABOUT_SECTORS.length} sectors, from a voting kiosk to a business platform to a nursing exam prep tool. See them at /products.`,
       },
       {
         label: "Bootcamp builds",
@@ -95,10 +107,10 @@ const pageContent: Record<string, PageContent> = {
         eyebrow: "What we do",
         title: "Two things, in the same building",
         description:
-          "We train people in AI, robotics and software, and we build systems for people who need them. Neither is the marketing arm of the other — the same engineers do both.",
+          "We train people in software and hardware, and we build systems for people who need them. Neither is the marketing arm of the other: the same engineers do both.",
         bullets: [
           "Cohort training that ships a real, working build before it certifies.",
-          "Client and product work across commerce, agriculture, health, language and civic tech.",
+          `Client and product work across ${ABOUT_SECTORS_LIST}.`,
           "Trainees work on real client problems, not simulated ones.",
         ],
       },
@@ -108,7 +120,7 @@ const pageContent: Record<string, PageContent> = {
         description:
           "Most of the places this software runs do not have the reliable power, bandwidth or budget that a lot of tooling assumes. We design for the network and hardware people actually have, not the ones we wish they had.",
         bullets: [
-          "Offline-first where a connection cannot be guaranteed — data syncs when it returns.",
+          "Offline-first where a connection cannot be guaranteed: data syncs when it returns.",
           "Edge inference over cloud dependency, where the hardware allows it.",
           "WhatsApp and SMS as first-class interfaces, because that is where the users already are.",
         ],
@@ -116,7 +128,7 @@ const pageContent: Record<string, PageContent> = {
     ],
     resources: [
       {
-        label: `A Beginner's Guide to Autonomous Robots — PDF, ${fileSize(ROBOTICS_GUIDE.bytes)}`,
+        label: `A Beginner's Guide to Autonomous Robots (PDF, ${fileSize(ROBOTICS_GUIDE.bytes)})`,
         href: ROBOTICS_GUIDE.src,
         external: true,
       },
@@ -226,7 +238,7 @@ const pageContent: Record<string, PageContent> = {
         eyebrow: "Proof points",
         title: "From prototype to continental scale",
         description:
-          "We build for radical practicality—programs only graduate when they show economic uplift and resilience across multiple states.",
+          "We build for radical practicality: programs only graduate when they show economic uplift and resilience across multiple states.",
         bullets: [
           "Climate-positive manufacturing corridors spanning West and East Africa.",
           "Creative economy pipelines exporting African IP globally.",
@@ -567,8 +579,8 @@ const MarketingPage = async ({ params }: PageParams) => {
           The accent ramp ranges from #ffd700 (light) to #0f2027 (near-black on
           robotics), so no single text colour reads on all six. A solid fill
           would need to special-case each one and break again the next time an
-          accent is added. Putting the gradient on a 1px ring instead — with the
-          text on a fixed white/black pill inside it — keeps the per-page colour
+          accent is added. Putting the gradient on a 1px ring instead, with the
+          text on a fixed white/black pill inside it, keeping the per-page colour
           identity while the text sits on a background this file already knows
           is legible in both themes.
         */}

@@ -17,7 +17,7 @@ const BuildLogSection = () => (
         <h2 className="section-title mt-3">What leaves the bench.</h2>
       </div>
       <p className="max-w-xs text-sm text-black/60 dark:text-white/60">
-        Offline AI assistants, sensor rigs, and rovers — built and tested in house.
+        Offline AI assistants, sensor rigs, and rovers, built and tested in house.
       </p>
     </div>
 
