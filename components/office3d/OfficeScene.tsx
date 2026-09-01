@@ -239,7 +239,18 @@ const OfficeScene = ({
   return (
     <Canvas
       shadows={tier === "high" ? "soft" : false}
-      dpr={tier === "high" ? [1, 1.75] : [1, 1.25]}
+      // R3F clamps this ceiling against the device's own devicePixelRatio, so
+      // it only raises resolution on screens that are actually dense enough
+      // to use it - a 1x-DPR laptop is untouched either way. `tier` here is
+      // "low" for every touch+narrow device regardless of how capable the
+      // phone actually is, which is the right call for shadows and bloom
+      // (genuinely expensive) but was wrong for DPR: at a 1.25 ceiling, a
+      // normal 3x-DPR phone rendered the room at under half the pixel
+      // density a laptop got, and the upscaled result read as blurry next to
+      // the crisp desktop/tablet view. This scene has no bloom or shadows on
+      // low tier to begin with, so the remaining fill cost is cheap enough
+      // for a modern phone GPU to carry at a full 2x.
+      dpr={tier === "high" ? [1, 1.75] : [1, 2]}
       frameloop={visible ? "always" : "never"}
       camera={{
         fov: 42,
@@ -248,7 +259,13 @@ const OfficeScene = ({
         position: [...OVERVIEW.camera],
       }}
       gl={{
-        antialias: tier === "high",
+        // Antialiasing was tied to `tier` alongside shadows and bloom, but on
+        // this low-poly furniture MSAA is cheap on its own - it is the post-
+        // processing composite pass that was ever expensive, and that stays
+        // gated to high tier below. Turning AA back on for low tier is what
+        // actually cleans up the jagged edges that read as "not as sharp"
+        // separately from the DPR fix above.
+        antialias: true,
         alpha: false,
         powerPreference: "high-performance",
         toneMapping: ACESFilmicToneMapping,
