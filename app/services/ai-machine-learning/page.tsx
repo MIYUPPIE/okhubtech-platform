@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/ai-machine-learning",
+  title: "AI & Machine Learning",
+  description:
+    "Custom copilots, predictive models and automation built for ministries and enterprises, from data pipeline to deployed model.",
+  ogSlug: "services",
+  ogAlt: "AI & Machine Learning at OKHub",
+});
+
 
 import Link from "next/link";
 import React from "react";
@@ -22,19 +35,6 @@ const AIMachineLearningPage = () => (
         <p className="text-black/70 dark:text-white/70 mb-2">
           Our team of AI experts combines deep technical knowledge with industry experience to deliver solutions that are both innovative and practical. We work closely with clients to understand their unique challenges and deliver measurable results.
         </p>
-      </div>
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Overview</h2>
-        <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
-          <iframe
-            className="h-full w-full"
-            src="https://www.youtube.com/embed/AdqFQ8pQY7k"
-            title="AI & Machine Learning Explained"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
       </div>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Get Started</h2>

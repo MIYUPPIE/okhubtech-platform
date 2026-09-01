@@ -3,12 +3,16 @@ import Image from "next/image";
 
 import ProjectArtifacts from "@/components/ProjectArtifacts";
 import { HYDROPONICS_ARTIFACTS } from "@/lib/media";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Hydroponics Automation | OKHub",
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/hydroponics",
+  title: "Hydroponics Automation",
   description:
     "An Arduino Nano hydroponics controller reading pH, water level, gas, temperature and light, driving a pump and grow light, and reporting over GSM where there is no broadband.",
-};
+  ogSlug: "portfolio-hydroponics",
+  ogAlt: "The hydroponics automation schematic",
+});
 
 const specs = [
   { label: "Controller", value: "Arduino Nano" },

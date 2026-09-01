@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/expertise/data-science",
+  title: "Data Science Expertise",
+  description:
+    "Big data pipelines, advanced analytics and scientific workflows that turn raw data into decisions worth acting on.",
+  ogSlug: "expertise",
+  ogAlt: "Data Science Expertise at OKHub",
+});
+
 import Link from "next/link";
 import React from "react";
 
@@ -16,19 +29,6 @@ export default function DataScienceExpertisePage() {
           <li>Predictive analytics for business strategy</li>
           <li>Custom solutions for industry-specific challenges</li>
         </ul>
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Expertise</h2>
-          <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/2vK1G6b0GJc"
-              title="Data Science Expertise"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
         <p className="mt-6 text-black/70 dark:text-white/70">
           For the projects behind this (the architectures, what they run on and
           why), see the{" "}

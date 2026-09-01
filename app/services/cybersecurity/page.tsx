@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/cybersecurity",
+  title: "Cybersecurity",
+  description:
+    "Threat modelling, SOC design and zero-trust architecture, plus resilience testing for national-scale platforms.",
+  ogSlug: "services",
+  ogAlt: "Cybersecurity at OKHub",
+});
+
 import React from "react";
 
 const CybersecurityPage = () => (

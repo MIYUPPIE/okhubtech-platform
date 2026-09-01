@@ -38,7 +38,7 @@ import sys
 from dataclasses import dataclass, asdict
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "assets"
@@ -68,6 +68,15 @@ DIAGRAM_QUALITY = 92
 VIDEO_POLICY: dict[str, dict[str, object]] = {
     "okhub-showreel": {"audio": True, "max_seconds": None, "width": 720},
 }
+
+# Social share cards. Brand fonts, not a system fallback: DejaVu on a card
+# meant to represent the brand on Twitter/LinkedIn/WhatsApp previews would be
+# an obviously wrong typeface next to the site's own Space Grotesk headings.
+FONT_TITLE = ASSETS / "fonts" / "SpaceGrotesk-Variable.ttf"
+FONT_BODY = ASSETS / "fonts" / "Sora-Variable.ttf"
+OG_SIZE = (1200, 630)
+WHITE = (255, 255, 255)
+MUTED = (168, 168, 168)
 
 FORCE = "--force" in sys.argv
 CHECK = "--check" in sys.argv
@@ -388,6 +397,175 @@ def build_videos() -> None:
 
 
 # ---------------------------------------------------------------------------
+# social share cards (Open Graph / Twitter)
+# ---------------------------------------------------------------------------
+#
+# Every page used to inherit the same generic card - share any of the ~40
+# routes on WhatsApp, Twitter or LinkedIn and every single one showed the
+# homepage's title, description AND image. lib/seo.ts fixes the text half;
+# this generates the image half: a real, on-brand 1200x630 card per page
+# (or per page category, where 8-12 leaf pages share one topic), built from
+# real project photography where it exists and a clean text card otherwise -
+# never a stock or AI-generated image standing in for the page.
+
+
+@dataclass(frozen=True)
+class OGCardSpec:
+    slug: str
+    kicker: str
+    title: str
+    # Path under public/media/ to a real, already-verified photo. Square or
+    # portrait sources are composited into a right-hand panel rather than
+    # stretched or cropped to fill the frame, so nothing gets distorted.
+    photo: str | None = None
+
+
+OG_CARDS: list[OGCardSpec] = [
+    OGCardSpec("about", "About OKHub", "Training minds. Building solutions."),
+    OGCardSpec("services", "Services", "What we build, deployed."),
+    OGCardSpec("expertise", "Expertise", "AI, data, web and robotics, in depth."),
+    OGCardSpec("portfolio", "Portfolio", "Systems we have shipped."),
+    OGCardSpec("products", "Products", "Software OKHub has built."),
+    OGCardSpec("bootcamp", "Running now", "4IR Bootcamp", photo="video/students-actuator-class-poster.webp"),
+    OGCardSpec("data", "Data & Analytics", "Signals into decisions."),
+    OGCardSpec("contact", "Get in touch", "Talk to OKHub."),
+    OGCardSpec("studio", "The Studio", "The robotics and training floor."),
+    OGCardSpec("portfolio-serving-robot", "Portfolio · Robotics", "Restaurant Serving Robot",
+               photo="portfolio/serving-robot.webp"),
+    OGCardSpec("portfolio-ai-health-assistant", "Portfolio · Health", "Patient Vitals Monitor",
+               photo="projects/health-monitor/02-block-diagram.webp"),
+    OGCardSpec("portfolio-hydroponics", "Portfolio · Agriculture", "Hydroponics Automation",
+               photo="projects/hydroponics/01-schematic.webp"),
+    OGCardSpec("ai", "AI Practice", "Policy-aligned roadmaps to sovereign LLM deployment."),
+    OGCardSpec("web", "Web Practice", "Luxury-grade digital products, built for reliability."),
+    OGCardSpec("robotics", "Robotics Practice", "Automation for African terrain and industry."),
+]
+
+
+def _font(path: Path, size: int, weight: int) -> ImageFont.FreeTypeFont:
+    font = ImageFont.truetype(str(path), size)
+    try:
+        font.set_variation_by_axes([weight])
+    except OSError:
+        pass  # static (non-variable) fallback build of the font: weight is fixed
+    return font
+
+
+def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont,
+          max_width: int) -> list[str]:
+    words = text.split()
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        candidate = f"{current} {word}".strip()
+        if draw.textlength(candidate, font=font) <= max_width or not current:
+            current = candidate
+        else:
+            lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines
+
+
+def _cover_crop(im: Image.Image, size: tuple[int, int]) -> Image.Image:
+    """Resize + centre-crop to exactly `size`, filling it with no distortion."""
+    target_w, target_h = size
+    scale = max(target_w / im.width, target_h / im.height)
+    resized = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
+    x = (resized.width - target_w) // 2
+    y = (resized.height - target_h) // 2
+    return resized.crop((x, y, x + target_w, y + target_h))
+
+
+def _rounded_mask(size: tuple[int, int], radius: int) -> Image.Image:
+    mask = Image.new("L", size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, size[0], size[1]), radius=radius, fill=255)
+    return mask
+
+
+def build_og_cards() -> None:
+    out = MEDIA / "og"
+    out.mkdir(parents=True, exist_ok=True)
+
+    title_font_lg = _font(FONT_TITLE, 64, 700)
+    title_font_md = _font(FONT_TITLE, 52, 700)
+    kicker_font = _font(FONT_BODY, 24, 600)
+
+    for spec in OG_CARDS:
+        dst = out / f"{spec.slug}.png"
+        photo_src = (MEDIA / spec.photo) if spec.photo else None
+        stale = newer(photo_src, dst) if photo_src else FORCE or not dst.exists()
+        if not stale:
+            continue
+
+        card = Image.new("RGB", OG_SIZE, INK)
+        draw = ImageDraw.Draw(card)
+
+        has_photo = photo_src is not None and photo_src.exists()
+        margin = 80
+        text_right_edge = 660 if has_photo else OG_SIZE[0] - margin
+        text_width = text_right_edge - margin
+
+        # Kicker: small caps label with manual letter-spacing (PIL has no
+        # CSS-style tracking) and a short gold rule beneath it, matching the
+        # accent treatment already used on okhub-og-image.png.
+        y = 150
+        x = margin
+        tracked = spec.kicker.upper()
+        for ch in tracked:
+            draw.text((x, y), ch, font=kicker_font, fill=GOLD)
+            x += draw.textlength(ch, font=kicker_font) + 3
+        draw.rectangle((margin, y + 42, margin + 64, y + 46), fill=GOLD)
+
+        # Title: the biggest font that still wraps to 3 lines or fewer.
+        title_font = title_font_lg
+        lines = _wrap(draw, spec.title, title_font, text_width)
+        if len(lines) > 3:
+            title_font = title_font_md
+            lines = _wrap(draw, spec.title, title_font, text_width)
+        lines = lines[:3]
+
+        line_height = int(title_font.size * 1.18)
+        title_y = y + 80
+        for line in lines:
+            draw.text((margin, title_y), line, font=title_font, fill=WHITE)
+            title_y += line_height
+
+        draw.text((margin, OG_SIZE[1] - 70), "okhubtech.com", font=kicker_font, fill=MUTED)
+
+        if has_photo:
+            panel = (740, 90, 1120, 540)
+            pw, ph = panel[2] - panel[0], panel[3] - panel[1]
+            photo = Image.open(photo_src).convert("RGB")
+            cropped = _cover_crop(photo, (pw, ph))
+            mask = _rounded_mask((pw, ph), 20)
+            card.paste(cropped, (panel[0], panel[1]), mask)
+            draw.rounded_rectangle(panel, radius=20, outline=GOLD, width=2)
+        else:
+            # No photo: the globe mark, large and faint, fills the right side
+            # rather than leaving it empty.
+            mark = brand.get("mark-dark")
+            if mark is not None:
+                mark_im = Image.open(MEDIA / mark.src.lstrip("/media/")).convert("RGBA")
+                scale = 360 / mark_im.height
+                mark_im = mark_im.resize(
+                    (round(mark_im.width * scale), round(mark_im.height * scale)), Image.LANCZOS
+                )
+                alpha = mark_im.getchannel("A").point(lambda a: int(a * 0.16))
+                mark_im.putalpha(alpha)
+                card.paste(
+                    mark_im,
+                    (OG_SIZE[0] - mark_im.width - 40, (OG_SIZE[1] - mark_im.height) // 2),
+                    mark_im,
+                )
+
+        card.save(dst, "PNG", optimize=True)
+
+    print(f"  /media/og: {len(OG_CARDS)} share cards")
+
+
+# ---------------------------------------------------------------------------
 # manifest
 # ---------------------------------------------------------------------------
 
@@ -505,6 +683,7 @@ def main() -> int:
     build_videos()
     build_projects()
     build_docs()
+    build_og_cards()
     write_manifest()
 
     total = sum(f.stat().st_size for f in MEDIA.rglob("*") if f.is_file())

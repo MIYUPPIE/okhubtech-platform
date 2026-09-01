@@ -3,12 +3,16 @@ import Image from "next/image";
 
 import ProjectArtifacts from "@/components/ProjectArtifacts";
 import { HEALTH_MONITOR_ARTIFACTS } from "@/lib/media";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Patient Vitals Monitor | OKHub",
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/ai-health-assistant",
+  title: "Patient Vitals Monitor",
   description:
     "An Arduino and ESP8266 vitals monitor reading temperature, heart rate and ECG, showing them on an LCD and sending an SMS when a reading goes abnormal.",
-};
+  ogSlug: "portfolio-ai-health-assistant",
+  ogAlt: "The patient vitals monitor block diagram",
+});
 
 const specs = [
   { label: "Controller", value: "Arduino + ESP8266" },

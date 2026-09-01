@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/iot-home",
+  title: "IoT Home Automation",
+  description:
+    "A Python-driven smart home system centralising lighting, security and climate control over a local MQTT network.",
+  ogSlug: "portfolio",
+  ogAlt: "IoT Home Automation — an OKHub project",
+});
+
 import React from "react";
 
 export default function IoTHomePortfolioPage() {

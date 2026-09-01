@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Data | OKHub",
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/data",
+  title: "Data",
   description:
     "OKHub's data practice: sequence models, computer vision and LLM-backed tools, built to run on small, patchy, real-world data, and taught the same way.",
-};
+  ogSlug: "data",
+  ogAlt: "OKHub data practice",
+});
 
 /**
  * /data used to be one of eight routes rendered from the shared pageContent map

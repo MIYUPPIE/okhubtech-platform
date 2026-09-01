@@ -10,12 +10,16 @@ import {
   YOUTUBE_HANDLE,
 } from "@/lib/bootcamp";
 import { HERO_LOOP } from "@/lib/media";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `${BOOTCAMP_NAME} | OKHub`,
+export const metadata: Metadata = pageMetadata({
+  path: "/bootcamp",
+  title: BOOTCAMP_NAME,
   description:
     "The current OKHub 4IR Bootcamp cohort builds six working systems: a dual-mode robotic car, an obstacle-avoidance robot, classroom automation, a deaf-blind obstacle alert, a smart water pump and a railway crossing safety system.",
-};
+  ogSlug: "bootcamp",
+  ogAlt: "Students building a robotics project in the OKHub 4IR Bootcamp",
+});
 
 export default function BootcampPage() {
   return (

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import ContactSection from "@/components/ContactSection";
 import AboutSection from "@/components/AboutSection";
+import { pageMetadata } from "@/lib/seo";
 import { BANK, EMAIL, FACEBOOK, INSTAGRAM, LOCATION, LOCATION_SHORT, MAILTO, PHONE_DISPLAY, TEL, whatsappLink } from "@/lib/contact";
 import { PRODUCTS } from "@/lib/products";
 
@@ -551,17 +552,35 @@ export function generateStaticParams() {
   return (Object.keys(pageContent) as PageKey[]).map((page) => ({ page }));
 }
 
+// Cards for the routes app/[page]/page.tsx actually serves. "services" and
+// "portfolio" have entries in pageContent below, but app/services/page.tsx
+// and app/portfolio/page.tsx are static routes that take priority over this
+// dynamic segment for those exact paths, so those two entries never render -
+// dead content, left as-is since removing it is a content decision, not an
+// SEO one. No card is needed for either.
+const PAGE_OG_SLUGS: Partial<Record<PageKey, string>> = {
+  about: "about",
+  contact: "contact",
+  ai: "ai",
+  web: "web",
+  robotics: "robotics",
+};
+
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const resolvedParams = await params;
-  const config = pageContent[resolvedParams.page as PageKey];
+  const key = resolvedParams.page as PageKey;
+  const config = pageContent[key];
   if (!config) {
     return {};
   }
 
-  return {
-    title: `${config.title} | OKHub`,
+  return pageMetadata({
+    path: `/${key}`,
+    title: config.title,
     description: config.description,
-  };
+    ogSlug: PAGE_OG_SLUGS[key],
+    ogAlt: config.title,
+  });
 }
 
 const MarketingPage = async ({ params }: PageParams) => {

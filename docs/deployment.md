@@ -67,6 +67,7 @@ directory somehow ends up without an `index.html` again, the server returns
 | `npm run build` | `next build`, then every `verify:*` gate; **fails the build** if the export is not deployable | every build |
 | `npm run verify:export` | Checks `out/` on its own | ad hoc |
 | `npm run verify:bootcamp` | Cohort data, the `/bootcamp` route, and placeholder social links | every build |
+| `npm run verify:seo` | Every route's title, canonical, OG/Twitter card and noindex status | every build |
 | `npm run deploy:pack` | Builds, verifies, writes `dist/okhubtech-<stamp>.zip` | before upload |
 | `npm run verify:live` | Probes the live site for directory listings, wrong hosts, bad robots | after upload |
 
@@ -152,6 +153,103 @@ These do not work on this hosting and are inert in `out/`:
 
 A real admin dashboard needs a Node host (Vercel, a VPS, or cPanel's Node.js
 Selector) rather than this static export.
+
+## SEO and social sharing
+
+Before this, ~28 of the site's ~40 routes exported no metadata of their own -
+`app/services/networking/page.tsx`, all four `/expertise/*` pages, eight
+`/portfolio/*` case studies and both index pages had no `export const
+metadata`, so they silently inherited the root layout's title, description
+and share image. Sharing any of them on WhatsApp, Twitter or LinkedIn showed
+the exact same card as the homepage; a visitor had no way to tell which page
+they were looking at before clicking through.
+
+### `lib/seo.ts` - one builder for every page
+
+`pageMetadata({ path, title, description, ogSlug, ogAlt, noindex })` returns a
+complete `Metadata` object: `<title>`, description, `alternates.canonical`,
+full `openGraph` and `twitter` blocks. Every page that needs metadata calls it
+once rather than hand-assembling four blocks that can drift from each other.
+The root layout sets a `title.template` (`"%s | OKHub Technology"`), so a page
+passes only its short title - eleven pages used to append the suffix
+themselves, inconsistently (`"| OKHub"` on some, `"| OKHub Technology"` on
+others). The homepage is the one exception: it opts out with `title: {
+absolute: "..." }`, because a brand-first title is the correct convention for
+a homepage specifically, and the template would have duplicated the brand name
+at both ends of the string.
+
+A client component cannot export `metadata` - Next drops it silently rather
+than erroring, which is exactly how `/portfolio` (a `"use client"` page,
+fetching `/api/portfolio` in a `useEffect`) ended up on the generic root
+card. `app/portfolio/layout.tsx` exists solely to carry the metadata a layout
+can hold that the page beneath it cannot.
+
+### Share images
+
+`scripts/build_media.py` generates fifteen 1200x630 cards into
+`public/media/og/` from an `OG_CARDS` list in that file: real project
+photography where it exists and is already verified (the serving robot,
+the vitals monitor block diagram, the hydroponics schematic, the bootcamp
+hero frame), a clean branded text card otherwise. Never a stock photo and
+never an AI-generated image standing in for a real one - see the note in the
+media pipeline section below about why that matters here specifically.
+Fonts are the site's own brand faces (Space Grotesk, Sora), fetched once into
+`assets/fonts/` from the Google Fonts source repo, not a system fallback -
+DejaVu next to the site's own headings would read as an obviously wrong card.
+
+Cards are shared per category rather than uniquely generated for all ~40
+leaf pages: every `/services/*` page uses the `services` card, every
+`/expertise/*` page uses `expertise`, and so on. This is a deliberate scope
+line, not a shortcut taken by accident - every route still gets its own
+correct title, description and canonical, which is what actually fixes the
+reported bug; a unique photo per leaf page is a real but secondary
+improvement, documented here as a next step for anyone who wants to take it
+further (most of the 8 remaining portfolio pages have no verified real
+photography behind them yet - see the fabricated-content note below before
+sourcing one).
+
+### Structured data
+
+`app/layout.tsx` renders `Organization` and `WebSite` JSON-LD once, via
+`components/JsonLd.tsx`. `lib/seo.ts` also exports `breadcrumbJsonLd()` for
+any page that wants a `BreadcrumbList`; nothing forces every page to use it.
+
+### Noindex, the second layer
+
+`robots.txt` disallows crawling `/admin`, `/login`, `/register` and
+`/unauthorized` - but that only stops a well-behaved crawler from *fetching*
+the page. It does not stop the URL from being indexed if Google reaches it
+some other way (an old link, a bookmark someone shared) - Search Console
+calls this state "Indexed, though blocked by robots.txt." `app/admin/layout.tsx`
+and `app/(auth)/layout.tsx` add `robots: { index: false, follow: false }`,
+which is the layer that actually guarantees these never show up in search or
+carry a social preview.
+
+### Fake video embeds, found while doing this
+
+Nine `/services/*` and `/expertise/*` pages had a "Watch Our Overview" (or
+"Watch Our Expertise") section embedding a YouTube video. All five distinct
+video ids returned 404 on YouTube's oEmbed endpoint - invented ids, not real
+OKHub videos, reused in pairs across matching services/expertise page (e.g.
+robotics services and robotics expertise shared the same fake id). Every
+visitor to those nine pages was looking at a broken "Video unavailable"
+embed. Removed; `scripts/verify-seo.mjs` check H keeps the five known-fake ids
+from quietly coming back.
+
+`scripts/verify-seo.mjs` fails the build on:
+
+- **A** a route with no exported page
+- **B** a missing `<title>`, or one identical to the homepage's
+- **C** a missing or incorrect `<link rel="canonical">`
+- **D** a missing `og:title` / `og:description` / `og:image` / `og:url`, an
+  `og:image` pointing at a file that was not exported, or - the exact bug
+  this exists to catch - a page whose `og:title`, `og:description` **and**
+  `og:image` are all three identical to the homepage's
+- **E** `twitter:card` not set to `summary_large_image`, or a missing
+  `twitter:image`
+- **F** a gated route (`/admin`, `/login`, …) with no `noindex` meta tag
+- **G** the homepage missing `Organization` or `WebSite` JSON-LD
+- **H** any of the five known-fake YouTube embed ids
 
 ## The 4IR Bootcamp
 

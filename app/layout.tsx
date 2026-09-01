@@ -3,9 +3,11 @@ import { Space_Grotesk, Sora } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingContact from "@/components/FloatingContact";
+import JsonLd from "@/components/JsonLd";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SITE_URL } from "@/lib/site";
 import { LOGO } from "@/lib/media";
+import { SITE_NAME, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -20,23 +22,34 @@ const sora = Sora({
   variable: "--font-display",
 });
 
+const DEFAULT_TITLE =
+  "OKHub Technology: Training Minds. Building Solutions. Powering Africa’s Future.";
+const DEFAULT_DESCRIPTION =
+  "OKHub Technology trains people in AI, robotics and software, and builds systems across commerce, agriculture, health, civic tech and more, out of Ibadan, Nigeria.";
+
 export const metadata: Metadata = {
-  title: "OKHub Technology: Training Minds. Building Solutions. Powering Africa’s Future.",
-  description:
-    "OKHub Technology trains people in AI, robotics and software, and builds systems across commerce, agriculture, health, civic tech and more, out of Ibadan, Nigeria.",
+  // `template` composes every child page's own (short) title automatically,
+  // so a page sets title: "Networking" and the rendered <title> and
+  // og:title both become "Networking | OKHub Technology" with no page having
+  // to spell the suffix out itself - eleven pages did, inconsistently
+  // ("| OKHub" vs "| OKHub Technology"), before this.
+  title: {
+    default: DEFAULT_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "OKHub Technology | Fourth Industrial Revolution for Africa",
-    description:
-      "Training minds, building solutions, and powering Africa’s future through AI, robotics, IoT, data, and immersive ecosystems.",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
     url: SITE_URL,
-    siteName: "OKHub Technology",
+    siteName: SITE_NAME,
     images: [
       {
         url: LOGO.og.src,
         width: LOGO.og.width,
         height: LOGO.og.height,
-        alt: "OKHub Technology",
+        alt: SITE_NAME,
       },
     ],
     locale: "en_US",
@@ -44,9 +57,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "OKHub Technology | Africa’s 4IR Engine",
-    description:
-      "Training minds, building solutions, and powering Africa’s future through AI, robotics, IoT, data, and immersive ecosystems.",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
     images: [LOGO.og.src],
   },
 };
@@ -61,6 +73,8 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${sora.variable} antialiased bg-white text-[#050505] dark:bg-black dark:text-white`}
       >
+        <JsonLd data={organizationJsonLd(SITE_URL)} />
+        <JsonLd data={websiteJsonLd(SITE_URL)} />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

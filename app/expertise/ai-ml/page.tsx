@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/expertise/ai-ml",
+  title: "AI & Machine Learning Expertise",
+  description:
+    "Deep learning, neural networks and custom AI systems for automation, prediction and optimisation, built for enterprises, governments and startups.",
+  ogSlug: "expertise",
+  ogAlt: "AI & Machine Learning Expertise at OKHub",
+});
+
 import React from "react";
 
 export default function AIMLExpertisePage() {
@@ -15,19 +28,6 @@ export default function AIMLExpertisePage() {
           <li>Predictive analytics and forecasting</li>
           <li>AI-powered automation for business processes</li>
         </ul>
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Expertise</h2>
-          <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/AdqFQ8pQY7k"
-              title="AI & Machine Learning Expertise"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
       </section>
     </main>
   );

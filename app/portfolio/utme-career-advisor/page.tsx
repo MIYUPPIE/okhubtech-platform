@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/utme-career-advisor",
+  title: "UTME Career Advisor",
+  description:
+    "An academic guidance platform matching UTME scores and subject combinations to university course requirements and personalised career paths.",
+  ogSlug: "portfolio",
+  ogAlt: "UTME Career Advisor — an OKHub project",
+});
+
 import React from "react";
 
 export default function UTMECareerAdvisorPortfolioPage() {

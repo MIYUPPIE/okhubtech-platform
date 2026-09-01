@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/expertise/web-engineering",
+  title: "Web Engineering Expertise",
+  description:
+    "Responsive, scalable web platforms with custom UI/UX, SEO and accessibility built in from the start.",
+  ogSlug: "expertise",
+  ogAlt: "Web Engineering Expertise at OKHub",
+});
+
 import React from "react";
 
 export default function WebEngineeringExpertisePage() {
@@ -15,19 +28,6 @@ export default function WebEngineeringExpertisePage() {
           <li>Integration with CMS and e-commerce</li>
           <li>Performance monitoring and support</li>
         </ul>
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Expertise</h2>
-          <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/3JluqTojuME"
-              title="Web Engineering Expertise"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
       </section>
     </main>
   );

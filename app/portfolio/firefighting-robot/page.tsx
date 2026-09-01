@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/firefighting-robot",
+  title: "Firefighting Robot",
+  description:
+    "A vision-based robotic safety system using thermal imaging and AI tracking to locate and suppress fires autonomously.",
+  ogSlug: "portfolio",
+  ogAlt: "Firefighting Robot — an OKHub project",
+});
+
 import React from "react";
 
 export default function FirefightingRobotPortfolioPage() {

@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/sign-language-educator",
+  title: "Sign Language Educator",
+  description:
+    "A computer vision system using YOLO and CNNs to recognise and validate signed gestures in real time, for interactive learning.",
+  ogSlug: "portfolio",
+  ogAlt: "Sign Language Educator — an OKHub project",
+});
+
 import React from "react";
 
 export default function SignLanguageEducatorPortfolioPage() {

@@ -3,12 +3,16 @@ import Image from "next/image";
 
 import ProjectArtifacts from "@/components/ProjectArtifacts";
 import { SERVING_ROBOT_ARTIFACTS } from "@/lib/media";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Restaurant Serving Robot | OKHub",
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/serving-robot",
+  title: "Restaurant Serving Robot",
   description:
     "An Arduino Mega and ESP32 serving robot that takes orders from a browser form in Yoruba, English, Igbo or Hausa, navigates around obstacles to the table, and plays the order back in the diner's language.",
-};
+  ogSlug: "portfolio-serving-robot",
+  ogAlt: "The assembled restaurant serving robot",
+});
 
 const specs = [
   { label: "Controller", value: "Arduino Mega 2560" },

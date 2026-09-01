@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/networking",
+  title: "Networking",
+  description:
+    "Reliable connectivity: custom networks for campuses and data centres, and secure comms for mission-critical work.",
+  ogSlug: "services",
+  ogAlt: "Networking at OKHub",
+});
+
 import React from "react";
 
 const NetworkingPage = () => (

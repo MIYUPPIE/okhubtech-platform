@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/robotics-automation",
+  title: "Robotics & Automation",
+  description:
+    "Industrial and commercial robotics deployments, IoT-connected systems, and automation for manufacturing and logistics.",
+  ogSlug: "services",
+  ogAlt: "Robotics & Automation at OKHub",
+});
+
 
 import Link from "next/link";
 import React from "react";
@@ -22,19 +35,6 @@ const RoboticsAutomationPage = () => (
         <p className="text-black/70 dark:text-white/70 mb-2">
           Our robotics engineers and automation specialists deliver solutions that are reliable, scalable, and tailored to your unique needs. We help organizations embrace the future of automation with confidence and expertise.
         </p>
-      </div>
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Overview</h2>
-        <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
-          <iframe
-            className="h-full w-full"
-            src="https://www.youtube.com/embed/4u5XQWkQe3g"
-            title="Robotics & Automation Explained"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
       </div>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Get Started</h2>

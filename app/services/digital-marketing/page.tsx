@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/digital-marketing",
+  title: "Digital Marketing",
+  description:
+    "Data-backed storytelling: SEO, social and content strategy with analytics-driven campaign optimisation.",
+  ogSlug: "services",
+  ogAlt: "Digital Marketing at OKHub",
+});
+
 import React from "react";
 
 const DigitalMarketingPage = () => (

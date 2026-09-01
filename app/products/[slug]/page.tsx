@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { PRODUCTS, productBySlug } from "@/lib/products";
 import { REELS } from "@/lib/contact";
 import { ReelCard } from "@/components/ReelsSection";
+import { pageMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -17,10 +18,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const product = productBySlug((await params).slug);
   if (!product) return {};
-  return {
-    title: `${product.name} | OKHub`,
+  return pageMetadata({
+    path: `/products/${product.slug}`,
+    title: product.name,
     description: product.tagline,
-  };
+    ogSlug: "products",
+    ogAlt: `${product.name}, a product built by OKHub`,
+  });
 }
 
 export default async function ProductPage({ params }: Params) {

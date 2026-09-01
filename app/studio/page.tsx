@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { pageMetadata } from "@/lib/seo";
+
 import HeroSection from "@/components/HeroSection";
 import BuildLogSection from "@/components/BuildLogSection";
 import ShowreelSection from "@/components/ShowreelSection";
@@ -9,12 +11,14 @@ import ServicesSection from "@/components/ServicesSection";
 import ImpactSection from "@/components/ImpactSection";
 import ContactSection from "@/components/ContactSection";
 
-export const metadata: Metadata = {
-  title: "The Studio | OKHub Technology",
+export const metadata: Metadata = pageMetadata({
+  path: "/studio",
+  title: "The Studio",
   description:
     "The robotics and training floor at OKHub: the build log, the showreel, the current bootcamp cohort, the services that come out of the bench, and the numbers behind them.",
-  alternates: { canonical: "/studio" },
-};
+  ogSlug: "studio",
+  ogAlt: "The OKHub robotics and training floor",
+});
 
 /**
  * The page this used to be the home page.

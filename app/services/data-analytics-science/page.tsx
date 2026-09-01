@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/data-analytics-science",
+  title: "Data Analytics & Science",
+  description:
+    "Big data pipelines with realtime dashboards, and advanced science workflows for problems that need real answers.",
+  ogSlug: "services",
+  ogAlt: "Data Analytics & Science at OKHub",
+});
+
 
 import Link from "next/link";
 import React from "react";
@@ -22,19 +35,6 @@ const DataAnalyticsSciencePage = () => (
         <p className="text-black/70 dark:text-white/70 mb-2">
           Our team combines domain expertise with technical excellence to deliver analytics solutions that drive growth and innovation. We partner with you to unlock the full potential of your data, ensuring accuracy, reliability, and strategic value.
         </p>
-      </div>
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Overview</h2>
-        <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
-          <iframe
-            className="h-full w-full"
-            src="https://www.youtube.com/embed/2vK1G6b0GJc"
-            title="Data Analytics & Science Explained"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
       </div>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Get Started</h2>

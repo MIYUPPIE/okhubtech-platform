@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/web-design-development",
+  title: "Web Design & Development",
+  description:
+    "Responsive, high-performance web platforms engineered for low-bandwidth realities and enterprise-grade scale.",
+  ogSlug: "services",
+  ogAlt: "Web Design & Development at OKHub",
+});
+
 
 import Link from "next/link";
 import React from "react";
@@ -22,19 +35,6 @@ const WebDesignDevelopmentPage = () => (
         <p className="text-black/70 dark:text-white/70 mb-2">
           We understand the unique challenges faced by African enterprises and global organizations. Our solutions are designed to be robust, scalable, and adaptable to evolving digital landscapes. From initial concept to final deployment, our team ensures every project meets the highest standards of quality and innovation.
         </p>
-      </div>
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Overview</h2>
-        <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
-          <iframe
-            className="h-full w-full"
-            src="https://www.youtube.com/embed/3JluqTojuME"
-            title="Web Design & Development Explained"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
       </div>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Get Started</h2>

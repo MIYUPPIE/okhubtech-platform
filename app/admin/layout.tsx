@@ -1,5 +1,9 @@
 import { ReactNode } from "react";
+import type { Metadata } from "next";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { noindexMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = noindexMetadata("Admin");
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (

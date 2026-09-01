@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/credit-card-fraud",
+  title: "Credit Card Fraud Detection",
+  description:
+    "A fraud-detection pipeline using ANN and LSTM sequence modelling to flag fraudulent card transactions from spending behaviour.",
+  ogSlug: "portfolio",
+  ogAlt: "Credit Card Fraud Detection — an OKHub project",
+});
+
 import React from "react";
 
 export default function CreditCardFraudPortfolioPage() {

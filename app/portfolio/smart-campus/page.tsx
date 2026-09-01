@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/smart-campus",
+  title: "Smart Campus Automation",
+  description:
+    "End-to-end automation and a digital twin for a university campus, covering security, energy and operations.",
+  ogSlug: "portfolio",
+  ogAlt: "Smart Campus Automation — an OKHub project",
+});
+
 import React from "react";
 
 export default function SmartCampusPortfolioPage() {

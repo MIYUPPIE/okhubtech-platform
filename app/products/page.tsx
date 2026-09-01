@@ -3,12 +3,16 @@ import Link from "next/link";
 
 import { PRODUCTS } from "@/lib/products";
 import ReelsSection from "@/components/ReelsSection";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Products | OKHub",
+export const metadata: Metadata = pageMetadata({
+  path: "/products",
+  title: "Products",
   description:
     "Software OKHub has built: LogSME, Alajapa, VASIDAS, TeenBuddy, LOGOD, NURPAT, LAMIUK, UNC, Loeko, GriotVid and more, across commerce, agriculture, health, language, automation and the public sector.",
-};
+  ogSlug: "products",
+  ogAlt: "Software OKHub has built",
+});
 
 const sectors = [...new Set(PRODUCTS.map((p) => p.sector))];
 

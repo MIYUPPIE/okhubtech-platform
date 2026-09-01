@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/speech-emotion",
+  title: "Speech Emotion Recognition",
+  description:
+    "A GRU-based audio model that extracts emotional signal from speech for behavioural analytics at scale.",
+  ogSlug: "portfolio",
+  ogAlt: "Speech Emotion Recognition — an OKHub project",
+});
+
 import React from "react";
 
 export default function SpeechEmotionPortfolioPage() {

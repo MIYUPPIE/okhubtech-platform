@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/drone-technology",
+  title: "Drone Technology",
+  description:
+    "Aerial intelligence and training: surveys, inspections and precision agriculture, plus certified pilot training.",
+  ogSlug: "services",
+  ogAlt: "Drone Technology at OKHub",
+});
+
 import React from "react";
 
 const DroneTechnologyPage = () => (

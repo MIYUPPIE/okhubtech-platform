@@ -62,6 +62,10 @@ export const PORTFOLIO_SLUGS = [
   "utme-career-advisor",
 ] as const;
 
+/** A valid slug under /portfolio/. Typing content against this turns a typo'd
+ * project reference into a compile error instead of a dead link. */
+export type PortfolioSlug = (typeof PORTFOLIO_SLUGS)[number];
+
 /** Mirrors the directories under app/expertise/. */
 export const EXPERTISE_SLUGS = [
   "ai-ml",

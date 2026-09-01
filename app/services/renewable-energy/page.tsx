@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/renewable-energy",
+  title: "Renewable Energy",
+  description:
+    "Sustainable infrastructure: solar, wind and hybrid system architecture, with consulting for grid independence.",
+  ogSlug: "services",
+  ogAlt: "Renewable Energy at OKHub",
+});
+
 import React from "react";
 
 const RenewableEnergyPage = () => (

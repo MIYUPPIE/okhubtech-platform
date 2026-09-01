@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services/3d-technologies",
+  title: "3D Technologies",
+  description:
+    "3D design, printing and rapid prototyping for health, agriculture and mobility products, from concept to production.",
+  ogSlug: "services",
+  ogAlt: "3D Technologies at OKHub",
+});
+
 
 import Link from "next/link";
 import React from "react";
@@ -22,19 +35,6 @@ const ThreeDTechnologiesPage = () => (
         <p className="text-black/70 dark:text-white/70 mb-2">
           Our team combines creative vision with technical expertise to deliver 3D solutions that accelerate innovation and reduce time-to-market. We support clients from concept to production, ensuring quality and efficiency at every stage.
         </p>
-      </div>
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Watch Our Overview</h2>
-        <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
-          <iframe
-            className="h-full w-full"
-            src="https://www.youtube.com/embed/6oH02sA6aR8"
-            title="3D Technologies Explained"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
       </div>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-black dark:text-white mb-2">Get Started</h2>

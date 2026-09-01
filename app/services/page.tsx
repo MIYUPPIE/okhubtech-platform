@@ -1,9 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import DomainsSection from "@/components/DomainsSection";
+import { pageMetadata } from "@/lib/seo";
 import SolutionCenterSection from "@/components/SolutionCenterSection";
 import ECommerceSection from "@/components/ECommerceSection";
 import { Globe, LineChart, Brain, Layers3, Bot, Video, Plane, Zap, ShieldCheck, Network, ActivitySquare } from "lucide-react";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/services",
+  title: "Services",
+  description:
+    "Twelve practices: web, AI, data, robotics, computer vision, drones, CCTV, renewable energy, cybersecurity, networking and digital marketing, plus the domains and commerce systems built on top of them.",
+  ogSlug: "services",
+  ogAlt: "OKHub services",
+});
 
 const services = [
   {

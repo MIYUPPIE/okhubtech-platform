@@ -1,3 +1,16 @@
+import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/portfolio/ai-agriculture",
+  title: "AI-Powered Agriculture Platform",
+  description:
+    "An AI and IoT platform for African farmers: real-time soil and weather sensing, yield prediction and automated recommendations.",
+  ogSlug: "portfolio",
+  ogAlt: "AI-Powered Agriculture Platform — an OKHub project",
+});
+
 import React from "react";
 
 export default function AIAgriculturePortfolioPage() {
