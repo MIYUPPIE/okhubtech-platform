@@ -4,11 +4,10 @@ import { notFound } from "next/navigation";
 
 import ContactSection from "@/components/ContactSection";
 import AboutSection from "@/components/AboutSection";
-import EducationSection from "@/components/EducationSection";
-import ResearchSection from "@/components/ResearchSection";
-import InnovationSection from "@/components/InnovationSection";
-import PartnershipsSection from "@/components/PartnershipsSection";
-import { BANK, EMAIL, FACEBOOK, INSTAGRAM, LOCATION, MAILTO, PHONE_DISPLAY, TEL, whatsappLink } from "@/lib/contact";
+import { BANK, EMAIL, FACEBOOK, INSTAGRAM, LOCATION, LOCATION_SHORT, MAILTO, PHONE_DISPLAY, TEL, whatsappLink } from "@/lib/contact";
+import { PRODUCTS } from "@/lib/products";
+import { BOOTCAMP_PROJECTS } from "@/lib/bootcamp";
+import { ROBOTICS_GUIDE, fileSize } from "@/lib/media";
 
 const accentFallback = "from-[var(--gold-primary)] via-[#ff8a1f] to-[#ffd166]";
 
@@ -70,74 +69,61 @@ type PageContent = {
 const pageContent: Record<string, PageContent> = {
   about: {
     badge: "About OKHub",
-    title: "Building Africa's sovereign 4IR operating system.",
+    title: "AI, robotics and data systems — built and taught in Ibadan.",
     description:
-      "We are a pan-African skunkworks bridging research, venture studios, and public infrastructure to deliver climate-resilient, economically sovereign technologies for the continent.",
+      "OKHub Technology is a training and engineering studio. We teach the skills in the same rooms where we ship the work, so a lesson is never far from a real deploy.",
     accent: "from-[var(--gold-primary)] via-[#f97316] to-[#ffcd5a]",
     highlights: [
       {
-        label: "Innovation Districts",
-        value: "12",
-        caption: "Living labs across Lagos, Kigali, Nairobi, Accra, Cairo, and Johannesburg.",
+        label: "Products shipped",
+        value: String(PRODUCTS.length),
+        caption: "Live software across commerce, agriculture, health, language and civic tech — see them at /products.",
       },
       {
-        label: "Partner Organizations",
-        value: "180+",
-        caption: "Governments, DFIs, OEMs, universities, venture studios, and philanthropies.",
+        label: "Bootcamp builds",
+        value: String(BOOTCAMP_PROJECTS.length),
+        caption: "Robots and systems the current 4IR Bootcamp cohort is building right now.",
       },
       {
-        label: "Talent Network",
-        value: "48K",
-        caption: "Engineers, product strategists, researchers, and creative technologists.",
+        label: "Where we are",
+        value: LOCATION_SHORT,
+        caption: LOCATION,
       },
     ],
     sections: [
       {
-        eyebrow: "Mandate",
-        title: "A pan-African 4IR compact",
+        eyebrow: "What we do",
+        title: "Two things, in the same building",
         description:
-          "OKHub convenes sovereign capital, policy leaders, and frontier builders to ship initiatives that absorb global IP, retain value on the continent, and export African design intelligence.",
+          "We train people in AI, robotics and software, and we build systems for people who need them. Neither is the marketing arm of the other — the same engineers do both.",
         bullets: [
-          "Localized playbooks for coastal, Sahelian, and peri-urban markets.",
-          "Shared venture studio to convert research breakthroughs into fundable businesses.",
-          "Predictive data engines supporting resilient government decision-making.",
+          "Cohort training that ships a real, working build before it certifies.",
+          "Client and product work across commerce, agriculture, health, language and civic tech.",
+          "Trainees work on real client problems, not simulated ones.",
         ],
       },
       {
-        eyebrow: "Operating Model",
-        title: "Studios, labs, and field teams",
+        eyebrow: "How we build",
+        title: "For the constraints that are actually there",
         description:
-          "Cross-functional squads blend strategy partners, design researchers, engineers, and growth operators who remain embedded until the initiative hits its KPI gate.",
+          "Most of the places this software runs do not have the reliable power, bandwidth or budget that a lot of tooling assumes. We design for the network and hardware people actually have, not the ones we wish they had.",
         bullets: [
-          "Country pods orchestrate delivery across policy, talent, and infrastructure lenses.",
-          "Methodology spans discovery, co-design, deployment, and in-market stabilization phases.",
-          "Impact instrumentation ties every sprint to economic inclusion and climate metrics.",
-        ],
-      },
-      {
-        eyebrow: "Leadership",
-        title: "Accountability with board-level governance",
-        description:
-          "An independent governing council spanning public, private, and civic leaders approves investment theses, program charters, and ESG guardrails.",
-        bullets: [
-          "Quarterly stewardship reviews and continent-wide listening tours.",
-          "Diversity mandate ensures women-led and youth-led organizations sit in every workstream.",
-          "Transparent reporting dashboard connected to our Prisma-powered admin studio.",
+          "Offline-first where a connection cannot be guaranteed — data syncs when it returns.",
+          "Edge inference over cloud dependency, where the hardware allows it.",
+          "WhatsApp and SMS as first-class interfaces, because that is where the users already are.",
         ],
       },
     ],
-    spotlight: {
-      title: "Continental innovation lanes",
-      description:
-        "Each lane blends policy, technology, and financing vehicles to accelerate regional competitiveness.",
-      items: [
-        { title: "Sovereign Tech", detail: "Cyber-physical infrastructure, energy grids, satellite, and agro supply chains." },
-        { title: "GovTech", detail: "Citizen services, revenue automation, and data-driven public safety stacks." },
-        { title: "Civic Infrastructure", detail: "Learning cities, community labs, and digital public goods." },
-        { title: "Capital & Climate", detail: "Climate adaptation ventures, catalytic funds, and blended finance vehicles." },
-      ],
-    },
-    cta: { label: "Explore services", href: "/services" },
+    resources: [
+      {
+        label: `A Beginner's Guide to Autonomous Robots — PDF, ${fileSize(ROBOTICS_GUIDE.bytes)}`,
+        href: ROBOTICS_GUIDE.src,
+        external: true,
+      },
+      { label: "See the current bootcamp cohort", href: "/bootcamp" },
+      { label: "See the hardware and research work", href: "/portfolio" },
+    ],
+    cta: { label: "See the products", href: "/products" },
   },
   services: {
     badge: "Offerings",
@@ -741,15 +727,7 @@ const MarketingPage = async ({ params }: PageParams) => {
 
       {/* Moved off the homepage. The story belongs on the page people open
           when they want the story. */}
-      {resolvedParams.page === "about" && (
-        <>
-          <AboutSection />
-          <EducationSection />
-          <ResearchSection />
-          <InnovationSection />
-          <PartnershipsSection />
-        </>
-      )}
+      {resolvedParams.page === "about" && <AboutSection />}
     </main>
   );
 };

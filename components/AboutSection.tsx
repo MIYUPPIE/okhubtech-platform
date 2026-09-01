@@ -7,18 +7,18 @@ import Image from "next/image";
 const signals = [
   {
     icon: Globe,
-    title: "Pan-African footprint",
-    copy: "Rooted in Nigeria, working across the continent.",
+    title: "Built in Nigeria",
+    copy: "Every product in the catalogue solves a Nigerian problem, for Nigerian conditions.",
   },
   {
     icon: ShieldCheck,
-    title: "Sovereign-by-design",
-    copy: "AI, data and robotics built for local rules.",
+    title: "Built for local rules",
+    copy: "AI, data and robotics built to the regulations that actually apply, not retrofitted to them.",
   },
   {
     icon: Sparkles,
-    title: "Innovation with accountability",
-    copy: "Teach it, build it, ship it.",
+    title: "Teach it, build it, ship it",
+    copy: "The same engineers who train a cohort ship the client work.",
   },
   {
     icon: Users,
@@ -83,10 +83,13 @@ const AboutSection = () => (
           className="rounded-3xl border border-black/15 bg-white shadow-md p-8 text-black dark:border-white/10 dark:bg-black/70 dark:text-white shadow-lg dark:shadow-none"
         >
           <h2 className="section-title leading-tight">
-            We merge policy intelligence, engineering rigor, and culture-powered storytelling to build Africa’s flagship 4IR ecosystems.
+            We teach the skills, then build with them.
           </h2>
           <p className="mt-6 text-black/70 dark:text-white/70">
-            From government-backed command campuses to community studios in underserved regions, OKHub Technology operationalizes the Fourth Industrial Revolution with accountable governance, modern pedagogy, and responsible capital.
+            OKHub Technology trains people in AI, robotics and software, and
+            builds systems for people who need them, out of the same building
+            in Ibadan. Trainees work on real problems, not exercises invented
+            for a classroom.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {statements.map((statement) => (
