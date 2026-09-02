@@ -35,6 +35,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...opted in: services/video-store's README has people `cp` this to get a
+# working .env, so it has to actually ship in the repo. Contains no secrets,
+# only variable names — same reason .env.example files are normally tracked.
+!services/video-store/.env.example
 
 # vercel
 .vercel
