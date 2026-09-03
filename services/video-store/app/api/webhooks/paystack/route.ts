@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { env } from "@/lib/env";
+import { paystackEnv } from "@/lib/env";
 import { verifyWebhookSignature } from "@/lib/paystack";
 import { fulfillOrder } from "@/lib/fulfillment";
 
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const rawBody = await req.text();
   const signature = req.headers.get("x-paystack-signature");
 
-  if (!verifyWebhookSignature(rawBody, signature, env().PAYSTACK_SECRET_KEY)) {
+  if (!verifyWebhookSignature(rawBody, signature, paystackEnv().PAYSTACK_SECRET_KEY)) {
     return NextResponse.json({ error: "invalid signature" }, { status: 401 });
   }
 

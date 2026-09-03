@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { env } from "./env.ts";
+import { coreEnv } from "./env.ts";
 
 // Deliberately no Prisma import here: this module is pure logic (token
 // generation, expiry/use-count rules, URL building) so it can be gate-tested
@@ -27,5 +27,5 @@ export function checkGrant(grant: GrantLike, now: Date = new Date()): GrantCheck
 }
 
 export function downloadUrlFor(token: string): string {
-  return `${env().APP_URL}/download/${token}`;
+  return `${coreEnv().APP_URL}/download/${token}`;
 }

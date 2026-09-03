@@ -1,13 +1,13 @@
 import type { Order } from "@prisma/client";
 import { prisma } from "./prisma.ts";
-import { env } from "./env.ts";
+import { deliveryEnv } from "./env.ts";
 import { verifyTransaction } from "./paystack.ts";
 import { generateDownloadToken, downloadUrlFor } from "./delivery.ts";
 import { sendDeliveryEmail } from "./mailer.ts";
 import type { OrderStatus } from "./status.ts";
 
 async function createDeliveryGrant(orderId: string) {
-  const e = env();
+  const e = deliveryEnv();
   const expiresAt = new Date(Date.now() + e.DOWNLOAD_TOKEN_TTL_HOURS * 60 * 60 * 1000);
   return prisma.deliveryGrant.create({
     data: { token: generateDownloadToken(), orderId, maxUses: e.DOWNLOAD_MAX_USES, expiresAt },

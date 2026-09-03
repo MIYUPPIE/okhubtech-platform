@@ -1,11 +1,11 @@
 import nodemailer from "nodemailer";
-import { env } from "./env.ts";
+import { smtpEnv } from "./env.ts";
 
 let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
 
 function getTransporter() {
   if (transporter) return transporter;
-  const e = env();
+  const e = smtpEnv();
   transporter = nodemailer.createTransport({
     host: e.SMTP_HOST,
     port: e.SMTP_PORT,
@@ -27,7 +27,7 @@ export async function sendDeliveryEmail(params: {
   downloadUrl: string;
   expiresAt: Date;
 }) {
-  const e = env();
+  const e = smtpEnv();
   await getTransporter().sendMail({
     from: e.EMAIL_FROM,
     to: params.to,

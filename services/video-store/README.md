@@ -125,6 +125,46 @@ URL. Then, in the Paystack dashboard, register
 `https://<your-domain>/api/webhooks/paystack` under Settings → API Keys &
 Webhooks.
 
+### Cloudflare DNS proxy in front of a VPS
+
+`docker-compose.prod.yml` + `Caddyfile` is exactly that reverse-proxy setup,
+prebuilt: Caddy terminates TLS on 80/443 and is the only thing published to
+the host; `video-store` itself isn't reachable from outside the container
+network at all. This is a **separate compose file** from the plain
+`docker-compose.yml` above (not an override), specifically so local/dev usage
+keeps working over plain HTTP on `:4100` exactly as it does today — the two
+are never meant to run against the same project/volumes at once.
+
+```bash
+cp .env.example .env
+# edit .env: set APP_URL=https://<your domain>, plus PAYSTACK/CLOUDINARY/SMTP
+# edit Caddyfile: replace the placeholder domain with your real one
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+In Cloudflare's dashboard: DNS → A record for your domain pointing at the
+VPS's IP, proxied (orange cloud) on. SSL/TLS → **Full**, not **Flexible** —
+Flexible means the Cloudflare-to-VPS hop is plain HTTP, and this app carries
+admin login and Paystack webhook traffic over that hop. Caddy's self-signed
+cert (`tls internal` in the Caddyfile) is what Full mode talks to; see the
+comment in that file for the "Full (strict)" alternative if you want the
+origin cert chain validated too, which needs a Cloudflare Origin CA cert
+instead.
+
+On the VPS's own firewall (ufw/firewalld), only allow 80/443 in — Docker's
+default bridge networking already keeps `video-store` unreachable from
+outside the host in this compose file (`expose`, not `ports`), but a host
+firewall is standard hardening on top of that regardless.
+
+The admin login cookie's `Secure` flag is set from the request's actual
+scheme (`x-forwarded-proto`, which Caddy sets automatically when it proxies
+to `video-store`), not from `NODE_ENV` — so this correctly gets marked
+`Secure` once traffic is really arriving over HTTPS through Caddy, and
+correctly does *not* over the plain-HTTP `docker-compose.yml` setup above.
+Getting this backwards is exactly what silently breaks login: a `Secure`
+cookie set while testing directly over `http://` is dropped by the browser
+with no visible error, and `/admin` just bounces back to the login page.
+
 ### Without Docker
 
 Any Node 22+ host works:

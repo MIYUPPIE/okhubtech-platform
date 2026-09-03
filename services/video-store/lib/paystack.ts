@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { env } from "./env.ts";
+import { paystackEnv } from "./env.ts";
 
 const BASE_URL = "https://api.paystack.co";
 
@@ -28,7 +28,7 @@ export async function initializeTransaction(
   const res = await fetch(`${BASE_URL}/transaction/initialize`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${env().PAYSTACK_SECRET_KEY}`,
+      Authorization: `Bearer ${paystackEnv().PAYSTACK_SECRET_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -67,7 +67,7 @@ export type VerifyTransactionResult = {
  */
 export async function verifyTransaction(reference: string): Promise<VerifyTransactionResult> {
   const res = await fetch(`${BASE_URL}/transaction/verify/${encodeURIComponent(reference)}`, {
-    headers: { Authorization: `Bearer ${env().PAYSTACK_SECRET_KEY}` },
+    headers: { Authorization: `Bearer ${paystackEnv().PAYSTACK_SECRET_KEY}` },
   });
   const body = await res.json();
   if (!res.ok || !body.status) {

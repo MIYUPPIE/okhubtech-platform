@@ -1,10 +1,10 @@
 import { v2 as cloudinary } from "cloudinary";
-import { env } from "./env.ts";
+import { cloudinaryEnv } from "./env.ts";
 
 let configured = false;
 function configure() {
   if (configured) return;
-  const e = env();
+  const e = cloudinaryEnv();
   cloudinary.config({
     cloud_name: e.CLOUDINARY_CLOUD_NAME,
     api_key: e.CLOUDINARY_API_KEY,

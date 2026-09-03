@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const FULL_VALID_ENV: Record<string, string> = {
+const ALL_VALID_ENV: Record<string, string> = {
   DATABASE_URL: "file:./dev.db",
   APP_URL: "http://localhost:4100",
   PAYSTACK_SECRET_KEY: "sk_test_xxx",
@@ -18,45 +18,95 @@ const FULL_VALID_ENV: Record<string, string> = {
 };
 
 // Each scenario imports lib/env.ts fresh (cache-busted via a unique query
-// string) because env() memoises its result at module scope on first call —
-// without this, whichever scenario ran first would poison the others.
+// string) because every group memoises its result at module scope on first
+// read — without this, whichever scenario ran first would poison the others.
 async function freshEnvModule() {
   return import(`../lib/env.ts?t=${Date.now()}-${Math.random()}`);
 }
 
-test("env() throws a descriptive error when required vars are missing", async () => {
+// Must be async and must `await fn()` before restoring — every caller here
+// passes an async callback, and a synchronous `return fn()` inside a
+// try/finally restores process.env as soon as that callback's *first*
+// `await` suspends it, not once it actually finishes. The env this test is
+// asserting against gets reverted out from under it mid-run.
+async function withEnv<T>(vars: Record<string, string | undefined>, fn: () => Promise<T>): Promise<T> {
   const saved = { ...process.env };
-  for (const key of Object.keys(FULL_VALID_ENV)) delete process.env[key];
+  for (const [key, value] of Object.entries(vars)) {
+    if (value === undefined) delete process.env[key];
+    else process.env[key] = value;
+  }
   try {
-    const { env } = await freshEnvModule();
-    assert.throws(() => env(), /invalid or missing environment configuration/);
+    return await fn();
   } finally {
     process.env = saved;
   }
+}
+
+test("adminEnv() succeeds on ADMIN_* alone — Cloudinary/SMTP/Paystack being unset must not block admin login", async () => {
+  const adminOnly = {
+    ADMIN_EMAIL: ALL_VALID_ENV.ADMIN_EMAIL,
+    ADMIN_PASSWORD: ALL_VALID_ENV.ADMIN_PASSWORD,
+    ADMIN_SESSION_SECRET: ALL_VALID_ENV.ADMIN_SESSION_SECRET,
+  };
+  await withEnv(
+    {
+      ...adminOnly,
+      CLOUDINARY_CLOUD_NAME: undefined,
+      CLOUDINARY_API_KEY: undefined,
+      CLOUDINARY_API_SECRET: undefined,
+      SMTP_HOST: undefined,
+      SMTP_USER: undefined,
+      SMTP_PASSWORD: undefined,
+      PAYSTACK_SECRET_KEY: undefined,
+    },
+    async () => {
+      const { adminEnv } = await freshEnvModule();
+      const result = adminEnv();
+      assert.equal(result.ADMIN_EMAIL, adminOnly.ADMIN_EMAIL);
+    },
+  );
 });
 
-test("env() succeeds and applies defaults when every required var is set", async () => {
-  const saved = { ...process.env };
-  Object.assign(process.env, FULL_VALID_ENV);
-  try {
-    const { env } = await freshEnvModule();
-    const result = env();
-    assert.equal(result.APP_URL, "http://localhost:4100");
-    assert.equal(result.SMTP_PORT, 587); // default applied, not set above
-    assert.equal(result.DOWNLOAD_TOKEN_TTL_HOURS, 72);
-    assert.equal(result.DOWNLOAD_MAX_USES, 5);
-  } finally {
-    process.env = saved;
-  }
+test("cloudinaryEnv() throws a descriptive error when its own vars are missing, independent of everything else being valid", async () => {
+  await withEnv({ ...ALL_VALID_ENV, CLOUDINARY_API_KEY: undefined }, async () => {
+    const { cloudinaryEnv, adminEnv } = await freshEnvModule();
+    assert.throws(() => cloudinaryEnv(), /Cloudinary environment configuration.*CLOUDINARY_API_KEY/);
+    // A sibling group with everything it needs must still work.
+    assert.doesNotThrow(() => adminEnv());
+  });
 });
 
-test("env() rejects a malformed ADMIN_EMAIL even if everything else is valid", async () => {
-  const saved = { ...process.env };
-  Object.assign(process.env, FULL_VALID_ENV, { ADMIN_EMAIL: "not-an-email" });
-  try {
-    const { env } = await freshEnvModule();
-    assert.throws(() => env(), /ADMIN_EMAIL/);
-  } finally {
-    process.env = saved;
-  }
+test("smtpEnv() applies the SMTP_PORT default and rejects a malformed ADMIN_EMAIL has no effect on it", async () => {
+  await withEnv({ ...ALL_VALID_ENV, ADMIN_EMAIL: "not-an-email" }, async () => {
+    const { smtpEnv } = await freshEnvModule();
+    const result = smtpEnv();
+    assert.equal(result.SMTP_PORT, 587);
+  });
+});
+
+test("adminEnv() rejects a malformed ADMIN_EMAIL even when every other group is fully valid", async () => {
+  await withEnv({ ...ALL_VALID_ENV, ADMIN_EMAIL: "not-an-email" }, async () => {
+    const { adminEnv } = await freshEnvModule();
+    assert.throws(() => adminEnv(), /ADMIN_EMAIL/);
+  });
+});
+
+test("deliveryEnv() applies both defaults when unset", async () => {
+  await withEnv(
+    { ...ALL_VALID_ENV, DOWNLOAD_TOKEN_TTL_HOURS: undefined, DOWNLOAD_MAX_USES: undefined },
+    async () => {
+      const { deliveryEnv } = await freshEnvModule();
+      const result = deliveryEnv();
+      assert.equal(result.DOWNLOAD_TOKEN_TTL_HOURS, 72);
+      assert.equal(result.DOWNLOAD_MAX_USES, 5);
+    },
+  );
+});
+
+test("coreEnv() and paystackEnv() each validate independently", async () => {
+  await withEnv({ ...ALL_VALID_ENV, PAYSTACK_SECRET_KEY: undefined }, async () => {
+    const { coreEnv, paystackEnv } = await freshEnvModule();
+    assert.doesNotThrow(() => coreEnv());
+    assert.throws(() => paystackEnv(), /Paystack/);
+  });
 });

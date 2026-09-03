@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { env } from "@/lib/env";
+import { coreEnv } from "@/lib/env";
 import { checkoutInputSchema, computeOrderAmountKobo, generateOrderReference } from "@/lib/checkout";
 import { initializeTransaction } from "@/lib/paystack";
 import type { OrderStatus } from "@/lib/status";
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       email: input.email,
       amountKobo,
       reference,
-      callbackUrl: `${env().APP_URL}/checkout/success`,
+      callbackUrl: `${coreEnv().APP_URL}/checkout/success`,
       metadata: { orderId: order.id, productSlug: variant.product.slug, variantId: variant.id },
     });
 
