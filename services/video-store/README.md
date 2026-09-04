@@ -230,11 +230,33 @@ not found`. (That binding is optional and this app doesn't actually hit the
 code paths that need it — a revalidation edge case, a queue fallback — but
 it's cheap to keep correct since it's declared either way.)
 
-### Deploy
+### Deploy from your own machine
 
 ```bash
 npm run cf:deploy
 ```
+
+### Deploy from a git push (Cloudflare Workers Builds)
+
+If this repo is connected to a Cloudflare Workers Builds project (Cloudflare
+dashboard → Workers & Pages → your project → Settings → Build), its **Build
+command** and **Deploy command** fields matter — the defaults Cloudflare
+picks for a detected Next.js project are wrong for OpenNext specifically:
+
+- **Build command:** leave as `npm run build` (plain `next build`) — this is
+  correct as-is, matches
+  [OpenNext's own documented setup](https://opennext.js.org/cloudflare/get-started).
+- **Deploy command:** must be `npm run cf:deploy`, **not** the Cloudflare
+  default of `npx wrangler deploy`. A bare `wrangler deploy` does correctly
+  detect this as an OpenNext project and tries to hand off to
+  `opennextjs-cloudflare deploy` — but that fails with `Could not find
+  compiled Open Next config, did you run the build command?`, because the
+  plain `next build` the Build command field ran never produces
+  `.open-next/worker.js` or its compiled config; only
+  `opennextjs-cloudflare build` does, and `npm run cf:deploy` runs that
+  first before deploying. This is a one-time project settings edit — no
+  code or `wrangler.jsonc` change fixes it, since the mismatch is entirely
+  in which command the dashboard invokes.
 
 Then in the Paystack dashboard, register
 `https://<your-worker-domain>/api/webhooks/paystack` under Settings → API
