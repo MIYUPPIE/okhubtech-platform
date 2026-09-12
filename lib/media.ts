@@ -159,8 +159,94 @@ export const BUILD_LOG: readonly Captioned<ImageAsset>[] = [
   captionedPhoto("img-20230701-231249", "OLED wired to a microcontroller mid-test on a breadboard"),
 ];
 
-/** Training clips. Poster-first; nothing autoplays except the hero. */
-export const SHOWREEL: readonly Captioned<VideoAsset>[] = [
+/**
+ * Class footage grouped by who's on camera, not just dumped in one strip.
+ *
+ * A grade level is only ever asserted here when the shot itself says so - a
+ * uniform, a caption in the source export ("primary school students...",
+ * "secondary school student..."). Clips with no such signal (a breadboard
+ * test, a serial monitor, a rover on the floor) land in TRAINING_CLIPS
+ * rather than being guessed into a school bucket. BOOTCAMP_CLIPS is the one
+ * exception: it groups by the OKHub 4IR cohort program itself (the free
+ * Saturday training and the independent builds that come out of it), not by
+ * school level.
+ */
+export const PRIMARY_CLIPS: readonly Captioned<VideoAsset>[] = [
+  captionedVideo(
+    "primary-mobile-robot-build-5",
+    "A primary school student in uniform pressing a wheel onto a motor shaft",
+    "Mounting a wheel",
+  ),
+  captionedVideo(
+    "primary-mobile-robot-build-1",
+    "Primary school students wiring motors and gearboxes onto a robot chassis at a classroom desk",
+    "Wiring the chassis",
+  ),
+  captionedVideo(
+    "primary-mobile-robot-build-2",
+    "Primary school students fitting wheels onto a robot base built from a cardboard kit",
+    "Fitting the wheels",
+  ),
+  captionedVideo(
+    "primary-mobile-robot-build-3",
+    "A laser-cut robot chassis kit and spare wheels laid out on a desk mid-build",
+    "Kit on the bench",
+  ),
+  captionedVideo(
+    "primary-mobile-robot-build-4",
+    "A primary school student holding a yellow gear motor beside an open robot kit box",
+    "Checking the motor",
+  ),
+];
+
+export const SECONDARY_CLIPS: readonly Captioned<VideoAsset>[] = [
+  captionedVideo(
+    "secondary-block-programming",
+    "Secondary school students at laptops in a computer lab working through a block-programming lesson",
+    "In the computer lab",
+  ),
+  captionedVideo(
+    "secondary-arduino-blocks-1",
+    "A student's block-code editor open on a laptop screen, programming an Arduino",
+    "Block code, live",
+  ),
+  captionedVideo(
+    "secondary-arduino-blocks-3",
+    "Two students at a laptop running block code against an Arduino during class",
+    "Running the program",
+  ),
+  captionedVideo(
+    "secondary-arduino-blocks-2",
+    "A red LED lit on a breadboard, wired to test a block-programmed Arduino circuit",
+    "Testing the circuit",
+  ),
+  captionedVideo(
+    "secondary-arduino-blocks-4",
+    "A block-programming editor open on a laptop screen during an Arduino lesson",
+    "Block programming",
+  ),
+];
+
+export const BOOTCAMP_CLIPS: readonly Captioned<VideoAsset>[] = [
+  captionedVideo(
+    "robotics-training-cohort",
+    "Promotional flyer for OKHub's free 3-Saturday robotics training programme, alongside a photo from a past cohort session",
+    "Free 3-Saturday robotics training",
+  ),
+  captionedVideo(
+    "bootcamp-cardboard-prototype",
+    "Two bootcamp participants marking and cutting cardboard panels to build a prototype enclosure",
+    "Prototyping in cardboard",
+  ),
+  captionedVideo(
+    "bootcamp-ultrasonic-door-demo",
+    "An Arduino and ultrasonic sensor wired to a cardboard door prototype, powered from a battery pack",
+    "Ultrasonic door demo",
+  ),
+];
+
+/** Level-agnostic training footage: no uniform or caption ties it to a grade. */
+export const TRAINING_CLIPS: readonly Captioned<VideoAsset>[] = [
   captionedVideo(
     "computer-vision-class",
     "Computer vision class: live object detection drawing labelled boxes around a room",
@@ -170,6 +256,11 @@ export const SHOWREEL: readonly Captioned<VideoAsset>[] = [
     "school-robotics-class",
     "School robotics session with a student-built rover driving across the floor",
     "Robotics in schools",
+  ),
+  captionedVideo(
+    "students-actuator-class",
+    "Students wiring an actuator circuit during a practical robotics class",
+    "Actuator wiring",
   ),
   captionedVideo(
     "actuator-serial-test",

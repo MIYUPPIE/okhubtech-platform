@@ -86,11 +86,23 @@ export const PORTFOLIO_IMAGES = [
 
 export const VIDEOS = [
   { kind: "video", id: "actuator-serial-test", src: "/media/video/actuator-serial-test.mp4", poster: "/media/video/actuator-serial-test-poster.webp", width: 640, height: 640, duration: 20.0 },
+  { kind: "video", id: "bootcamp-cardboard-prototype", src: "/media/video/bootcamp-cardboard-prototype.mp4", poster: "/media/video/bootcamp-cardboard-prototype-poster.webp", width: 640, height: 1138, duration: 12.73 },
+  { kind: "video", id: "bootcamp-ultrasonic-door-demo", src: "/media/video/bootcamp-ultrasonic-door-demo.mp4", poster: "/media/video/bootcamp-ultrasonic-door-demo-poster.webp", width: 640, height: 1138, duration: 20.0 },
   { kind: "video", id: "components-workbench", src: "/media/video/components-workbench.mp4", poster: "/media/video/components-workbench-poster.webp", width: 640, height: 640, duration: 20.0 },
   { kind: "video", id: "computer-vision-class", src: "/media/video/computer-vision-class.mp4", poster: "/media/video/computer-vision-class-poster.webp", width: 640, height: 640, duration: 20.0 },
   { kind: "video", id: "okhub-showreel", src: "/media/video/okhub-showreel.mp4", poster: "/media/video/okhub-showreel-poster.webp", width: 720, height: 720, duration: 55.52 },
+  { kind: "video", id: "primary-mobile-robot-build-1", src: "/media/video/primary-mobile-robot-build-1.mp4", poster: "/media/video/primary-mobile-robot-build-1-poster.webp", width: 640, height: 1138, duration: 20.97 },
+  { kind: "video", id: "primary-mobile-robot-build-2", src: "/media/video/primary-mobile-robot-build-2.mp4", poster: "/media/video/primary-mobile-robot-build-2-poster.webp", width: 640, height: 1138, duration: 20.87 },
+  { kind: "video", id: "primary-mobile-robot-build-3", src: "/media/video/primary-mobile-robot-build-3.mp4", poster: "/media/video/primary-mobile-robot-build-3-poster.webp", width: 640, height: 1138, duration: 5.6 },
+  { kind: "video", id: "primary-mobile-robot-build-4", src: "/media/video/primary-mobile-robot-build-4.mp4", poster: "/media/video/primary-mobile-robot-build-4-poster.webp", width: 640, height: 1138, duration: 20.0 },
+  { kind: "video", id: "primary-mobile-robot-build-5", src: "/media/video/primary-mobile-robot-build-5.mp4", poster: "/media/video/primary-mobile-robot-build-5-poster.webp", width: 640, height: 1138, duration: 14.0 },
   { kind: "video", id: "robotics-training-cohort", src: "/media/video/robotics-training-cohort.mp4", poster: "/media/video/robotics-training-cohort-poster.webp", width: 640, height: 662, duration: 20.0 },
   { kind: "video", id: "school-robotics-class", src: "/media/video/school-robotics-class.mp4", poster: "/media/video/school-robotics-class-poster.webp", width: 640, height: 640, duration: 20.0 },
+  { kind: "video", id: "secondary-arduino-blocks-1", src: "/media/video/secondary-arduino-blocks-1.mp4", poster: "/media/video/secondary-arduino-blocks-1-poster.webp", width: 640, height: 1138, duration: 20.0 },
+  { kind: "video", id: "secondary-arduino-blocks-2", src: "/media/video/secondary-arduino-blocks-2.mp4", poster: "/media/video/secondary-arduino-blocks-2-poster.webp", width: 640, height: 1138, duration: 21.67 },
+  { kind: "video", id: "secondary-arduino-blocks-3", src: "/media/video/secondary-arduino-blocks-3.mp4", poster: "/media/video/secondary-arduino-blocks-3-poster.webp", width: 640, height: 1138, duration: 20.0 },
+  { kind: "video", id: "secondary-arduino-blocks-4", src: "/media/video/secondary-arduino-blocks-4.mp4", poster: "/media/video/secondary-arduino-blocks-4-poster.webp", width: 640, height: 1138, duration: 20.0 },
+  { kind: "video", id: "secondary-block-programming", src: "/media/video/secondary-block-programming.mp4", poster: "/media/video/secondary-block-programming-poster.webp", width: 640, height: 1138, duration: 20.0 },
   { kind: "video", id: "students-actuator-class", src: "/media/video/students-actuator-class.mp4", poster: "/media/video/students-actuator-class-poster.webp", width: 640, height: 640, duration: 4.9 },
   { kind: "video", id: "why-children-learn-tech", src: "/media/video/why-children-learn-tech.mp4", poster: "/media/video/why-children-learn-tech-poster.webp", width: 640, height: 1130, duration: 20.0 },
 ] as const satisfies readonly VideoAsset[];

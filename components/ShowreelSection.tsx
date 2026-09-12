@@ -1,15 +1,18 @@
 import MediaFrame from "@/components/media/MediaFrame";
 import VideoLoop from "@/components/media/VideoLoop";
-import { BRANDED_SHOWREEL, SHOWREEL, WORKBENCH_LOOP } from "@/lib/media";
+import { BRANDED_SHOWREEL, WORKBENCH_LOOP } from "@/lib/media";
 
 /**
  * The branded showreel leads: it is the one clip OKHub produced as marketing,
- * it is narrated, and it covers four projects in under a minute. The class
- * clips sit beneath it.
+ * it is narrated, and it covers four projects in under a minute.
  *
- * Nothing here autoplays. These carry burned-in captions and a voice track, so
- * they wait for a click. Only the workbench strip behind the heading moves, and
- * it stops when it scrolls out of view.
+ * The class clips that used to sit in a flat strip beneath it now live in
+ * TrainingLevelsSection, split out by school level instead of lumped
+ * together - see that component for why.
+ *
+ * Nothing here autoplays. The branded reel carries burned-in captions and a
+ * voice track, so it waits for a click. Only the workbench strip behind the
+ * heading moves, and it stops when it scrolls out of view.
  */
 const ShowreelSection = () => (
   <section className="section-shell">
@@ -38,18 +41,6 @@ const ShowreelSection = () => (
           sizes="(max-width: 1024px) 100vw, 40vw"
           className="rounded-3xl border border-black/10 dark:border-white/10"
         />
-      </div>
-
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {SHOWREEL.map((item) => (
-          <MediaFrame
-            key={item.asset.id}
-            item={item}
-            aspect="4 / 3"
-            sizes="(max-width: 640px) 100vw, 25vw"
-            className="rounded-2xl border border-black/10 dark:border-white/10"
-          />
-        ))}
       </div>
     </div>
   </section>

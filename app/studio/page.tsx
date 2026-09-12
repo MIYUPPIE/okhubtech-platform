@@ -6,6 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 import HeroSection from "@/components/HeroSection";
 import BuildLogSection from "@/components/BuildLogSection";
 import ShowreelSection from "@/components/ShowreelSection";
+import TrainingLevelsSection from "@/components/TrainingLevelsSection";
 import BootcampSection from "@/components/BootcampSection";
 import ServicesSection from "@/components/ServicesSection";
 import ImpactSection from "@/components/ImpactSection";
@@ -51,6 +52,7 @@ export default function StudioPage() {
 
       <BuildLogSection />
       <ShowreelSection />
+      <TrainingLevelsSection />
       <BootcampSection />
       <ServicesSection />
       <ImpactSection />
