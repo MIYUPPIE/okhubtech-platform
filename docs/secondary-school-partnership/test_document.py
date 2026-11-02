@@ -148,9 +148,41 @@ class Style(unittest.TestCase):
 
     def test_cross_references_point_at_real_pages(self):
         # Order in build.render(): 1 cover, 2 summary, 3 why, 4 proof, 5 builds, 6 pathway,
-        # 7 staff, 8 book, 9 academy, 10 assessment, 11 kits, 12 packs, 13 models, 14 roadmap...
-        for ref in ("Pages 4 to 6", "Pages 7 to 10", "Pages 11 to 12", "pages 9 and 10"):
+        # 7 staff, 8 book, 9 options, 10 three-day, 11 academy, 12 assessment, 13 kits, 14 packs...
+        for ref in ("Pages 4 to 6", "Pages 7 to 12", "Pages 13 to 14", "Compared on page 9"):
             self.assertIn(ref.lower(), Html.text.lower())
+        self.assertEqual(Html.total, 18)
+
+
+class ThreeDay(unittest.TestCase):
+    def test_each_day_is_six_contact_hours(self):
+        self.assertEqual(len(C.THREE_DAY), 3)
+        for d in C.THREE_DAY:
+            self.assertEqual(sum(b[1] for b in d["blocks"]), 6.0, d["title"])
+
+    def test_chapter_accounting(self):
+        in_room = {c for d in C.THREE_DAY for b in d["blocks"] for c in b[3]}
+        later = set(C.THREE_DAY_AFTER["chapters"]) | {o["chapter"] for o in C.OPTIONAL}
+        self.assertEqual(in_room | later, set(range(1, 21)))
+        self.assertEqual(len(in_room), 16)  # the options page says "16 of 20 in the room"
+        self.assertTrue(in_room.isdisjoint(later))
+
+    def test_six_projects_in_room_twelve_after(self):
+        text = " ".join(b[2] for d in C.THREE_DAY for b in d["blocks"])
+        projects = set(re.findall(r"Project (\d+)|\((\d+)\)|\((\d+), ", text))
+        self.assertEqual(18 - 6, C.THREE_DAY_AFTER["projects"])
+        for n in ("Project 1)", "(9)", "(10)", "Project 14)", "(15)", "(16)"):
+            self.assertIn(n.strip("()"), text)
+
+    def test_kit_cost_for_six_teachers(self):
+        t = C.THREE_DAY_KITS
+        self.assertEqual((t["qty"], t["gross"], t["net"]), (6, 400500, 380475))
+        self.assertEqual(C.ACADEMY_KITS["net"], 476997)
+        self.assertIn(C.naira(380475), Html.text)
+
+    def test_options_page_present_in_both_formats(self):
+        for term in ("3-Day Teacher Intensive", "Teacher Academy", "Our recommendation", "Day 1", "Day 3", "Eighteen contact hours"):
+            self.assertIn(term, Html.text)
 
 
 if __name__ == "__main__":

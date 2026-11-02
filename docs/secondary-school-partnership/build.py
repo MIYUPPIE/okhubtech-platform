@@ -170,7 +170,7 @@ def page_cover(school):
   </div>
   <div style="position:absolute;left:16mm;right:16mm;top:187mm;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
     <div class="stat"><b style="font-size:26pt">1</b><span style="font-size:9.5pt">Student lab, run in your timetable, JSS1 to SS3</span></div>
-    <div class="stat"><b style="font-size:26pt">10</b><span style="font-size:9.5pt">Staff sessions, 20 book chapters, 18 sensor projects</span></div>
+    <div class="stat"><b style="font-size:26pt">3 or 10</b><span style="font-size:9.5pt">Teacher training: a 3-day intensive or a 10-session academy</span></div>
     <div class="stat"><b style="font-size:26pt">8</b><span style="font-size:9.5pt">Catalogue kits, 5% off at 5 or more, 10% off at 10 or more</span></div>
   </div>
   <div style="position:absolute;left:16mm;right:16mm;top:226mm;display:grid;grid-template-columns:1.1fr 1fr;gap:14mm;font-size:9pt">
@@ -192,17 +192,17 @@ def page_summary(n, T):
       <p class="mut">Six working builds, from a dual-mode car to a smart railway crossing, sequenced from JSS1 to SS3. Block coding first, then C/C++, simulation, and on-device AI.</p>
       <p class="mono mut">Pages 4 to 6</p></div>
     <div class="card"><span class="tag">PART 2</span><h3>Staff training academy</h3>
-      <p class="mut">Ten three-hour sessions that take your teachers through all 20 chapters of <i>Robotics for Everyone</i>, with a safety gate, a practical assessment and a copy of the book each.</p>
-      <p class="mono mut">Pages 7 to 10</p></div>
+      <p class="mut">Two options: a 3-day intensive to start fast, or ten sessions through all 20 chapters of <i>Robotics for Everyone</i>. Both carry a safety gate and a copy of the book per teacher.</p>
+      <p class="mono mut">Pages 7 to 12</p></div>
     <div class="card"><span class="tag">PART 3</span><h3>Tested kits for the lab</h3>
       <p class="mut">Eight catalogue kits mapped to the chapters and class levels they serve, with four ready lab packs and the school discount worked out.</p>
-      <p class="mono mut">Pages 11 to 12</p></div>
+      <p class="mono mut">Pages 13 to 14</p></div>
   </div>
   <div class="grid g2" style="margin-bottom:10px">
     <div class="card"><h3>OKHub provides</h3><ul class="t">
       <li>Curriculum, module sequence and lesson plans for JSS1 to SS3</li>
       <li>An instructor in the room for every student session in Term 1</li>
-      <li>The Teacher Academy, assessment and a copy of the book per teacher</li>
+      <li>Teacher training (3-day or 10 sessions), assessment and a copy of the book per teacher</li>
       <li>Kits from the OKHub catalogue, tested before delivery, with tutorials, code and 1 year of support</li>
       <li>Termly check-ins until your staff lead independently</li></ul></div>
     <div class="card"><h3>The school provides</h3><ul class="t">
@@ -213,7 +213,7 @@ def page_summary(n, T):
       <li>A school head who attends the leadership briefing</li></ul></div>
   </div>
   <div class="card" style="border-left:3px solid var(--y)"><h3>What changes, and how you will see it</h3>
-    <ul class="t"><li><b>Term 1:</b> every participating teacher passes the safety gate and builds all 18 sensor projects once.</li>
+    <ul class="t"><li><b>Before Term 1:</b> every participating teacher passes the safety gate and builds the sensor projects set for their option.</li>
     <li><b>Term 2:</b> teachers lead sessions with an OKHub instructor beside them. Students hold working builds from Modules 1 to 3.</li>
     <li><b>Term 3:</b> your teachers run the lab. A demo day shows all six modules and the school decides on a competition entry.</li></ul>
     <p class="mut" style="margin:4px 0 0">These are proposed targets. They are fixed in writing in your school's proposal.</p></div>
@@ -338,22 +338,22 @@ def page_staff(n, T):
     return f"""
 <section class="pg">{sec('05', 'STAFF TRAINING')}
   <h2>Train the teachers first.<br>The programme outlives us.</h2>
-  <p class="lead">A lab run by visiting instructors stops when they leave. The Teacher Academy puts the capability in your building: teachers who have built each project themselves, passed a safety gate, and led a class with support.</p>
+  <p class="lead">A lab run by visiting instructors stops when they leave. Teacher training puts the capability in your building: teachers who have built each project themselves, passed a safety gate, and led a class with support.</p>
   <div class="grid g3" style="margin-bottom:10px">
     <div class="card"><span class="tag">TRACK A</span><h3>Leadership briefing</h3><p class="mut">Half day for the principal and heads of department. Lab layout, safety policy, timetable, budget, and how to read the termly evidence.</p></div>
-    <div class="card"><span class="tag">TRACK B</span><h3>Teacher Academy</h3><p class="mut">The core. Ten three-hour sessions, three to six teachers, using the book chapter by chapter. Detailed on pages 9 and 10.</p></div>
+    <div class="card"><span class="tag">TRACK B</span><h3>Teacher training</h3><p class="mut">The core, in two options: a 3-day intensive or a ten-session academy. Three to six teachers, using the book. Compared on page 9.</p></div>
     <div class="card"><span class="tag">TRACK C</span><h3>Lab technician and safety</h3><p class="mut">Two sessions: battery handling and charging, soldering rules, kit audit and repair, storage. Built from the book's Safety Notes and Chapter 19.</p></div>
   </div>
   <h3 style="margin-bottom:6px">The handover ladder: observe, co-teach, lead</h3>
   <div class="grid g3" style="margin-bottom:10px">
-    <div class="card"><span class="tag o mono">TERM 1</span><h3>Observe</h3><p class="mut" style="margin:0">OKHub teaches the student lab. Teachers sit in, run a bench each, and take the Academy in the holiday block before or in the first weeks.</p></div>
+    <div class="card"><span class="tag o mono">TERM 1</span><h3>Observe</h3><p class="mut" style="margin:0">OKHub teaches the student lab. Teachers sit in, run a bench each, and finish their training in the holiday block before or in the first weeks.</p></div>
     <div class="card"><span class="tag o mono">TERM 2</span><h3>Co-teach</h3><p class="mut" style="margin:0">Teachers lead and an OKHub instructor stands beside them. Practical assessment happens here, in front of a real class.</p></div>
     <div class="card"><span class="tag o mono">TERM 3</span><h3>Lead</h3><p class="mut" style="margin:0">Teachers run the lab. OKHub visits for check-ins, reviews student builds, and supports the demo day.</p></div>
   </div>
   <h3 style="margin-bottom:6px">Who should attend</h3>
   <p class="mut">Teachers of ICT or Computer Studies, Physics, Basic Technology and Mathematics fit best. No prior electronics or programming is needed. The book is written for complete beginners.</p>
   <div class="grid g2">
-    <div class="card"><h3>Each teacher leaves with</h3><ul class="t"><li>A copy of <i>Robotics for Everyone</i></li><li>All 18 sensor projects built once</li><li>A wheeled robot and a camera robot built</li><li>A signed-off safety routine</li><li>A term teaching plan</li></ul></div>
+    <div class="card"><h3>Each teacher leaves with</h3><ul class="t"><li>A copy of <i>Robotics for Everyone</i></li><li>Sensor projects built: 6 in the 3-day option, all 18 in the Academy</li><li>A wheeled robot built, plus a camera robot in the Academy</li><li>A signed-off safety routine</li><li>A term teaching plan</li></ul></div>
     <div class="card"><h3>The school leaves with</h3><ul class="t"><li>Named lab lead and trained technician</li><li>Safety policy and kit audit sheet</li><li>Assessment records per teacher</li><li>A path to run a second cohort in-house</li><li>A teaching team that can enter a competition</li></ul></div>
   </div>
   {foot(n, T)}
@@ -395,6 +395,65 @@ def page_book(n, T):
 </section>"""
 
 
+def page_options(n, T):
+    t, a = C.THREE_DAY_KITS, C.ACADEMY_KITS
+
+    def row(label, x, y):
+        return f'<tr><td class="mono"><b>{label}</b></td><td>{x}</td><td>{y}</td></tr>'
+    rows = "".join([
+        row("Format", "3 consecutive days, 6 contact hours a day", "10 sessions of 3 hours, as a 2-week holiday block or 10 weekly sessions"),
+        row("Contact hours", "18", "30"),
+        row("Best for", "A fast start. Tight calendar. Seeing the programme before committing further.", "Teachers who will lead SS2 and SS3 AI work, and a school that wants depth before Term 1."),
+        row("Chapters covered", "16 of 20 in the room. Chapters 15 and 17 by self-study. Chapters 14 and 16 optional.", "All 20: 18 in the core sessions, 14 and 16 as optional modules."),
+        row("Sensor projects", "6 of 18 in the room, the other 12 by end of Term 1", "All 18 in the room"),
+        row("Robots built", "One wheeled robot", "Wheeled robot, ESP32-CAM robot, simulation, language-model link"),
+        row("Signed off in the room", "Gate 1 safety, Gate 2 knowledge", "Gate 1 safety, Gate 2 knowledge"),
+        row("Gate 3 practical", "Term 1 or 2, with trainer observing", "Term 1 or 2, with trainer observing"),
+        row("Kit for 6 teachers", f"3 Ignite Genesis + 3 Rover M2 with UNO: {C.naira(t['net'])} after the 5% school rate", f"3 Rover Ultimate-X: {C.naira(a['net'])}"),
+        row("Fee", "Quoted in your proposal", "Quoted in your proposal"),
+    ])
+    return f"""
+<section class="pg">{sec('07', 'TEACHER TRAINING: YOUR OPTIONS')}
+  <h2>Two ways to train your staff.<br>Pick one, or do both in order.</h2>
+  <p class="lead">Both options use <i>Robotics for Everyone</i>, both end with a copy of the book per teacher, and both pass through the same safety gate. They differ in depth and in how soon your lab can start.</p>
+  <div class="grid g2" style="margin-bottom:10px">
+    <div class="card" style="border-top:3px solid var(--y)"><span class="tag">OPTION 1</span><h3 style="font-size:14pt">3-Day Teacher Intensive</h3>
+      <p class="mut" style="margin:0">Three focused days at your school or at OKHub, Mokola. Teachers leave safe, wired and able to run the first student sessions.</p></div>
+    <div class="card" style="border-top:3px solid var(--ink)"><span class="tag o">OPTION 2</span><h3 style="font-size:14pt">Teacher Academy</h3>
+      <p class="mut" style="margin:0">Ten three-hour sessions across all 20 chapters. Teachers leave able to lead the full JSS1 to SS3 pathway, including vision and AI.</p></div>
+  </div>
+  <table><tr><th style="width:27mm"></th><th>Option 1: 3-Day Intensive</th><th>Option 2: Academy</th></tr>{rows}</table>
+  <div class="card" style="margin-top:10px;border-left:3px solid var(--y)"><h3>Our recommendation</h3>
+  <p style="margin:0"><b>Start with Option 1, then add Academy sessions in Term 1.</b> Teachers are productive in three days and your lab opens on time. The remaining chapters are taught in the weeks that follow, on the same kits, while teachers are already in front of students. Choose Option 2 straight away if you plan an SS2 and SS3 AI club in the first term.</p></div>
+  {foot(n, T)}
+</section>"""
+
+
+def page_threeday(n, T):
+    cols = ""
+    for d in C.THREE_DAY:
+        rows = "".join(
+            f'<div style="border-top:1px solid var(--line);padding:5px 0"><span class="mono mut">{tm} · {h:g} h</span><br>{e(what)}'
+            + (f'<br><span class="pill" style="margin-top:2px">{", ".join("Ch. %d" % c for c in ch)}</span>' if ch else '')
+            + '</div>' for tm, h, what, ch in d["blocks"])
+        hrs = sum(b[1] for b in d["blocks"])
+        cols += (f'<div class="card" style="padding:0"><div style="background:var(--dk);color:#fff;padding:7px 10px"><span class="mono" style="color:var(--y)">Day {d["day"]} · {hrs:g} hours</span>'
+                 f'<h3 style="margin:2px 0 0;font-size:11.5pt">{e(d["title"])}</h3></div><div style="padding:2px 10px 8px;font-size:8.8pt">{rows}</div></div>')
+    after = C.THREE_DAY_AFTER
+    return f"""
+<section class="pg">{sec('08', 'OPTION 1: THE 3-DAY INTENSIVE')}
+  <h2>Three days. Safe, wired,<br>and ready to teach.</h2>
+  <p class="lead">Eighteen contact hours for three to six teachers, with two teachers sharing each kit set. Each day ends with something that works, and each day maps to chapters of the book.</p>
+  <div class="grid g3" style="margin-bottom:10px;align-items:start">{cols}</div>
+  <div class="grid g2">
+    <div class="card"><h3>By the end of day 3 each teacher has</h3><ul class="t"><li>Passed the safety gate and the knowledge check</li><li>Built six sensor and display projects and one wheeled robot</li><li>Taught a 10-minute segment and had feedback</li><li>A copy of the book and a written term plan</li></ul></div>
+    <div class="card"><h3>After the three days</h3><p class="mut" style="margin-bottom:3px">{e(after['note'])}.</p><p class="mut" style="margin:0">The practical teaching assessment (Gate 3) happens in Term 1 or 2 with a trainer observing.</p></div>
+  </div>
+  <p class="mut" style="margin-top:6px;font-size:8.3pt">Programme is indicative and is fitted to your calendar. Times assume a 09:00 start with lunch and short breaks.</p>
+  {foot(n, T)}
+</section>"""
+
+
 def page_academy(n, T):
     names = dict(C.CHAPTERS)
     rows = "".join(
@@ -402,8 +461,8 @@ def page_academy(n, T):
         f'<td>{", ".join("Ch. %d" % c for c in s["chapters"])}</td><td>{e(s["leave"])}</td></tr>' for s in C.SESSIONS)
     opt = "".join(f'<span class="pill">Ch. {o["chapter"]}: {e(o["note"])}</span>' for o in C.OPTIONAL)
     return f"""
-<section class="pg">{sec('07', 'TEACHER ACADEMY: THE CURRICULUM')}
-  <h2>Ten sessions. Every chapter.<br>Built, not just read.</h2>
+<section class="pg">{sec('09', 'OPTION 2: TEACHER ACADEMY')}
+  <h2>Option 2: the Academy.<br>Ten sessions, every chapter.</h2>
   <p class="lead">Each session is three hours: one hour of explanation and two hours at the bench. Delivered as a two-week holiday block or ten weekly sessions. Thirty contact hours in total.</p>
   <table><tr><th style="width:8mm"></th><th>Bench work</th><th style="width:15mm">Book</th><th style="width:44mm">Teacher leaves with</th></tr>{rows}</table>
   <h3 style="margin:10px 0 4px">Optional advanced modules</h3>
@@ -423,19 +482,19 @@ def page_assess(n, T):
     ]
     ur = "".join(f'<tr><td><b>{a}</b></td><td>{b}</td><td class="mut">{c}</td></tr>' for a, b, c in unesco)
     return f"""
-<section class="pg">{sec('08', 'ASSESSMENT AND STANDARDS')}
+<section class="pg">{sec('10', 'ASSESSMENT AND STANDARDS')}
   <h2>How we know a teacher<br>is ready to teach it.</h2>
   <p class="lead">Completion is not attendance. A teacher is signed off on three gates, each with a written record the school keeps.</p>
   <div class="grid g3" style="margin-bottom:10px">
     <div class="card"><span class="tag">GATE 1</span><h3>Safety</h3><p class="mut" style="margin:0">Before any student kit is handled: Safety Notes checklist, battery and soldering rules, and a stop-switch on every robot. Pass or repeat.</p></div>
-    <div class="card"><span class="tag">GATE 2</span><h3>Knowledge</h3><p class="mut" style="margin:0">Chapter review questions from the book, marked against its answer key. Proposed pass mark: 70% on each part.</p></div>
-    <div class="card"><span class="tag">GATE 3</span><h3>Practical</h3><p class="mut" style="margin:0">Teach one session to real students with a trainer observing: a working student build by the end of the hour.</p></div>
+    <div class="card"><span class="tag">GATE 2</span><h3>Knowledge</h3><p class="mut" style="margin:0">Chapter review questions from the book, marked against its answer key. Proposed pass mark: 70% on each part. Gates 1 and 2 are signed off in the room in both options.</p></div>
+    <div class="card"><span class="tag">GATE 3</span><h3>Practical</h3><p class="mut" style="margin:0">Teach one session to real students with a trainer observing: a working student build by the end of the hour. Held in Term 1 or 2, in both options.</p></div>
   </div>
   <h3 style="margin-bottom:6px">Mapped to UNESCO's AI competency framework for teachers{sup(8)}</h3>
   <table><tr><th style="width:48mm">Domain</th><th style="width:32mm">Where it is trained</th><th>What teachers do</th></tr>{ur}</table>
   <div class="grid g2" style="margin-top:10px">
     <div class="card"><h3>Evidence the school receives</h3><ul class="t"><li>A record per teacher for each gate</li><li>Photos and build logs from each Academy session</li><li>An end-of-term report on student builds</li></ul></div>
-    <div class="card"><h3>Proposed targets, set in your proposal</h3><ul class="t"><li>100% of teachers pass Gate 1 before Term 1 lab starts</li><li>All 18 sensor projects completed per teacher</li><li>At least one teacher leads a session unaided by the end of Term 2</li></ul></div>
+    <div class="card"><h3>Proposed targets, set in your proposal</h3><ul class="t"><li>100% of teachers pass Gate 1 before Term 1 lab starts</li><li>All 18 sensor projects completed per teacher by the end of Term 1</li><li>At least one teacher leads a session unaided by the end of Term 2</li></ul></div>
   </div>
   {foot(n, T)}
 </section>"""
@@ -457,7 +516,7 @@ def page_kits(n, T):
         layout = "display:block" if wide else "display:grid;grid-template-columns:30mm 1fr;gap:8px"
         cards += f'<div class="card" style="{layout};padding:7px 9px">{pic}{body}</div>'
     return f"""
-<section class="pg">{sec('09', 'TESTED KITS FOR THE LAB')}
+<section class="pg">{sec('11', 'TESTED KITS FOR THE LAB')}
   <h2>Eight kits. Each one mapped<br>to a stage and a chapter.</h2>
   <p class="lead" style="margin-bottom:8px">OKHub catalogue kits. Every component is tested before shipping. Each ships with a free tutorial PDF, Arduino and MicroPython code, 1 year of WhatsApp support, and nationwide delivery.</p>
   <div class="grid g2" style="gap:6px">{cards}</div>
@@ -481,7 +540,7 @@ def page_packs(n, T):
         <div class="mono mut" style="margin-top:3px">Book: {e(p['chapters'])}</div>{note}</div>"""
     full = C.pack_total([(C.KITS["ignite"]["price"], 10), (C.KITS["rover_m2"]["uno_price"], 10)])
     return f"""
-<section class="pg">{sec('10', 'LAB PACKS AND BUDGET')}
+<section class="pg">{sec('12', 'LAB PACKS AND BUDGET')}
   <h2>Four ready packs.<br>The discount worked out.</h2>
   <p class="lead">Packs are sized for one class of 30 in ten groups of three. The catalogue's school discount is 5% off at 5 or more kits and 10% off at 10 or more. Here it is applied to each pack's own kit count.</p>
   <div class="grid g2">{cards}</div>
@@ -495,18 +554,18 @@ def page_packs(n, T):
 def page_models(n, T):
     models = [
         ("In-School Robotics &amp; AI Lab", "Weekly / termly", "A standing class inside your timetable. OKHub supplies the lab kit, the module sequence and an instructor for every session.", "1 to 2 sessions a week, full term", "Every student holding a working build"),
-        ("Teacher Capacity Building", "Cohort based", "The Teacher Academy of this document, against UNESCO's AI competency framework for educators.", "Intensive block, then termly check-ins", "A school that can teach this itself"),
+        ("Teacher Capacity Building", "Cohort based", "Teacher training as a 3-day intensive or a ten-session Academy, against UNESCO's AI competency framework for educators.", "Intensive block, then termly check-ins", "A school that can teach this itself"),
         ("Holiday Intensive", "1 to 2 weeks", "The 4IR Bootcamp model for your students during a school holiday. Six builds, start to finish, published to OKHub's YouTube channel.", "Daily, for the length of the intensive", "A published build and a YouTube credit"),
         ("Competition Track", "Seasonal", "Mentoring toward WRO, FIRST LEGO League or the Robotics for Good Youth Challenge.", "Set against the competition calendar", "A team entered, coached and ready"),
     ]
     cards = "".join(f'<div class="card"><div style="display:flex;justify-content:space-between"><h3>{a}</h3><span class="mono mut">{b}</span></div><p class="mut" style="margin-bottom:4px">{c}</p><p style="font-size:8.6pt;margin:0"><b>Cadence:</b> {d}<br><b>Ends with:</b> {f}</p></div>' for a, b, c, d, f in models)
     return f"""
-<section class="pg">{sec('11', 'PARTNERSHIP MODELS')}
+<section class="pg">{sec('13', 'PARTNERSHIP MODELS')}
   <h2>Four ways to run this.<br>We recommend a combination.</h2>
   <p class="lead">Equipment, curriculum and instruction come from OKHub in every model. What changes is cadence, who ends up able to run the room, and what the term ends with.</p>
   <div class="grid g2">{cards}</div>
   <div class="card" style="margin-top:10px;border-left:3px solid var(--y)"><h3>Recommended for a secondary school</h3>
-  <p style="margin-bottom:4px"><b>Teacher Capacity Building + In-School Lab, then a Holiday Intensive.</b> Train staff first, run the lab for three terms on the handover ladder, and use a holiday intensive to give the strongest students an extra six builds. Add the Competition Track once a team forms.</p>
+  <p style="margin-bottom:4px"><b>Teacher Capacity Building + In-School Lab, then a Holiday Intensive.</b> Train staff first (start with the 3-day intensive, add Academy sessions for depth), run the lab for three terms on the handover ladder, and use a holiday intensive to give the strongest students an extra six builds. Add the Competition Track once a team forms.</p>
   <p class="mut" style="margin:0">A school can enter at any stage and add models later.</p></div>
   {foot(n, T)}
 </section>"""
@@ -514,21 +573,21 @@ def page_models(n, T):
 
 def page_roadmap(n, T):
     terms = [
-        ("Before Term 1", "Set up", ["Discovery call or site visit", "Leadership briefing (Track A)", "Lab room set up, kits delivered", "Teacher Academy block (10 sessions)"], "All teachers pass Gate 1 and complete the 18 sensor projects."),
+        ("Before Term 1", "Set up", ["Discovery call or site visit", "Leadership briefing (Track A)", "Lab room set up, kits delivered", "Teacher training: 3-day intensive or Academy block"], "All teachers pass Gate 1 and complete the 18 sensor projects."),
         ("Term 1", "Observe", ["OKHub leads the student lab, 1 to 2 sessions a week", "Teachers run a bench each", "Modules 1 and 2 (car and obstacle avoider)", "Lab technician training (Track C)"], "Every student in the pilot class holds a working build."),
         ("Term 2", "Co-teach", ["Teachers lead, OKHub instructor beside them", "Modules 3 to 4, simulation in Webots for SS", "Gate 3 practical assessment", "Optional holiday intensive"], "At least one teacher leads a session unaided."),
         ("Term 3", "Lead", ["Teachers run the lab", "Modules 5 and 6, AI integration for senior classes", "Demo day for parents and the board", "Competition entry decision"], "Demo day with all six modules shown. Second cohort planned."),
     ]
     cards = "".join(f'<div class="card"><span class="tag mono">{a}</span><h3>{b}</h3><ul class="t" style="font-size:8.6pt;margin-bottom:5px">{"".join(f"<li>{e(x)}</li>" for x in c)}</ul><div class="mono mut">Evidence</div><div style="font-size:8.6pt"><b>{e(d)}</b></div></div>' for a, b, c, d in terms)
     return f"""
-<section class="pg">{sec('12', 'YEAR ONE ROADMAP')}
+<section class="pg">{sec('14', 'YEAR ONE ROADMAP')}
   <h2>From first call to a school<br>that teaches it itself.</h2>
   <p class="lead">Four stages, each ending with evidence you can look at. Every stage can be stopped, resized or extended after review.</p>
   <div class="grid g2">{cards}</div>
   <h3 style="margin:12px 0 6px">Next steps</h3>
   <div class="step"><div class="no">1</div><div><b>Discovery call or site visit.</b> We look at student age range, existing facilities and timetable, and confirm which models fit.</div></div>
   <div class="step"><div class="no">2</div><div><b>A proposal built for your school.</b> Cohort size, cadence, equipment list and cost, scoped to what you need. No generic package.</div></div>
-  <div class="step"><div class="no">3</div><div><b>Run the pilot.</b> One class or one cohort, one term, with the Academy running alongside.</div></div>
+  <div class="step"><div class="no">3</div><div><b>Run the pilot.</b> One class or one cohort, one term, with teacher training running alongside.</div></div>
   <div class="step"><div class="no">4</div><div><b>Review, then scale.</b> Add cohorts, extend training, or move toward a competition entry.</div></div>
   {foot(n, T)}
 </section>"""
@@ -536,7 +595,7 @@ def page_roadmap(n, T):
 
 def page_about(n, T):
     return f"""
-<section class="pg">{sec('13', 'ABOUT OKHUB TECHNOLOGY')}
+<section class="pg">{sec('15', 'ABOUT OKHUB TECHNOLOGY')}
   <h2>We teach the skills,<br>then build with them.</h2>
   <p class="lead">OKHub Technology trains people and builds systems from the same building in Ibadan. The work spans commerce, health, agriculture and civic tech. Robotics and AI are one part of it, which is why your classroom gets the engineers who ship production systems the rest of the week.</p>
   <div class="grid g3" style="margin-bottom:10px">
@@ -549,9 +608,16 @@ def page_about(n, T):
     <div class="card"><h3>Teach it, build it, ship it</h3><p class="mut" style="margin:0">The engineers who train a cohort ship the client work. Students, schools and industry sit in the same room.</p></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">{img('ph_rover_side', 52)}{img('ph_breadboard', 52)}</div>
-  <div class="card" style="border-left:3px solid var(--y)"><h3>About the author</h3>
-  <p style="margin:0">{C.BOOK['author']} is the founder of OKHub Technology and the author of <i>Robotics for Everyone</i>. He has taken more than twelve AI and IoT systems from model training to deployment, including a Yoruba and English serving robot, a firefighting robot, a smart walking stick for visually impaired users and a Nigerian Sign Language recogniser.
-  He has taught sensor integration, autonomous navigation and ROS simulation as an AI and robotics instructor, and is an alumnus of the Data Science Nigeria AI Bootcamp.</p></div>
+  <div class="card" style="border-left:3px solid var(--y)">
+    <div class="mono mut">About the author</div>
+    <h3 style="font-size:14pt;margin-bottom:1px">{C.BOOK['author']}</h3>
+    <p style="margin-bottom:6px"><b>Mechatronics engineering graduate. Founder of OKHub Technology. Author of <i>Robotics for Everyone</i>.</b></p>
+    <div class="grid g3" style="gap:10px">
+      <div><div class="mono mut" style="margin-bottom:2px">Engineer</div><p style="font-size:8.8pt;margin:0">Has taken more than twelve AI and IoT systems from model training to deployment. They include a Yoruba and English serving robot, a firefighting robot, a smart walking stick for visually impaired users and a Nigerian Sign Language recogniser.</p></div>
+      <div><div class="mono mut" style="margin-bottom:2px">Instructor</div><p style="font-size:8.8pt;margin:0">Has taught sensor integration, autonomous navigation and ROS simulation as an AI and robotics instructor. Alumnus of the Data Science Nigeria AI Bootcamp.</p></div>
+      <div><div class="mono mut" style="margin-bottom:2px">Author</div><p style="font-size:8.8pt;margin:0">Wrote the book your teachers train on. It grew out of teaching beginners with simple kits, and it is written for people with no programming background.</p></div>
+    </div>
+  </div>
   {foot(n, T)}
 </section>"""
 
@@ -561,7 +627,7 @@ def page_contact(n, T):
     c = C.CONTACT
     return f"""
 <section class="pg dark">
-  <div class="sec mono"><span class="n" style="color:#000">14</span><span class="l" style="color:#9b9b92">LET'S START</span></div>
+  <div class="sec mono"><span class="n" style="color:#000">16</span><span class="l" style="color:#9b9b92">LET'S START</span></div>
   <h1 style="color:#fff;font-size:30pt">Ready to put a robot<br>in a student's hands,<br><span style="color:var(--y)">and a teacher behind it?</span></h1>
   <p style="color:#e4e4dc;margin:10px 0 14px;max-width:150mm;font-size:10.5pt">OKHub Technology is based in {c['address']} and works with schools across Nigeria. Reach us directly. There is no intermediary form.</p>
   <div class="grid g2" style="margin-bottom:12px">
@@ -581,7 +647,7 @@ def page_contact(n, T):
 
 def render(school):
     makers = [page_summary, page_why, page_proof, page_builds, page_pathway, page_staff, page_book,
-              page_academy, page_assess, page_kits, page_packs, page_models, page_roadmap, page_about, page_contact]
+              page_options, page_threeday, page_academy, page_assess, page_kits, page_packs, page_models, page_roadmap, page_about, page_contact]
     total = len(makers) + 1
     pages = [page_cover(school)] + [m(i + 2, total) for i, m in enumerate(makers)]
     css = CSS % {"fonts": FONTS}

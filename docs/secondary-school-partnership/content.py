@@ -183,10 +183,38 @@ SESSIONS = [
          do="Obstacle avoidance in Webots. Connect a language model to a robot through an allowed-commands list. Draft your Term 1 plan.",
          leave="A teaching plan for the term and the practical assessment."),
 ]
+# Three-day intensive. Hours are contact hours per block; each day must total 6.
+THREE_DAY = [
+    dict(day=1, title="Safe, wired and running", blocks=[
+        ("09:00", 1.5, "What a robot is and what it is made of. Sense, think, act on real machines.", [1, 2]),
+        ("10:45", 1.5, "Safety gate: Safety Notes, batteries, soldering, a stop switch on every robot. Gate 1 sign-off.", [3, 19]),
+        ("13:15", 1.75, "Electronics on a breadboard: Ohm's law, multimeter, voltage divider.", [4]),
+        ("15:15", 1.25, "First boards: blink an LED on the Uno and the ESP32, then write and debug a first sketch.", [5, 6]),
+    ]),
+    dict(day=2, title="Sense and move", blocks=[
+        ("09:00", 1.5, "Sensors teachers use most: DHT11 temperature (Project 1), HC-SR04 ultrasonic (9), PIR motion (10).", [7, 8]),
+        ("10:45", 1.5, "Identify, switch, display: RFID reader (Project 14), relay (15), LCD (16).", [9]),
+        ("13:15", 1.75, "Motors, servos and an H-bridge driver. Drive a DC motor both ways.", [10]),
+        ("15:15", 1.25, "Feedback in plain language, then motor control for a robot that drives straight.", [11, 12]),
+    ]),
+    dict(day=3, title="Build, teach, plan", blocks=[
+        ("09:00", 2.0, "Build a wheeled robot from a Rover M2 kit: chassis, driver, ultrasonic obstacle avoider.", [13]),
+        ("11:15", 1.0, "Test plan and simulation: test on the bench first, then see the same logic in Webots.", [18]),
+        ("13:15", 1.75, "Teaching clinic: each teacher teaches a 10-minute segment to the group. Gate 2 knowledge check against the book's answer key.", []),
+        ("15:15", 1.25, "Plan the term, set the self-study route, choose the lab lead.", [20]),
+    ]),
+]
+THREE_DAY_AFTER = dict(chapters=[15, 17], projects=12,
+                       note="Self-study with termly check-ins: the other 12 sensor projects, Chapter 15 vision, Chapter 17 Physical AI and language models")
+
 OPTIONAL = [
     dict(chapter=14, note="Legged Robots and the Hexapod: servo-heavy build for an after-school club lead"),
     dict(chapter=16, note="ROS 2 Basics: for the teacher who will lead the SS2-SS3 AI club"),
 ]
+
+# Kits for six teachers, two to a kit set.
+THREE_DAY_KITS = pack_total([(KITS["ignite"]["price"], 3), (KITS["rover_m2"]["uno_price"], 3)])
+ACADEMY_KITS = next(p for p in PACKS if p["key"] == "staff")["calc"]
 
 # ---------------------------------------------------------------- reference --
 REFERENCES = [
