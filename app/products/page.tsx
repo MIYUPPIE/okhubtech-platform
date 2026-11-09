@@ -9,7 +9,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/products",
   title: "Products",
   description:
-    "Software OKHub has built: LogSME, Alajapa, VASIDAS, TeenBuddy, LOGOD, NURPAT, LAMIUK, UNC, Loeko, GriotVid and more, across commerce, agriculture, health, language, automation and the public sector.",
+    "Software OKHub has built: LogSME, PARSIL, NILERA, OKROBO, OICS, PDF Studio, Alajapa, VASIDAS, NURPAT, LOGOD and more, across commerce, mapping, health, education and security.",
   ogSlug: "products",
   ogAlt: "Software OKHub has built",
 });
@@ -27,7 +27,8 @@ export default function ProductsPage() {
       </h1>
       <p className="mt-6 max-w-3xl text-lg text-black/80 dark:text-white/80">
         {PRODUCTS.length} products across {sectors.length} sectors: commerce,
-        agriculture, health, language, automation, media and the public sector.
+        mapping, health, education, language, security, automation, media and the
+        public sector.
         Most were built for conditions the usual tooling assumes away: no signal
         in the field, no broadband in the building, no GPU worth the name, and a
         customer who is already on WhatsApp and not coming to your website.
