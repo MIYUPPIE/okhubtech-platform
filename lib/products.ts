@@ -252,23 +252,6 @@ const PRODUCTS_DATA: Product[] = [
     stack: ["Python", "InsightFace", "MediaPipe", "Computer vision", "Offline TTS"],
   },
   {
-    slug: "kso-campaign",
-    name: "KSO 2027 Campaign",
-    tagline: "The campaign website and content backend for a 2027 House of Representatives candidate in Ibadan.",
-    sector: "Civic tech",
-    url: "https://kso.ng",
-    summary: [
-      "The website for Dr. Kazeem Adesina Olasupo Abidikugu (KSO), ADC candidate for the Ibadan Northeast/Southeast Federal Constituency in the 2027 general elections: who the candidate is, the agenda, news and media.",
-      "The campaign team updates the site themselves through a Django content backend, while the public site is served as fast static pages behind Nginx with HTTPS.",
-    ],
-    highlights: [
-      "Content managed by the campaign team, not by a developer.",
-      "Static Next.js front end for speed on mobile data.",
-      "Containerised and deployed behind Nginx with Let's Encrypt HTTPS.",
-    ],
-    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Django REST Framework", "Docker", "Nginx"],
-  },
-  {
     slug: "nilera",
     name: "NILERA",
     tagline: "Healthcare you can speak to: a voice-first health companion on WhatsApp, in four Nigerian languages.",
