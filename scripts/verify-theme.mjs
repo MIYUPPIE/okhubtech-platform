@@ -87,6 +87,8 @@ const CONTENT_PAGES = [
   /^app\/portfolio\/page\.tsx$/,
   /^app\/\[page\]\/page\.tsx$/,
   /^app\/\(auth\)\/[^/]+\/page\.tsx$/,
+  /^app\/kits\/page\.tsx$/,
+  /^app\/schools\/page\.tsx$/,
 ];
 
 const CLASSNAME = /className=(?:"([^"]*)"|\{`([^`]*)`\})/gs;

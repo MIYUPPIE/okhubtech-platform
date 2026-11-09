@@ -51,6 +51,7 @@ INK = (5, 5, 5)
 
 PHOTO_WIDTHS = {"lg": 1600, "sm": 640}
 PORTFOLIO_WIDTH = 1200
+KIT_WIDTHS = {"lg": 1200, "sm": 640}
 VIDEO_WIDTH = 640
 VIDEO_CRF = 28
 # Marketing B-roll does not need three minutes. Anything longer is trimmed.
@@ -143,6 +144,7 @@ class VideoEntry:
 
 photos: list[ImageEntry] = []
 portfolio: list[ImageEntry] = []
+kits: list[ImageEntry] = []
 videos: list[VideoEntry] = []
 brand: dict[str, ImageEntry] = {}
 projects: dict[str, list[ImageEntry]] = {}
@@ -430,6 +432,10 @@ OG_CARDS: list[OGCardSpec] = [
     OGCardSpec("data", "Data & Analytics", "Signals into decisions."),
     OGCardSpec("contact", "Get in touch", "Talk to OKHub."),
     OGCardSpec("studio", "The Studio", "The robotics and training floor."),
+    OGCardSpec("kits", "Kits", "Electronics and robotics kits, tested before they ship.",
+               photo="kits/ignite-genesis.webp"),
+    OGCardSpec("schools", "For secondary schools", "A robotics lab, trained staff and the kits to run it.",
+               photo="video/secondary-block-programming-poster.webp"),
     OGCardSpec("portfolio-serving-robot", "Portfolio · Robotics", "Restaurant Serving Robot",
                photo="portfolio/serving-robot.webp"),
     OGCardSpec("portfolio-ai-health-assistant", "Portfolio · Health", "Patient Vitals Monitor",
@@ -635,6 +641,10 @@ def write_manifest() -> None:
     lines.extend(ts_image(e) + "," for e in portfolio)
     lines.append("] as const satisfies readonly ImageAsset[];\n")
 
+    lines.append("export const KIT_IMAGES = [")
+    lines.extend(ts_image(e) + "," for e in kits)
+    lines.append("] as const satisfies readonly ImageAsset[];\n")
+
     lines.append("export const VIDEOS = [")
     lines.extend(ts_video(e) + "," for e in videos)
     lines.append("] as const satisfies readonly VideoAsset[];\n")
@@ -653,6 +663,7 @@ def write_manifest() -> None:
 
     lines.append("export type PhotoId = (typeof PHOTOS)[number][\"id\"];")
     lines.append("export type PortfolioImageId = (typeof PORTFOLIO_IMAGES)[number][\"id\"];")
+    lines.append("export type KitImageId = (typeof KIT_IMAGES)[number][\"id\"];")
     lines.append("export type VideoId = (typeof VIDEOS)[number][\"id\"];")
     lines.append("export type BrandId = keyof typeof BRAND;")
     lines.append("export type ProjectSlug = keyof typeof PROJECT_MEDIA;")
@@ -680,6 +691,8 @@ def main() -> int:
     build_images(ASSETS / "photos", MEDIA / "photos", "/media/photos", PHOTO_WIDTHS, photos)
     build_images(ASSETS / "portfolio", MEDIA / "portfolio", "/media/portfolio",
                  {"lg": PORTFOLIO_WIDTH}, portfolio)
+    # Kit masters come from scripts/extract_kit_photos.py (catalogue PDF -> 4:3 cards).
+    build_images(ASSETS / "kits", MEDIA / "kits", "/media/kits", KIT_WIDTHS, kits)
     build_videos()
     build_projects()
     build_docs()

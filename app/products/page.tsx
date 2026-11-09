@@ -37,6 +37,9 @@ export default function ProductsPage() {
         <Link href="/contact" className="btn-primary">
           Talk to us about a build
         </Link>
+        <Link href="/kits" className="btn-secondary">
+          Electronics &amp; robotics kits
+        </Link>
         <Link href="/portfolio" className="btn-secondary">
           Hardware &amp; research work
         </Link>

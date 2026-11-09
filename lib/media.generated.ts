@@ -84,6 +84,17 @@ export const PORTFOLIO_IMAGES = [
   { kind: "image", id: "utme-career-advisor", src: "/media/portfolio/utme-career-advisor.webp", width: 640, height: 640, thumb: null },
 ] as const satisfies readonly ImageAsset[];
 
+export const KIT_IMAGES = [
+  { kind: "image", id: "ignite-genesis", src: "/media/kits/ignite-genesis.webp", width: 1200, height: 900, thumb: "/media/kits/ignite-genesis-sm.webp" },
+  { kind: "image", id: "picode-lab", src: "/media/kits/picode-lab.webp", width: 1200, height: 900, thumb: "/media/kits/picode-lab-sm.webp" },
+  { kind: "image", id: "rover-guard-iot", src: "/media/kits/rover-guard-iot.webp", width: 1200, height: 900, thumb: "/media/kits/rover-guard-iot-sm.webp" },
+  { kind: "image", id: "rover-m2", src: "/media/kits/rover-m2.webp", width: 1200, height: 900, thumb: "/media/kits/rover-m2-sm.webp" },
+  { kind: "image", id: "rover-sense-iot", src: "/media/kits/rover-sense-iot.webp", width: 1200, height: 900, thumb: "/media/kits/rover-sense-iot-sm.webp" },
+  { kind: "image", id: "rover-ultimate-x", src: "/media/kits/rover-ultimate-x.webp", width: 1200, height: 900, thumb: "/media/kits/rover-ultimate-x-sm.webp" },
+  { kind: "image", id: "sensorverse-22", src: "/media/kits/sensorverse-22.webp", width: 1200, height: 900, thumb: "/media/kits/sensorverse-22-sm.webp" },
+  { kind: "image", id: "sentinel-rfid-lab", src: "/media/kits/sentinel-rfid-lab.webp", width: 1200, height: 900, thumb: "/media/kits/sentinel-rfid-lab-sm.webp" },
+] as const satisfies readonly ImageAsset[];
+
 export const VIDEOS = [
   { kind: "video", id: "actuator-serial-test", src: "/media/video/actuator-serial-test.mp4", poster: "/media/video/actuator-serial-test-poster.webp", width: 640, height: 640, duration: 20.0 },
   { kind: "video", id: "bootcamp-cardboard-prototype", src: "/media/video/bootcamp-cardboard-prototype.mp4", poster: "/media/video/bootcamp-cardboard-prototype-poster.webp", width: 640, height: 1138, duration: 12.73 },
@@ -141,6 +152,7 @@ export const DOCS = [
 
 export type PhotoId = (typeof PHOTOS)[number]["id"];
 export type PortfolioImageId = (typeof PORTFOLIO_IMAGES)[number]["id"];
+export type KitImageId = (typeof KIT_IMAGES)[number]["id"];
 export type VideoId = (typeof VIDEOS)[number]["id"];
 export type BrandId = keyof typeof BRAND;
 export type ProjectSlug = keyof typeof PROJECT_MEDIA;

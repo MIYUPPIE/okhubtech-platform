@@ -11,10 +11,14 @@ const primaryNav = [
   { label: "About", href: "/about" },
   { label: "Studio", href: "/studio" },
   { label: "Bootcamp", href: "/bootcamp" },
+  { label: "Schools", href: "/schools" },
   { label: "Products", href: "/products" },
+  { label: "Kits", href: "/kits" },
   { label: "Services", href: "/services" },
   { label: "Portfolio", href: "/portfolio" },
-  { label: "Contact", href: "/contact" },
+  // No "Contact" here: the "Talk to us" button beside the nav (and the mobile
+  // menu's Contact button) already go to /contact, and the room went to Kits
+  // and Schools.
 ];
 
 const serviceDropdown = [
@@ -36,7 +40,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const sharedNavClasses = "text-sm font-medium tracking-wide text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white transition";
+  const sharedNavClasses = "whitespace-nowrap text-sm font-medium tracking-wide text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white transition";
 
   return (
     <header
@@ -46,7 +50,7 @@ const Header = () => {
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
         <LogoLink height={40} priority />
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-5 lg:flex xl:gap-7">
           <div
             className="relative"
             onMouseEnter={() => setShowDropdown(true)}
@@ -94,8 +98,9 @@ const Header = () => {
 
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
-          <Link href="/contact" className="btn-primary">
-            <PhoneCall className="h-4 w-4" /> Talk to us
+          {/* Icon-only below xl: at 1024px the label wrapped onto two lines. */}
+          <Link href="/contact" className="btn-primary whitespace-nowrap" aria-label="Talk to us">
+            <PhoneCall className="h-4 w-4" /> <span className="hidden xl:inline">Talk to us</span>
           </Link>
         </div>
 

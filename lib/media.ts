@@ -14,6 +14,7 @@
 import {
   BRAND,
   DOCS,
+  KIT_IMAGES,
   PHOTOS,
   PORTFOLIO_IMAGES,
   PROJECT_MEDIA,
@@ -34,6 +35,7 @@ export type PortfolioImageId = (typeof PORTFOLIO_IMAGES)[number]["id"];
 export type BrandId = keyof typeof BRAND;
 export type ProjectSlug = keyof typeof PROJECT_MEDIA;
 export type DocId = (typeof DOCS)[number]["id"];
+export type KitImageId = (typeof KIT_IMAGES)[number]["id"];
 
 const byId = <T extends { readonly id: string }>(
   items: readonly T[],
@@ -58,6 +60,13 @@ export const portfolioImage: (id: PortfolioImageId) => ImageAsset = byId(
   "portfolio image",
 );
 export const brand = (id: BrandId): ImageAsset => BRAND[id];
+
+/**
+ * A kit photo by kit slug. Takes a plain string because kit slugs live in
+ * lib/kits.ts, which stays import-free for the gate; scripts/verify-kits.mjs
+ * proves every slug has its photo, and this throws at build time if not.
+ */
+export const kitImage: (slug: string) => ImageAsset = byId<ImageAsset>(KIT_IMAGES, "kit image");
 
 /** One engineering artefact from a project folder, by project and file id. */
 export function artifact<S extends ProjectSlug>(
