@@ -16,6 +16,21 @@ Measure it by orders received on WhatsApp carrying an `NFC-` reference.
 | `services/nfc-orders/` | Cloudflare Worker that holds the WhatsApp token |
 | `scripts/verify-nfc.mjs` (+ `.test.mjs`) | Gate: pricing, order, designer, wiring |
 
+## Tap actions and chip memory
+
+An order holds one or more tap actions, in order. Phones act on the first; the
+rest are stored for apps that read the whole tag. `memoryReport()` in `lib/nfc.ts`
+sizes the NDEF message exactly: record header (3 bytes, 6 from a 256-byte payload),
+type, payload, URI prefix compression (`https://` is one byte), UTF-8 text with a
+3-byte language header, vCard 3.0 for contacts, the Wi-Fi Simple Configuration
+payload for Wi-Fi, then the tag's TLV wrapper (3 bytes, 5 from a 255-byte message).
+Capacity is 144 / 504 / 888 bytes for NTAG213 / 215 / 216, framing included.
+"Something else" is programmed by hand and counts as 0 bytes.
+
+The page shows a live meter, offers a one-click chip upgrade with the price
+difference, and `validateOrder()` refuses an order that does not fit, naming the
+chip that does. The PDF lists each item with its bytes.
+
 ## Changing prices
 
 Edit `PRICING` in `lib/nfc.ts`. The page, PDF and gate follow. The gate rejects

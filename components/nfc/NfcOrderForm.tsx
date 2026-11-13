@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, Download, ImagePlus, Loader2, MessageCircle, Trash2, Type, Square, Circle, Radio } from "lucide-react";
 
 import {
-  ACTIONS, CHIPS, DELIVERY, EXTRAS, FINISHES, FORMS, MAX_QTY, formById, naira, orderRef, quote, validateOrder,
-  type ActionId, type ChipId, type DeliveryId, type ExtraId, type FinishId, type FormId, type Order, type Selection,
+  ACTIONS, CHIPS, DELIVERY, EXTRAS, FINISHES, FORMS, MAX_QTY, PRICING, chipById, formById, memoryReport, naira, orderRef, quote, validateOrder,
+  type ActionId, type TapAction, type ChipId, type DeliveryId, type ExtraId, type FinishId, type FormId, type Order, type Selection,
 } from "@/lib/nfc";
 import {
   canvasSize, defaultDesign, drawSide, hitTest, layerBox, moveLayer, newId, FONT_STACKS,
@@ -13,6 +13,10 @@ import {
 } from "@/lib/nfc-design";
 import { buildOrderPdf, pdfFileName } from "@/lib/nfc-pdf";
 import { deliver, type DeliveryResult } from "@/lib/nfc-delivery";
+
+type Item = TapAction & { uid: string };
+let itemCounter = 0;
+const blankItem = (id: ActionId): Item => ({ uid: `a${itemCounter++}`, id, value: "", ...(ACTIONS.find((a) => a.id === id)?.fields ? { fields: {} } : {}) });
 
 const STEPS = ["Card", "Design", "Function", "Details"] as const;
 
@@ -80,7 +84,7 @@ export default function NfcOrderForm() {
   const [design, setDesign] = useState<Design>(defaultDesign);
   const [side, setSide] = useState<"front" | "back">("front");
   const [selected, setSelected] = useState<string | null>(null);
-  const [action, setAction] = useState<{ id: ActionId; value: string }>({ id: "website", value: "" });
+  const [items, setItems] = useState<Item[]>(() => [blankItem("website")]);
   const [customer, setCustomer] = useState({ name: "", business: "", phone: "", email: "", city: "", notes: "" });
   const [errors, setErrors] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -94,6 +98,16 @@ export default function NfcOrderForm() {
   const form = formById(sel.form);
   const { w, h } = useMemo(() => canvasSize(form), [form]);
   const q = useMemo(() => quote(sel), [sel]);
+  const mem = useMemo(() => memoryReport(items, sel.chip), [items, sel.chip]);
+  const patchItem = (uid: string, patch: Partial<Item>) => setItems((xs) => xs.map((x) => (x.uid === uid ? { ...x, ...patch } : x)));
+  const moveItem = (i: number, d: -1 | 1) =>
+    setItems((xs) => {
+      const j = i + d;
+      if (j < 0 || j >= xs.length) return xs;
+      const next = [...xs];
+      [next[i], next[j]] = [next[j]!, next[i]!];
+      return next;
+    });
   const current: SideDesign = design[side];
   const layer = current.layers.find((l) => l.id === selected) ?? null;
 
@@ -190,7 +204,7 @@ export default function NfcOrderForm() {
       ref: orderRef(now, crypto.getRandomValues(new Uint8Array(4))),
       createdAt: now.toISOString(),
       selection: sel,
-      action,
+      actions: items.map(({ uid: _uid, ...a }) => a),
       customer,
     };
     const errs = validateOrder(order);
@@ -447,17 +461,76 @@ export default function NfcOrderForm() {
 
         {step === 2 && (
           <section className="space-y-5">
-            <div>
-              <label className={LABEL} htmlFor="action">When someone taps the card</label>
-              <select id="action" className={INPUT} value={action.id} onChange={(e) => setAction({ ...action, id: e.target.value as ActionId })}>
-                {ACTIONS.map((a) => <option key={a.id} value={a.id}>{a.label}</option>)}
-              </select>
+            <p className="text-sm text-black/65 dark:text-white/65">
+              Add everything the card should hold. We measure it against the chip as you type. Phones act on the <strong>first</strong> item when tapped; the rest are stored on the chip for apps that read them.
+            </p>
+
+            <div className="sticky top-24 z-10 rounded-2xl border border-black/10 bg-white/95 p-4 backdrop-blur dark:border-white/10 dark:bg-black/80" aria-live="polite">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-sm font-semibold text-black dark:text-white">
+                  {chipById(sel.chip).label} memory
+                </span>
+                <span className={`text-sm font-semibold ${mem.fits ? (mem.tight ? "text-amber-600" : "text-green-700 dark:text-green-400") : "text-red-600 dark:text-red-400"}`}>
+                  {mem.used} / {mem.capacity} bytes
+                </span>
+              </div>
+              <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-black/10 dark:bg-white/15" role="progressbar" aria-valuemin={0} aria-valuemax={mem.capacity} aria-valuenow={Math.min(mem.used, mem.capacity)}>
+                <div className={`h-full rounded-full transition-all ${mem.fits ? (mem.tight ? "bg-amber-500" : "bg-green-600") : "bg-red-600"}`} style={{ width: `${Math.min(100, (mem.used / mem.capacity) * 100)}%` }} />
+              </div>
+              <p className="mt-2 text-xs text-black/60 dark:text-white/60">
+                {mem.used === 0 && "Nothing to store yet."}
+                {mem.used > 0 && mem.fits && !mem.tight && `Fits with ${mem.free} bytes to spare.`}
+                {mem.used > 0 && mem.fits && mem.tight && `Fits, but only ${mem.free} bytes are left. A small change later may not.`}
+                {!mem.fits && (mem.smallestChip ? `Over by ${mem.used - mem.capacity} bytes. ` : `Over by ${mem.used - mem.capacity} bytes and no chip we sell is big enough. Remove something.`)}
+              </p>
+              {!mem.fits && mem.smallestChip && (
+                <button type="button" onClick={() => setSel({ ...sel, chip: mem.smallestChip! })} className="mt-2 rounded-full bg-black px-4 py-1.5 text-sm font-semibold text-[#fafafa] dark:bg-gold-primary dark:text-black">
+                  Use {chipById(mem.smallestChip).label} (+{naira(PRICING.chip[mem.smallestChip] - PRICING.chip[sel.chip])} per card)
+                </button>
+              )}
             </div>
-            <div>
-              <label className={LABEL} htmlFor="avalue">Details</label>
-              <textarea id="avalue" rows={4} className={INPUT} placeholder={ACTIONS.find((a) => a.id === action.id)?.placeholder} value={action.value} onChange={(e) => setAction({ ...action, value: e.target.value })} />
-              <p className="mt-1 text-xs text-black/50 dark:text-white/50">We programme every chip with this before it ships.</p>
-            </div>
+
+            <ol className="space-y-4">
+              {items.map((it, i) => {
+                const def = ACTIONS.find((a) => a.id === it.id)!;
+                return (
+                  <li key={it.uid} className="rounded-2xl border border-black/10 p-4 dark:border-white/10">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-xs font-bold text-[#fafafa] dark:bg-gold-primary dark:text-black">{i + 1}</span>
+                      <select aria-label={`Item ${i + 1} type`} className={INPUT + " flex-1"} value={it.id}
+                        onChange={(e) => setItems((xs) => xs.map((x) => (x.uid === it.uid ? { ...blankItem(e.target.value as ActionId), uid: it.uid } : x)))}>
+                        {ACTIONS.map((a) => <option key={a.id} value={a.id}>{a.label}</option>)}
+                      </select>
+                      <span className="rounded-full bg-black/5 px-2.5 py-1 text-xs font-semibold dark:bg-white/10">{it.id === "other" ? "not stored" : `${mem.perAction[i] ?? 0} bytes`}</span>
+                      <button type="button" aria-label="Move up" disabled={i === 0} onClick={() => moveItem(i, -1)} className="rounded-full border border-black/15 px-2 py-1 text-sm disabled:opacity-30 dark:border-white/20">&uarr;</button>
+                      <button type="button" aria-label="Move down" disabled={i === items.length - 1} onClick={() => moveItem(i, 1)} className="rounded-full border border-black/15 px-2 py-1 text-sm disabled:opacity-30 dark:border-white/20">&darr;</button>
+                      <button type="button" aria-label="Remove item" onClick={() => setItems((xs) => xs.filter((x) => x.uid !== it.uid))} className="rounded-full border border-red-500/40 p-2 text-red-600"><Trash2 size={16} /></button>
+                    </div>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      {def.fields ? (
+                        def.fields.map((f) => (
+                          <div key={f.key}>
+                            <label className={LABEL} htmlFor={`${it.uid}-${f.key}`}>{f.label}</label>
+                            <input id={`${it.uid}-${f.key}`} className={INPUT} placeholder={f.placeholder} value={it.fields?.[f.key] ?? ""}
+                              onChange={(e) => patchItem(it.uid, { fields: { ...it.fields, [f.key]: e.target.value } })} />
+                          </div>
+                        ))
+                      ) : (
+                        <div className="sm:col-span-2">
+                          <label className={LABEL} htmlFor={`${it.uid}-v`}>Details</label>
+                          <textarea id={`${it.uid}-v`} rows={it.id === "payment" || it.id === "text" || it.id === "other" ? 3 : 1} className={INPUT} placeholder={def.placeholder} value={it.value}
+                            onChange={(e) => patchItem(it.uid, { value: e.target.value })} />
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <button type="button" onClick={() => setItems((xs) => [...xs, blankItem("website")])} className="inline-flex items-center gap-2 rounded-full border border-dashed border-black/30 px-5 py-2.5 text-sm font-semibold dark:border-white/40">
+              + Add another item
+            </button>
           </section>
         )}
 

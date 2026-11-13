@@ -10,7 +10,7 @@
  */
 
 import { BANK, EMAIL, LOCATION, PHONE_DISPLAY } from "./contact";
-import { ACTIONS, DELIVERY, EXTRAS, FINISHES, chipById, formById, nairaPlain, quote, type Order } from "./nfc";
+import { ACTIONS, DELIVERY, EXTRAS, FINISHES, chipById, formById, memoryReport, nairaPlain, quote, type Order } from "./nfc";
 
 export type Artwork = { front: string; back: string };
 
@@ -56,7 +56,15 @@ export async function buildOrderPdf(o: Order, art: Artwork): Promise<Blob> {
     doc.setTextColor(...color);
     doc.text(s, x, yy, { align });
   };
+  /** Start a fresh page when the next block would run into the footer. */
+  const ensureSpace = (h: number) => {
+    if (y + h > 280) {
+      doc.addPage();
+      y = 18;
+    }
+  };
   const heading = (s: string) => {
+    ensureSpace(24);
     y += 4;
     text(s.toUpperCase(), M, y, 8.5, MUTED, true);
     doc.setDrawColor(...RULE);
@@ -89,15 +97,29 @@ export async function buildOrderPdf(o: Order, art: Artwork): Promise<Blob> {
   }
 
   heading("What the card does when tapped");
-  const act = ACTIONS.find((a) => a.id === o.action.id)?.label ?? o.action.id;
-  text(act, M, y, 9.5, INK, true);
-  y += 5.2;
-  const lines: string[] = doc.splitTextToSize(o.action.value, W - 2 * M);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(9.5);
-  doc.setTextColor(...INK);
-  doc.text(lines.slice(0, 4), M, y);
-  y += Math.min(lines.length, 4) * 4.6 + 1;
+  const mem = memoryReport(o.actions, o.selection.chip);
+  o.actions.forEach((a, i) => {
+    ensureSpace(18);
+    const def = ACTIONS.find((x) => x.id === a.id);
+    const bytes = mem.perAction[i] ?? 0;
+    text(`${i + 1}. ${def?.label ?? a.id}`, M, y, 9.5, INK, true);
+    text(a.id === "other" ? "not stored" : `${bytes} bytes`, W - M, y, 8.5, MUTED, false, "right");
+    y += 4.8;
+    const detail = def?.fields
+      ? def.fields.map((f) => (a.fields?.[f.key] ? `${f.label}: ${a.fields[f.key]}` : "")).filter(Boolean).join("   |   ")
+      : a.value;
+    const dl: string[] = doc.splitTextToSize(detail, W - 2 * M - 4);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...MUTED);
+    doc.text(dl.slice(0, 3), M + 4, y);
+    y += Math.min(dl.length, 3) * 4.2 + 1.6;
+  });
+  text(
+    `Chip memory: ${mem.used} of ${mem.capacity} bytes used (${mem.free} free), ${chipById(o.selection.chip).label}`,
+    M, y + 0.5, 9, mem.tight ? [170, 90, 0] : MUTED, true,
+  );
+  y += 5.5;
   if (o.customer.notes.trim()) {
     text("Notes", M, y + 1, 9.5, MUTED);
     const nl: string[] = doc.splitTextToSize(o.customer.notes.trim(), W - 2 * M - 34);
@@ -106,6 +128,7 @@ export async function buildOrderPdf(o: Order, art: Artwork): Promise<Blob> {
     y += Math.min(nl.length, 4) * 4.6 + 2;
   }
 
+  ensureSpace(62);
   heading("Price");
   for (const l of q.lines) {
     text(l.label, M, y, 9.5, INK);
@@ -128,19 +151,19 @@ export async function buildOrderPdf(o: Order, art: Artwork): Promise<Blob> {
   text("Pay only after OKHub confirms this order on WhatsApp. Quote ref: " + o.ref, M, y, 8.5, MUTED);
   y += 2;
 
-  heading("Artwork preview");
   const maxW = (W - 2 * M - 10) / 2;
   const sides: [string, string][] = o.selection.sides === "double" ? [["Front", art.front], ["Back", art.back]] : [["Front", art.front]];
   const aspect = form.heightMm / form.widthMm;
   const pw = Math.min(maxW, form.shape === "circle" ? 50 : maxW);
   const ph = pw * aspect;
+  ensureSpace(ph + 24);
+  heading("Artwork preview");
   sides.forEach(([label, data], i) => {
     const x = M + i * (pw + 10);
     text(label, x, y, 8.5, MUTED, true);
     doc.addImage(data, "PNG", x, y + 2, pw, ph, undefined, "FAST");
   });
 
-  text(`${EMAIL}   |   ${PHONE_DISPLAY}   |   ${LOCATION}`, W / 2, 289, 8, MUTED, false, "center");
 
   // Page 2: 100% artwork with crop marks
   doc.addPage();
@@ -164,5 +187,11 @@ export async function buildOrderPdf(o: Order, art: Artwork): Promise<Blob> {
     py += form.heightMm + 22;
   }
 
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    text(`${EMAIL}   |   ${PHONE_DISPLAY}   |   ${LOCATION}`, W / 2, 289, 8, MUTED, false, "center");
+    text(`${i} / ${pageCount}`, W - M, 289, 8, MUTED, false, "right");
+  }
   return doc.output("blob");
 }

@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
 
-import { checkDesigner, checkOrder, checkPricing, checkQuotes, checkWiring, loadSources } from "./verify-nfc.mjs";
+import { checkDesigner, checkNdef, checkOrder, checkPricing, checkQuotes, checkWiring, loadSources } from "./verify-nfc.mjs";
 
 const ROOT = new URL("..", import.meta.url).pathname.replace(/\/$/, "");
 const { nfc, design } = await loadSources(ROOT);
@@ -21,7 +21,7 @@ const expect = (name, found, re) => {
 };
 
 // The real sources are clean.
-for (const [n, f] of [["pricing", checkPricing(nfc)], ["quotes", checkQuotes(nfc)], ["order", checkOrder(nfc)], ["designer", checkDesigner(nfc, design)], ["wiring", checkWiring(ROOT)]]) {
+for (const [n, f] of [["pricing", checkPricing(nfc)], ["quotes", checkQuotes(nfc)], ["order", checkOrder(nfc)], ["ndef", checkNdef(nfc)], ["designer", checkDesigner(nfc, design)], ["wiring", checkWiring(ROOT)]]) {
   if (f.length) problems.push(`real ${n} should be clean: ${f}`);
 }
 
@@ -44,6 +44,17 @@ expect("ref drift", checkOrder({ ...nfc, orderRef: () => "NFC-000000-0000" }), /
 expect("phone accepted junk", checkOrder({ ...nfc, normalisePhone: () => "2348031234567" }), /normalisePhone/);
 expect("everything valid", checkOrder({ ...nfc, validateOrder: () => [] }), /accepted/);
 expect("long caption", checkOrder({ ...nfc, whatsappCaption: () => "x".repeat(1200) }), /caption exceeds/);
+
+// 3b. NDEF
+expect("uri ignores prefix compression", checkNdef({ ...nfc, uriRecordBytes: (u) => 3 + 1 + 1 + u.length }), /https URI/);
+expect("text counted in chars not bytes", checkNdef({ ...nfc, textRecordBytes: (t) => 3 + 1 + 3 + t.length }), /UTF-8/);
+expect("long record header wrong", checkNdef({ ...nfc, ndefRecordBytes: (t, p) => 3 + t + p }), /long record/);
+expect("wifi payload drift", checkNdef({ ...nfc, wifiPayloadBytes: () => 50 }), /wifi payload/);
+expect("framing forgotten", checkNdef({ ...nfc, memoryReport: (a, c) => { const r = nfc.memoryReport(a, c); return { ...r, used: r.messageBytes, free: r.capacity - r.messageBytes }; } }), /one url used|full chip|one byte over/);
+expect("wrong capacity", checkNdef({ ...nfc, memoryReport: (a, c) => ({ ...nfc.memoryReport(a, c), capacity: 100 }) }), /capacity/);
+expect("over-capacity allowed", checkNdef({ ...nfc, memoryReport: (a, c) => ({ ...nfc.memoryReport(a, c), fits: true }) }), /one byte over/);
+expect("contact needs no phone", checkOrder({ ...nfc, actionProblem: () => null, validateOrder: (o) => nfc.validateOrder(o).filter((m) => !/Save my contact/.test(m)) }), /contact with no phone/);
+expect("capacity check removed", checkOrder({ ...nfc, validateOrder: (o) => nfc.validateOrder(o).filter((m) => !/bytes/.test(m)) }), /over-capacity/);
 
 // 4. Designer
 expect("wrong px size", checkDesigner(nfc, { ...design, canvasSize: () => ({ w: 100, h: 100 }) }), /1011x638/);

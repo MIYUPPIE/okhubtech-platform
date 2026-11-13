@@ -34,6 +34,9 @@ export const LOCATION_SHORT = "Ibadan, Nigeria";
 export const MAILTO = `mailto:${EMAIL}`;
 export const TEL = `tel:${PHONE_E164}`;
 
+/** Chat link for any number (digits only, country code first). The customer's own number on an NFC card, not OKHub's. */
+export const whatsappChatUrl = (digits: string) => `https://wa.me/${digits}`;
+
 /** Deep link into WhatsApp, optionally with the message pre-filled. */
 export const whatsappLink = (message?: string) =>
   `https://wa.me/${WHATSAPP_NUMBER}${message ? `?text=${encodeURIComponent(message)}` : ""}`;

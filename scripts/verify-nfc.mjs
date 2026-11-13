@@ -7,7 +7,9 @@
  *  2. PRICE BEHAVIOUR. Hand-computed quotes match to the naira. A bigger order
  *     never costs more per card than a smaller one, for every form. Quantities
  *     under the minimum are priced at the minimum and flagged.
- *  3. ORDER. References are deterministic and use only unambiguous characters;
+ *  3. NDEF. The bytes each tap action writes to the chip, hand-computed from the
+ *     NFC Forum record layout, and the fit against NTAG213/215/216 to the byte.
+ *  3b. ORDER. References are deterministic and use only unambiguous characters;
  *     phones normalise to 234...; validation catches missing contact details;
  *     the WhatsApp caption fits WhatsApp's 1024-character limit.
  *  4. DESIGNER. The renderer draws every layer kind, hit-testing returns the
@@ -120,7 +122,7 @@ export function checkOrder(nfc) {
 
   const good = {
     ref, createdAt: "2026-11-13T00:00:00Z", selection: { ...BASE },
-    action: { id: "website", value: "https://example.com" },
+    actions: [{ id: "website", value: "https://example.com" }],
     customer: { name: "Ada Obi", business: "", phone: "08031234567", email: "", city: "Ibadan", notes: "" },
   };
   if (nfc.validateOrder(good).length) out.push(`a valid order was rejected: ${nfc.validateOrder(good)}`);
@@ -128,8 +130,18 @@ export function checkOrder(nfc) {
   if (!bad({ customer: { ...good.customer, name: "" } }).length) out.push("empty name accepted");
   if (!bad({ customer: { ...good.customer, phone: "12" } }).length) out.push("bad phone accepted");
   if (!bad({ customer: { ...good.customer, email: "nope" } }).length) out.push("bad email accepted");
-  if (!bad({ action: { id: "website", value: "example.com" } }).length) out.push("website without https accepted");
-  if (!bad({ action: { id: "text", value: "" } }).length) out.push("empty tap action accepted");
+  if (!bad({ actions: [{ id: "website", value: "example.com" }] }).length) out.push("website without https accepted");
+  if (!bad({ actions: [{ id: "text", value: "" }] }).length) out.push("empty tap action accepted");
+  if (!bad({ actions: [] }).length) out.push("an order with no tap actions was accepted");
+  if (!bad({ actions: [{ id: "contact", value: "", fields: { name: "Ada" } }] }).length) out.push("contact with no phone or email accepted");
+  if (!bad({ actions: [{ id: "wifi", value: "", fields: { ssid: "" } }] }).length) out.push("wifi with no network name accepted");
+  if (bad({ actions: [{ id: "website", value: "https://a.com" }, { id: "text", value: "Hello" }] }).length) out.push("a valid two-item order was rejected");
+  // Too big for the chosen chip must be refused, and the message must name the chip that fits.
+  const big = { actions: [{ id: "text", value: "x".repeat(135) }] };
+  const over = bad(big);
+  if (!over.some((m) => /NTAG213 holds 144/.test(m) && /NTAG215/.test(m))) out.push(`over-capacity order not refused with a useful message: ${over}`);
+  if (bad({ ...big, selection: { ...good.selection, chip: "ntag215" } }).length) out.push("an order that fits NTAG215 was refused for NTAG215");
+  if (!bad({ actions: [{ id: "text", value: "x".repeat(2000) }], selection: { ...good.selection, chip: "ntag216" } }).some((m) => /largest chip/.test(m))) out.push("an order too big for every chip was not refused");
 
   const long = { ...good, customer: { ...good.customer, name: "N".repeat(100), business: "B".repeat(100) } };
   if (nfc.whatsappCaption(long).length > 1000) out.push("caption exceeds 1000 characters");
@@ -145,6 +157,62 @@ export function recorder() {
     set: (t, k, v) => { t[k] = v; return true; },
   });
   return { ctx: p, calls };
+}
+
+/** NDEF byte maths, each number worked out by hand from the NFC Forum record layout. */
+export function checkNdef(nfc) {
+  const out = [];
+  const eq = (name, got, want) => got !== want && out.push(`ndef ${name}: got ${got}, expected ${want}`);
+
+  // URI: header 1 + type len 1 + payload len 1 + type "U" 1 + payload (1 prefix code + rest).
+  eq("https URI", nfc.uriRecordBytes("https://okhubtech.com"), 18); // rest "okhubtech.com" = 13, payload 14
+  eq("http://www. prefix", nfc.uriRecordBytes("http://www.x.com"), 10); // rest "x.com" = 5, payload 6
+  eq("unknown scheme", nfc.uriRecordBytes("ftp://a.b"), 14); // no prefix code: payload 1 + 9
+  eq("prefix match ignores case", nfc.uriRecordBytes("HTTPS://okhubtech.com"), 18);
+  // Text: payload = 1 status + 2 language + text.
+  eq("text", nfc.textRecordBytes("Hello"), 12);
+  eq("text is counted in UTF-8 bytes", nfc.textRecordBytes("\u20A6100"), 13); // naira sign is 3 bytes
+  // Wi-Fi: type "application/vnd.wfa.wsc" is 23 bytes, payload 44 + ssid + key.
+  eq("wifi payload", nfc.wifiPayloadBytes("Home", "pass1234"), 56);
+  eq("wifi record", nfc.actionBytes({ id: "wifi", value: "", fields: { ssid: "Home", password: "pass1234" } }), 82);
+  eq("open wifi", nfc.actionBytes({ id: "wifi", value: "", fields: { ssid: "Home" } }), 3 + 23 + 48);
+  // vCard: 63 bytes for the name-only card, type "text/vcard" is 10 bytes.
+  eq("vcard text", nfc.vCard({ name: "Ada Obi" }).length, 63);
+  eq("vcard record", nfc.actionBytes({ id: "contact", value: "", fields: { name: "Ada Obi" } }), 76);
+  if (!nfc.vCard({ name: "A", org: "X;Y, Z" }).includes("ORG:X\\;Y\\, Z")) out.push("vCard does not escape ; and ,");
+  if (nfc.vCard({ name: "Ada Obi" }).includes("ORG")) out.push("vCard wrote an empty ORG line");
+  // WhatsApp: normalised, then https://wa.me/234...: rest "wa.me/2348031234567" = 19, payload 20.
+  eq("whatsapp", nfc.actionBytes({ id: "whatsapp", value: "08031234567" }), 24);
+  eq("whatsapp with bad number", nfc.actionBytes({ id: "whatsapp", value: "12" }), 0);
+  eq("something else is not stored", nfc.actionBytes({ id: "other", value: "anything at all" }), 0);
+  eq("blank website", nfc.actionBytes({ id: "website", value: "  " }), 0);
+
+  // Long record: payload of 256 or more switches to a 4-byte length (6-byte header).
+  eq("short record at 255", nfc.ndefRecordBytes(1, 255), 3 + 1 + 255);
+  eq("long record at 256", nfc.ndefRecordBytes(1, 256), 6 + 1 + 256);
+
+  const rep = (actions, chip = "ntag213") => nfc.memoryReport(actions, chip);
+  // TLV framing: 0x03, length, message, 0xFE = 3 bytes extra, or 5 once the message is 255+.
+  eq("one url used", rep([{ id: "website", value: "https://okhubtech.com" }]).used, 21);
+  eq("two items add up", rep([{ id: "website", value: "https://okhubtech.com" }, { id: "text", value: "Hello" }]).used, 18 + 12 + 3);
+  eq("empty uses nothing", rep([]).used, 0);
+  eq("only 'something else' uses nothing", rep([{ id: "other", value: "x" }]).used, 0);
+  eq("long message framing", rep([{ id: "website", value: `https://${"a".repeat(300)}` }], "ntag216").used, 308 + 5);
+  const per = rep([{ id: "website", value: "https://a.co" }, { id: "text", value: "Hi" }]).perAction;
+  if (per.join() !== "9,9") out.push(`ndef perAction: got ${per}, expected 9,9`);
+
+  // Capacity edges on NTAG213 (144): text record = 7 + length, plus 3 framing.
+  const text = (n) => [{ id: "text", value: "x".repeat(n) }];
+  const full = rep(text(134));
+  if (!(full.used === 144 && full.free === 0 && full.fits && full.smallestChip === "ntag213")) out.push(`exactly full chip: ${JSON.stringify(full)}`);
+  const over = rep(text(135));
+  if (!(over.used === 145 && !over.fits && over.smallestChip === "ntag215")) out.push(`one byte over: ${JSON.stringify(over)}`);
+  if (rep(text(125)).tight !== true) out.push("under 10% free should be tight");
+  if (rep(text(100)).tight !== false) out.push("plenty of room should not be tight");
+  if (rep(text(2000), "ntag216").smallestChip !== null) out.push("nothing fits 2000 bytes, smallestChip should be null");
+  eq("ntag215 capacity", rep([], "ntag215").capacity, 504);
+  eq("ntag216 capacity", rep([], "ntag216").capacity, 888);
+  return out;
 }
 
 export function checkDesigner(nfc, d) {
@@ -223,7 +291,7 @@ export function checkWiring(root) {
 
 async function main() {
   const { nfc, design } = await loadSources(ROOT);
-  const problems = [...checkPricing(nfc), ...checkQuotes(nfc), ...checkOrder(nfc), ...checkDesigner(nfc, design), ...checkWiring(ROOT)];
+  const problems = [...checkPricing(nfc), ...checkQuotes(nfc), ...checkOrder(nfc), ...checkNdef(nfc), ...checkDesigner(nfc, design), ...checkWiring(ROOT)];
   if (problems.length) {
     console.error(`verify-nfc: ${problems.length} problem(s)\n`);
     for (const p of problems) console.error(`  - ${p}`);
