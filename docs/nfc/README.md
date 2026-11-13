@@ -20,7 +20,7 @@ Measure it by orders received on WhatsApp carrying an `NFC-` reference.
 
 Edit `PRICING` in `lib/nfc.ts`. The page, PDF and gate follow. The gate rejects
 fractional or negative prices and any change that makes a bigger order cost more
-per card. **The shipped numbers are launch defaults, not confirmed OKHub prices.**
+per card. Prices were set against Nigerian listings seen in Nov 2026 (Jiji N20,000, Nukreationz from N30,000, Quikprint metal N6,000 to N11,500 by volume). Confirm them against your own costs.
 Hand-computed expectations in `scripts/verify-nfc.mjs` (`checkQuotes`) will fail
 when you change a price: update them to your new arithmetic.
 

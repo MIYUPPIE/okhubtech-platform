@@ -5,7 +5,10 @@
  * pure and deterministic (no Date.now, no Math.random, no DOM) so
  * scripts/verify-nfc.mjs can pin every number.
  *
- * PRICES: these are launch defaults, in whole naira. Edit PRICING below and
+ * PRICES: whole naira, set against Nigerian listings seen in Nov 2026 (custom NFC
+ * cards from N20,000 each on Jiji and N30,000 on Nukreationz; metal NFC at
+ * N11,500 / N9,500 / N6,000 for 50 / 100 / 250+ at Quikprint). Still confirm
+ * against your own costs. Edit PRICING below and
  * nothing else; the page, the PDF and the gate all read from it. The gate
  * (scripts/verify-nfc.mjs) fails if a price is not a non-negative integer or if
  * a bigger order ever costs more per card than a smaller one.
@@ -86,19 +89,19 @@ export const DELIVERY: readonly { id: DeliveryId; label: string }[] = [
 /** Whole naira. Edit here; everything else follows. */
 export const PRICING = {
   /** Per unit, before chip, finish, sides and extras. */
-  base: { "pvc-card": 3500, "wood-card": 6000, "metal-card": 15000, keyfob: 2500, sticker: 1200, wristband: 2800 } satisfies Record<FormId, number>,
+  base: { "pvc-card": 7500, "wood-card": 11000, "metal-card": 14000, keyfob: 5000, sticker: 2500, wristband: 4500 } satisfies Record<FormId, number>,
   /** Per unit, added to the base. */
-  chip: { ntag213: 0, ntag215: 600, ntag216: 1000 } satisfies Record<ChipId, number>,
-  finish: { gloss: 0, matte: 200, frosted: 400, "soft-touch": 600 } satisfies Record<FinishId, number>,
+  chip: { ntag213: 0, ntag215: 1000, ntag216: 2000 } satisfies Record<ChipId, number>,
+  finish: { gloss: 0, matte: 300, frosted: 600, "soft-touch": 1000 } satisfies Record<FinishId, number>,
   /** Per unit, for printing the back as well as the front. */
-  doubleSided: 500,
-  extra: { serial: 150, hole: 100, magstripe: 700 } satisfies Record<ExtraId, number>,
+  doubleSided: 1000,
+  extra: { serial: 300, hole: 200, magstripe: 1500 } satisfies Record<ExtraId, number>,
   /** One-off, covers print plates and setup. Waived from SETUP_WAIVED_FROM units. */
-  setupFee: 3000,
+  setupFee: 5000,
   /** One-off, when OKHub does the artwork instead of the customer. */
-  designService: 5000,
+  designService: 15000,
   /** One-off, per order. */
-  delivery: { pickup: 0, ibadan: 1500, nationwide: 4000 } satisfies Record<DeliveryId, number>,
+  delivery: { pickup: 0, ibadan: 2500, nationwide: 5000 } satisfies Record<DeliveryId, number>,
   /** Quantity discount on the unit subtotal. Highest minQty not above the order wins. */
   tiers: [
     { minQty: 1, pct: 0 },

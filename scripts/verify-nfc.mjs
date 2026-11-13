@@ -63,16 +63,16 @@ export function checkQuotes(nfc) {
   const out = [];
   const eq = (name, got, want) => got !== want && out.push(`${name}: got ${got}, expected ${want}`);
 
-  // 50 PVC, 1 side: unit 3500, 175000 less 10%, setup waived, pickup.
-  eq("50 pvc pickup", nfc.quote({ ...BASE }).total, 157500);
-  // 50 PVC double, delivered in Ibadan: unit 4000 -> 200000 - 20000 + 1500.
-  eq("50 pvc double ibadan", nfc.quote({ ...BASE, sides: "double", delivery: "ibadan" }).total, 181500);
-  // 10 PVC, ntag215, matte, serial, pickup: unit 3500+600+200+150 = 4450 -> 44500 + 3000 setup.
-  eq("10 pvc small order", nfc.quote({ ...BASE, qty: 10, chip: "ntag215", finish: "matte", extras: ["serial"] }).total, 47500);
+  // 50 PVC, 1 side: unit 7500, 375000 less 10%, setup waived, pickup.
+  eq("50 pvc pickup", nfc.quote({ ...BASE }).total, 337500);
+  // 50 PVC double, delivered in Ibadan: unit 8500 -> 425000 - 42500 + 2500.
+  eq("50 pvc double ibadan", nfc.quote({ ...BASE, sides: "double", delivery: "ibadan" }).total, 385000);
+  // 10 PVC, ntag215, matte, serial, pickup: unit 7500+1000+300+300 = 9100 -> 91000 + 5000 setup.
+  eq("10 pvc small order", nfc.quote({ ...BASE, qty: 10, chip: "ntag215", finish: "matte", extras: ["serial"] }).total, 96000);
   // Duplicate extras must not double charge.
-  eq("duplicate extras", nfc.unitPrice({ ...BASE, extras: ["hole", "hole"] }), 3600);
+  eq("duplicate extras", nfc.unitPrice({ ...BASE, extras: ["hole", "hole"] }), 7700);
   // OKHub design fee is one-off.
-  eq("design service", nfc.quote({ ...BASE, designBy: "okhub" }).total, 157500 + nfc.PRICING.designService);
+  eq("design service", nfc.quote({ ...BASE, designBy: "okhub" }).total, 337500 + nfc.PRICING.designService);
   // 500 gets 25%.
   eq("500 tier", nfc.quote({ ...BASE, qty: 500 }).discountPct, 25);
 
