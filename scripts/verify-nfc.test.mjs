@@ -29,9 +29,10 @@ for (const [n, f] of [["pricing", checkPricing(nfc)], ["quotes", checkQuotes(nfc
 const withPricing = (patch) => ({ ...nfc, PRICING: { ...nfc.PRICING, ...patch } });
 expect("fractional price", checkPricing(withPricing({ setupFee: 3000.5 })), /whole naira/);
 expect("negative price", checkPricing(withPricing({ doubleSided: -1 })), /whole naira/);
-expect("falling tier", checkPricing(withPricing({ tiers: [{ minQty: 1, pct: 0 }, { minQty: 50, pct: 10 }, { minQty: 100, pct: 5 }] })), /falls/);
-expect("tier not starting at zero", checkPricing(withPricing({ tiers: [{ minQty: 1, pct: 5 }] })), /first discount tier/);
-expect("missing base price", checkPricing(withPricing({ base: { "pvc-card": 1 } })), /no base price/);
+const br = (patch) => withPricing({ breaks: { ...nfc.PRICING.breaks, ...patch } });
+expect("rising break", checkPricing(br({ keyfob: [{ minQty: 1, unit: 100 }, { minQty: 50, unit: 200 }] })), /costs more/);
+expect("break not starting at 1", checkPricing(br({ keyfob: [{ minQty: 5, unit: 100 }] })), /start at 1/);
+expect("missing form", checkPricing(withPricing({ breaks: { "pvc-card": nfc.PRICING.breaks["pvc-card"] } })), /no price breaks/);
 
 // 2. Quote behaviour
 expect("wrong total", checkQuotes({ ...nfc, quote: (s) => ({ ...nfc.quote(s), total: nfc.quote(s).total + 1 }) }), /got/);

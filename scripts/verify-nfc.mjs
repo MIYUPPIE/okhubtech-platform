@@ -2,8 +2,8 @@
 /**
  * Gate: the /nfc order page prices correctly and is wired end to end.
  *
- *  1. PRICE TABLE. Every price is a non-negative whole naira; discount tiers
- *     start at 0% and only rise.
+ *  1. PRICE TABLE. Every price is a non-negative whole naira; each form's price
+ *     breaks start at 1 unit and the unit price only falls.
  *  2. PRICE BEHAVIOUR. Hand-computed quotes match to the naira. A bigger order
  *     never costs more per card than a smaller one, for every form. Quantities
  *     under the minimum are priced at the minimum and flagged.
@@ -44,14 +44,16 @@ export function checkPricing(nfc) {
     }
   };
   walk(P, "PRICING");
-  const t = P.tiers;
-  if (t[0].minQty !== 1 || t[0].pct !== 0) out.push("first discount tier must be 1 unit at 0%");
-  for (let i = 1; i < t.length; i++) {
-    if (t[i].minQty <= t[i - 1].minQty) out.push(`discount tier ${i} minQty is not ascending`);
-    if (t[i].pct < t[i - 1].pct) out.push(`discount tier ${i} pct falls`);
+  for (const f of nfc.FORMS) {
+    const br = P.breaks[f.id];
+    if (!br?.length) { out.push(`form ${f.id} has no price breaks`); continue; }
+    if (br[0].minQty !== 1) out.push(`${f.id}: first price break must start at 1 unit`);
+    for (let i = 1; i < br.length; i++) {
+      if (br[i].minQty <= br[i - 1].minQty) out.push(`${f.id}: price break ${i} minQty is not ascending`);
+      if (br[i].unit > br[i - 1].unit) out.push(`${f.id}: price break ${i} costs more than the one before`);
+    }
+    if (br.some((b) => b.unit <= 0)) out.push(`${f.id}: a price break is zero or negative`);
   }
-  if (t.at(-1).pct >= 100) out.push("top discount tier is 100% or more");
-  for (const f of nfc.FORMS) if (!(f.id in P.base)) out.push(`form ${f.id} has no base price`);
   for (const c of nfc.CHIPS) if (!(c.id in P.chip)) out.push(`chip ${c.id} has no price`);
   for (const f of nfc.FINISHES) if (!(f.id in P.finish)) out.push(`finish ${f.id} has no price`);
   for (const e of nfc.EXTRAS) if (!(e.id in P.extra)) out.push(`extra ${e.id} has no price`);
@@ -63,18 +65,19 @@ export function checkQuotes(nfc) {
   const out = [];
   const eq = (name, got, want) => got !== want && out.push(`${name}: got ${got}, expected ${want}`);
 
-  // 50 PVC, 1 side: unit 7500, 375000 less 10%, setup waived, pickup.
-  eq("50 pvc pickup", nfc.quote({ ...BASE }).total, 337500);
-  // 50 PVC double, delivered in Ibadan: unit 8500 -> 425000 - 42500 + 2500.
-  eq("50 pvc double ibadan", nfc.quote({ ...BASE, sides: "double", delivery: "ibadan" }).total, 385000);
-  // 10 PVC, ntag215, matte, serial, pickup: unit 7500+1000+300+300 = 9100 -> 91000 + 5000 setup.
-  eq("10 pvc small order", nfc.quote({ ...BASE, qty: 10, chip: "ntag215", finish: "matte", extras: ["serial"] }).total, 96000);
+  // 50 PVC, 1 side: break price 6000 x 50, setup waived, pickup.
+  eq("50 pvc pickup", nfc.quote({ ...BASE }).total, 300000);
+  // 50 PVC double, delivered in Ibadan: (6000 + 300) x 50 + 2000.
+  eq("50 pvc double ibadan", nfc.quote({ ...BASE, sides: "double", delivery: "ibadan" }).total, 317000);
+  // 10 PVC, ntag215, matte, serial, pickup: unit 9000+300+100+150 = 9550 -> 95500 + 3000 setup.
+  eq("10 pvc small order", nfc.quote({ ...BASE, qty: 10, chip: "ntag215", finish: "matte", extras: ["serial"] }).total, 98500);
   // Duplicate extras must not double charge.
-  eq("duplicate extras", nfc.unitPrice({ ...BASE, extras: ["hole", "hole"] }), 7700);
+  eq("duplicate extras", nfc.unitPrice({ ...BASE, extras: ["hole", "hole"] }), 6100);
   // OKHub design fee is one-off.
-  eq("design service", nfc.quote({ ...BASE, designBy: "okhub" }).total, 337500 + nfc.PRICING.designService);
-  // 500 gets 25%.
-  eq("500 tier", nfc.quote({ ...BASE, qty: 500 }).discountPct, 25);
+  eq("design service", nfc.quote({ ...BASE, designBy: "okhub" }).total, 300000 + nfc.PRICING.designService);
+  // Market anchors: Quikprint metal list, exact.
+  for (const [qty, want] of [[50, 11500], [100, 9500], [250, 6000]]) eq(`metal ${qty} break`, nfc.breakPrice("metal-card", qty), want);
+  eq("pvc 500 break", nfc.quote({ ...BASE, qty: 500 }).unitPrice, 3800);
 
   // The PDF cannot print the naira sign, so no line may carry a pre-formatted one.
   for (const l of nfc.quote({ ...BASE }).lines) if (/\u20A6/.test(`${l.label}${l.note ?? ""}`)) out.push(`price line "${l.label}" embeds a naira sign`);

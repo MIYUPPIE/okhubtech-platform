@@ -88,29 +88,30 @@ export const DELIVERY: readonly { id: DeliveryId; label: string }[] = [
 
 /** Whole naira. Edit here; everything else follows. */
 export const PRICING = {
-  /** Per unit, before chip, finish, sides and extras. */
-  base: { "pvc-card": 7500, "wood-card": 11000, "metal-card": 14000, keyfob: 5000, sticker: 2500, wristband: 4500 } satisfies Record<FormId, number>,
-  /** Per unit, added to the base. */
-  chip: { ntag213: 0, ntag215: 1000, ntag216: 2000 } satisfies Record<ChipId, number>,
-  finish: { gloss: 0, matte: 300, frosted: 600, "soft-touch": 1000 } satisfies Record<FinishId, number>,
+  /**
+   * Per-card price by quantity, before chip, finish, sides and extras. Highest
+   * minQty not above the order wins. Must start at minQty 1 and never rise.
+   */
+  breaks: {
+    "pvc-card": [{ minQty: 1, unit: 9000 }, { minQty: 25, unit: 7500 }, { minQty: 50, unit: 6000 }, { minQty: 100, unit: 5000 }, { minQty: 250, unit: 4200 }, { minQty: 500, unit: 3800 }],
+    "wood-card": [{ minQty: 1, unit: 14000 }, { minQty: 25, unit: 12000 }, { minQty: 50, unit: 10000 }, { minQty: 100, unit: 8500 }, { minQty: 250, unit: 7500 }, { minQty: 500, unit: 7000 }],
+    "metal-card": [{ minQty: 1, unit: 14000 }, { minQty: 50, unit: 11500 }, { minQty: 100, unit: 9500 }, { minQty: 250, unit: 6000 }],
+    keyfob: [{ minQty: 1, unit: 6000 }, { minQty: 25, unit: 5000 }, { minQty: 50, unit: 4000 }, { minQty: 100, unit: 3200 }, { minQty: 250, unit: 2800 }, { minQty: 500, unit: 2500 }],
+    sticker: [{ minQty: 1, unit: 1500 }, { minQty: 25, unit: 1200 }, { minQty: 50, unit: 1000 }, { minQty: 100, unit: 800 }, { minQty: 250, unit: 700 }, { minQty: 500, unit: 600 }],
+    wristband: [{ minQty: 1, unit: 3500 }, { minQty: 25, unit: 3200 }, { minQty: 50, unit: 3000 }, { minQty: 100, unit: 2800 }, { minQty: 250, unit: 2600 }, { minQty: 500, unit: 2500 }],
+  } satisfies Record<FormId, readonly { minQty: number; unit: number }[]>,
+  /** Per unit, added to the break price. */
+  chip: { ntag213: 0, ntag215: 300, ntag216: 700 } satisfies Record<ChipId, number>,
+  finish: { gloss: 0, matte: 100, frosted: 250, "soft-touch": 400 } satisfies Record<FinishId, number>,
   /** Per unit, for printing the back as well as the front. */
-  doubleSided: 1000,
-  extra: { serial: 300, hole: 200, magstripe: 1500 } satisfies Record<ExtraId, number>,
+  doubleSided: 300,
+  extra: { serial: 150, hole: 100, magstripe: 500 } satisfies Record<ExtraId, number>,
   /** One-off, covers print plates and setup. Waived from SETUP_WAIVED_FROM units. */
-  setupFee: 5000,
+  setupFee: 3000,
   /** One-off, when OKHub does the artwork instead of the customer. */
-  designService: 15000,
+  designService: 7500,
   /** One-off, per order. */
-  delivery: { pickup: 0, ibadan: 2500, nationwide: 5000 } satisfies Record<DeliveryId, number>,
-  /** Quantity discount on the unit subtotal. Highest minQty not above the order wins. */
-  tiers: [
-    { minQty: 1, pct: 0 },
-    { minQty: 25, pct: 5 },
-    { minQty: 50, pct: 10 },
-    { minQty: 100, pct: 15 },
-    { minQty: 250, pct: 20 },
-    { minQty: 500, pct: 25 },
-  ],
+  delivery: { pickup: 0, ibadan: 2000, nationwide: 4500 } satisfies Record<DeliveryId, number>,
 } as const;
 
 export const SETUP_WAIVED_FROM = 50;
@@ -132,8 +133,6 @@ export type PriceLine = { label: string; amount: number; note?: string; /** Per-
 export type Quote = {
   qty: number;
   unitPrice: number;
-  /** Discount percentage applied to the unit subtotal. */
-  discountPct: number;
   lines: PriceLine[];
   /** Every line summed, in naira. */
   total: number;
@@ -149,15 +148,16 @@ export const naira = (n: number): string => `₦${String(n).replace(/\B(?=(\d{3}
 /** For the PDF, whose built-in fonts have no naira glyph. */
 export const nairaPlain = (n: number): string => `NGN ${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 
-export const tierFor = (qty: number): number => {
-  let pct = 0;
-  for (const t of PRICING.tiers) if (qty >= t.minQty) pct = t.pct;
-  return pct;
+/** The price-break unit price for this form at this quantity. */
+export const breakPrice = (form: FormId, qty: number): number => {
+  let unit = PRICING.breaks[form][0]!.unit;
+  for (const b of PRICING.breaks[form]) if (qty >= b.minQty) unit = b.unit;
+  return unit;
 };
 
-/** Per-card price before the quantity discount. */
+/** Per-card price at the selection's quantity: break price plus chip, finish, sides and extras. */
 export const unitPrice = (s: Selection): number =>
-  PRICING.base[s.form] +
+  breakPrice(s.form, s.qty) +
   PRICING.chip[s.chip] +
   PRICING.finish[s.finish] +
   (s.sides === "double" ? PRICING.doubleSided : 0) +
@@ -181,22 +181,19 @@ export function quote(s: Selection): Quote {
     qty = MAX_QTY;
   }
 
-  const unit = unitPrice(s);
+  const unit = unitPrice({ ...s, qty });
   const subtotal = unit * qty;
-  const pct = tierFor(qty);
-  const discount = Math.round((subtotal * pct) / 100);
 
   const lines: PriceLine[] = [
     { label: `${form.label} x ${qty}`, amount: subtotal, each: unit },
   ];
-  if (discount > 0) lines.push({ label: `Quantity discount (${pct}%)`, amount: -discount });
   if (qty < SETUP_WAIVED_FROM) lines.push({ label: "Print setup", amount: PRICING.setupFee, note: `Free from ${SETUP_WAIVED_FROM} units` });
   if (s.designBy === "okhub") lines.push({ label: "OKHub designs it for you", amount: PRICING.designService });
   const ship = PRICING.delivery[s.delivery];
   lines.push({ label: DELIVERY.find((d) => d.id === s.delivery)?.label ?? "Delivery", amount: ship });
 
   const total = lines.reduce((sum, l) => sum + l.amount, 0);
-  return { qty, unitPrice: unit, discountPct: pct, lines, total, perCard: Math.round(total / qty), problems };
+  return { qty, unitPrice: unit, lines, total, perCard: Math.round(total / qty), problems };
 }
 
 // ---------------------------------------------------------------------------

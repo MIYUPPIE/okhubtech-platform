@@ -497,7 +497,7 @@ export default function NfcOrderForm() {
         <ul className="mt-4 space-y-2 border-t border-black/10 pt-4 text-sm dark:border-white/10">
           {q.lines.map((l) => (
             <li key={l.label} className="flex justify-between gap-3">
-              <span className="text-black/75 dark:text-white/75">{l.label}</span>
+              <span className="text-black/75 dark:text-white/75">{l.label}{l.each !== undefined && <span className="block text-xs text-black/50 dark:text-white/50">{naira(l.each)} each</span>}</span>
               <span className="whitespace-nowrap font-medium text-black dark:text-white">{l.amount < 0 ? `-${naira(-l.amount)}` : naira(l.amount)}</span>
             </li>
           ))}
