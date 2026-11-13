@@ -436,6 +436,7 @@ OG_CARDS: list[OGCardSpec] = [
                photo="kits/ignite-genesis.webp"),
     OGCardSpec("schools", "For secondary schools", "A robotics lab, trained staff and the kits to run it.",
                photo="video/secondary-block-programming-poster.webp"),
+    OGCardSpec("nfc", "NFC cards", "Design it, price it, order it. Straight to WhatsApp."),
     OGCardSpec("portfolio-serving-robot", "Portfolio · Robotics", "Restaurant Serving Robot",
                photo="portfolio/serving-robot.webp"),
     OGCardSpec("portfolio-ai-health-assistant", "Portfolio · Health", "Patient Vitals Monitor",

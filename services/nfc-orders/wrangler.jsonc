@@ -1,0 +1,12 @@
+{
+	"name": "okhub-nfc-orders",
+	"main": "src/worker.ts",
+	"compatibility_date": "2026-09-03",
+	// Secrets are NOT set here. Run once:
+	//   npx wrangler secret put WHATSAPP_TOKEN
+	//   npx wrangler secret put WHATSAPP_PHONE_NUMBER_ID
+	"vars": {
+		"OWNER_NUMBER": "2349069958990",
+		"ALLOWED_ORIGINS": "https://okhubtech.com,https://www.okhubtech.com"
+	}
+}

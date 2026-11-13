@@ -88,6 +88,7 @@ const CONTENT_PAGES = [
   /^app\/\[page\]\/page\.tsx$/,
   /^app\/\(auth\)\/[^/]+\/page\.tsx$/,
   /^app\/kits\/page\.tsx$/,
+  /^app\/nfc\/page\.tsx$/,
   /^app\/schools\/page\.tsx$/,
 ];
 

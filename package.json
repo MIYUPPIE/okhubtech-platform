@@ -7,10 +7,10 @@
     "media": "python3 scripts/build_media.py",
     "media:force": "python3 scripts/build_media.py --force",
     "prebuild": "node scripts/clean-out.mjs",
-    "build": "next build && npm run verify:export && npm run verify:contact && npm run verify:theme && npm run verify:products && npm run verify:bootcamp && npm run verify:home && npm run verify:studio && npm run verify:seo && npm run verify:kits",
+    "build": "next build && npm run verify:export && npm run verify:contact && npm run verify:theme && npm run verify:products && npm run verify:bootcamp && npm run verify:home && npm run verify:studio && npm run verify:seo && npm run verify:kits && npm run verify:nfc",
     "start": "next start",
     "lint": "eslint",
-    "test": "node scripts/verify-export.test.mjs && node scripts/verify-contact.test.mjs && node scripts/verify-theme.test.mjs && node scripts/verify-products.test.mjs && node scripts/verify-bootcamp.test.mjs && node scripts/verify-home.test.mjs && node scripts/verify-studio.test.mjs && node scripts/verify-seo.test.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-kits.test.mjs && python3 -m unittest scripts/test_extract_kit_photos.py",
+    "test": "node scripts/verify-export.test.mjs && node scripts/verify-contact.test.mjs && node scripts/verify-theme.test.mjs && node scripts/verify-products.test.mjs && node scripts/verify-bootcamp.test.mjs && node scripts/verify-home.test.mjs && node scripts/verify-studio.test.mjs && node scripts/verify-seo.test.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-kits.test.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-nfc.test.mjs && npm --prefix services/nfc-orders test --silent && python3 -m unittest scripts/test_extract_kit_photos.py",
     "verify:export": "node scripts/verify-export.mjs",
     "verify:contact": "node scripts/verify-contact.mjs",
     "verify:theme": "node scripts/verify-theme.mjs",
@@ -25,7 +25,8 @@
     "deploy:pack": "npm run build && node scripts/pack-deploy.mjs",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed": "tsx prisma/seed.ts",
+    "verify:nfc": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verify-nfc.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.6.0",
@@ -35,6 +36,7 @@
     "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.1",
+    "jspdf": "^2.5.2",
     "lucide-react": "^0.468.0",
     "next": "16.0.1",
     "next-auth": "5.0.0-beta.30",

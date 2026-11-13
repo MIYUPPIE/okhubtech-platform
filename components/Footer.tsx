@@ -30,6 +30,7 @@ const footerLinks = [
     links: [
       { label: "Products", href: "/products" },
       { label: "Kits", href: "/kits" },
+      { label: "NFC Cards", href: "/nfc" },
       { label: "Schools", href: "/schools" },
       { label: "Portfolio", href: "/portfolio" },
       { label: "Security", href: "#" },
