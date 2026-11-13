@@ -4,11 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, Download, ImagePlus, Loader2, MessageCircle, Trash2, Type, Square, Circle, Radio } from "lucide-react";
 
 import {
-  ACTIONS, CHIPS, DELIVERY, EXTRAS, FINISHES, FORMS, MAX_QTY, PRICING, chipById, formById, memoryReport, naira, orderRef, quote, validateOrder,
-  type ActionId, type TapAction, type ChipId, type DeliveryId, type ExtraId, type FinishId, type FormId, type Order, type Selection,
+  ACTIONS, CHIPS, DELIVERY, DELIVERY_BACKORDER, DELIVERY_FEE_NOTE, DELIVERY_TIME, EXTRAS, FORMS, MAX_QTY, STRIPE_MAX, activeExtras, PRICING, chipById, formById, memoryReport, naira, orderRef, quote, validateOrder,
+  type ActionId, type TapAction, type ChipId, type DeliveryId, type ExtraId, type FormId, type Order, type Selection,
 } from "@/lib/nfc";
 import {
-  canvasSize, defaultDesign, drawSide, hitTest, layerBox, moveLayer, newId, FONT_STACKS,
+  canvasSize, defaultDesign, STRIPE_HEIGHT_MM, STRIPE_TOP_MM, PX_PER_MM, drawSide, hitTest, layerBox, moveLayer, newId, FONT_STACKS,
   type Design, type FontId, type Layer, type SideDesign,
 } from "@/lib/nfc-design";
 import { buildOrderPdf, pdfFileName } from "@/lib/nfc-pdf";
@@ -79,7 +79,7 @@ async function loadImage(file: File): Promise<{ src: string; img: HTMLImageEleme
 export default function NfcOrderForm() {
   const [step, setStep] = useState(0);
   const [sel, setSel] = useState<Selection>({
-    form: "pvc-card", chip: "ntag213", finish: "gloss", sides: "double", qty: 50, extras: [], designBy: "self", delivery: "ibadan",
+    form: "pvc-card", chip: "ntag213", sides: "double", qty: 50, extras: [], stripeData: "", designBy: "self", delivery: "ibadan",
   });
   const [design, setDesign] = useState<Design>(defaultDesign);
   const [side, setSide] = useState<"front" | "back">("front");
@@ -122,6 +122,17 @@ export default function NfcOrderForm() {
     const ctx = c.getContext("2d")!;
     ctx.clearRect(0, 0, w, h);
     drawSide(ctx, form, current, w, h, lookup);
+    if (side === "back" && sel.extras.includes("magstripe") && activeExtras(sel.form, sel.extras).includes("magstripe")) {
+      ctx.save();
+      ctx.fillStyle = "rgba(0,0,0,0.55)";
+      ctx.fillRect(0, STRIPE_TOP_MM * PX_PER_MM, w, STRIPE_HEIGHT_MM * PX_PER_MM);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = `${Math.round(h * 0.045)}px Helvetica, Arial, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("MAGNETIC STRIPE, KEEP CLEAR", w / 2, (STRIPE_TOP_MM + STRIPE_HEIGHT_MM / 2) * PX_PER_MM);
+      ctx.restore();
+    }
     if (layer) {
       ctx.save();
       ctx.setLineDash([14, 10]);
@@ -131,7 +142,7 @@ export default function NfcOrderForm() {
       ctx.strokeRect(b.cx - b.hw - 8, b.cy - b.hh - 8, b.hw * 2 + 16, b.hh * 2 + 16);
       ctx.restore();
     }
-  }, [w, h, form, current, layer, lookup]);
+  }, [w, h, form, current, layer, lookup, side, sel.extras, sel.form]);
 
   const patchSide = (fn: (s: SideDesign) => SideDesign) => setDesign((d) => ({ ...d, [side]: fn(d[side]) }));
   const patchLayer = (id: string, patch: Partial<Layer>) =>
@@ -255,7 +266,10 @@ export default function NfcOrderForm() {
             <Download size={18} /> Download your PDF
           </button>
         </div>
-        <p className="mt-6 text-sm text-black/55 dark:text-white/55">Total {naira(quote(done.order.selection).total)}. Do not pay until we confirm.</p>
+        <p className="mt-6 text-sm text-black/55 dark:text-white/55">
+          Total {naira(quote(done.order.selection).total)}{quote(done.order.selection).deliveryTbc && ", plus the delivery fee we will tell you"}. Do not pay until we confirm.
+        </p>
+        <p className="mt-2 text-sm text-black/55 dark:text-white/55">{DELIVERY_TIME} {DELIVERY_BACKORDER}</p>
       </div>
     );
   }
@@ -306,18 +320,12 @@ export default function NfcOrderForm() {
                 ))}
               </div>
             </div>
-            <div className="grid gap-6 sm:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2">
               <div>
                 <label className={LABEL} htmlFor="qty">Quantity</label>
                 <input id="qty" type="number" inputMode="numeric" min={form.minQty} max={MAX_QTY} className={INPUT} value={sel.qty}
                   onChange={(e) => setSel({ ...sel, qty: Number(e.target.value) })} />
                 <p className="mt-1 text-xs text-black/50 dark:text-white/50">Minimum {form.minQty}</p>
-              </div>
-              <div>
-                <label className={LABEL} htmlFor="finish">Finish</label>
-                <select id="finish" className={INPUT} value={sel.finish} onChange={(e) => setSel({ ...sel, finish: e.target.value as FinishId })}>
-                  {FINISHES.map((f) => <option key={f.id} value={f.id}>{f.label}</option>)}
-                </select>
               </div>
               <div>
                 <label className={LABEL} htmlFor="sides">Printing</label>
@@ -330,13 +338,27 @@ export default function NfcOrderForm() {
             <div>
               <span className={LABEL}>Extras</span>
               <div className="grid gap-3 sm:grid-cols-3">
-                {EXTRAS.map((x) => (
-                  <button key={x.id} type="button" className={CHIP_BTN(sel.extras.includes(x.id))} aria-pressed={sel.extras.includes(x.id)} onClick={() => toggleExtra(x.id)}>
-                    <span className="block font-semibold">{x.label}</span>
-                    <span className="block text-sm opacity-70">{x.blurb}</span>
-                  </button>
-                ))}
+                {EXTRAS.filter((x) => x.forms.includes(sel.form)).map((x) => {
+                  const on = activeExtras(sel.form, sel.extras).includes(x.id);
+                  return (
+                    <button key={x.id} type="button" className={CHIP_BTN(on)} aria-pressed={on} onClick={() => toggleExtra(x.id)}>
+                      <span className="block font-semibold">{x.label}</span>
+                      <span className="block text-sm opacity-70">{x.blurb}</span>
+                      <span className="mt-1 block text-xs font-semibold opacity-80">+{naira(PRICING.extra[x.id])} per card</span>
+                    </button>
+                  );
+                })}
               </div>
+              {activeExtras(sel.form, sel.extras).includes("magstripe") && (
+                <div className="mt-4 rounded-2xl border border-black/10 p-4 dark:border-white/10">
+                  <label className={LABEL} htmlFor="stripe">Number to encode on the stripe</label>
+                  <input id="stripe" inputMode="numeric" maxLength={STRIPE_MAX} className={INPUT} placeholder="e.g. 0012345678" value={sel.stripeData}
+                    onChange={(e) => setSel({ ...sel, stripeData: e.target.value.replace(/\D/g, "") })} />
+                  <p className="mt-2 text-xs leading-relaxed text-black/60 dark:text-white/60">
+                    The stripe is separate from the tap chip. It stores digits only (up to {STRIPE_MAX}), the same on every card unless you order serial numbers. A swipe reader reads this number, like a bank card, and your system looks up the rest. Keep your artwork off the stripe area: the back preview shows where it sits.
+                  </p>
+                </div>
+              )}
             </div>
           </section>
         )}
@@ -549,6 +571,10 @@ export default function NfcOrderForm() {
                 </select>
               </div>
             </div>
+            <div className="rounded-2xl border border-black/10 bg-black/[0.03] p-4 text-sm leading-relaxed text-black/75 dark:border-white/10 dark:bg-white/5 dark:text-white/75">
+              <p><strong>{DELIVERY_TIME}</strong> {DELIVERY_BACKORDER}</p>
+              {q.deliveryTbc && <p className="mt-1">{DELIVERY_FEE_NOTE}</p>}
+            </div>
             <div><label className={LABEL} htmlFor="cno">Anything else we should know</label><textarea id="cno" rows={3} className={INPUT} value={customer.notes} onChange={(e) => setCustomer({ ...customer, notes: e.target.value })} /></div>
             <button type="button" disabled={busy} onClick={() => void submit()} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-black px-6 py-4 text-lg font-semibold text-[#fafafa] disabled:opacity-60 dark:bg-gold-primary dark:text-black">
               {busy ? <><Loader2 className="animate-spin" size={20} /> Building your PDF</> : <><MessageCircle size={20} /> Send my order to OKHub</>}
@@ -566,17 +592,21 @@ export default function NfcOrderForm() {
       <aside aria-label="Price" className="h-fit rounded-3xl border border-black/10 bg-white p-5 shadow-sm lg:sticky lg:top-28 dark:border-white/10 dark:bg-white/5">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-black/50 dark:text-white/50">Your price</p>
         <p className="mt-1 font-display text-4xl font-bold text-black dark:text-white" aria-live="polite">{naira(q.total)}</p>
-        <p className="text-sm text-black/60 dark:text-white/60">about {naira(q.perCard)} per card</p>
+        <p className="text-sm text-black/60 dark:text-white/60">about {naira(q.perCard)} per card{q.deliveryTbc && ", before the delivery fee"}</p>
         <ul className="mt-4 space-y-2 border-t border-black/10 pt-4 text-sm dark:border-white/10">
           {q.lines.map((l) => (
             <li key={l.label} className="flex justify-between gap-3">
               <span className="text-black/75 dark:text-white/75">{l.label}{l.each !== undefined && <span className="block text-xs text-black/50 dark:text-white/50">{naira(l.each)} each</span>}</span>
-              <span className="whitespace-nowrap font-medium text-black dark:text-white">{l.amount < 0 ? `-${naira(-l.amount)}` : naira(l.amount)}</span>
+              <span className="whitespace-nowrap font-medium text-black dark:text-white">{l.tbc ? "To be confirmed" : l.amount < 0 ? `-${naira(-l.amount)}` : naira(l.amount)}</span>
             </li>
           ))}
         </ul>
         {q.problems.map((p) => <p key={p} className="mt-3 text-xs text-red-600 dark:text-red-300">{p}</p>)}
         <p className="mt-4 text-xs text-black/50 dark:text-white/50">Bigger orders cost less per card. 50 or more skips the setup fee.</p>
+        <p className="mt-3 border-t border-black/10 pt-3 text-xs leading-relaxed text-black/60 dark:border-white/10 dark:text-white/60">
+          {DELIVERY_TIME} {DELIVERY_BACKORDER}
+          {q.deliveryTbc && ` ${DELIVERY_FEE_NOTE}`}
+        </p>
       </aside>
     </div>
   );

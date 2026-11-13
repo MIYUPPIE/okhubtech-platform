@@ -33,7 +33,7 @@ export async function loadSources(root) {
   return { nfc: await load("lib/nfc.ts"), design: await load("lib/nfc-design.ts") };
 }
 
-const BASE = { form: "pvc-card", chip: "ntag213", finish: "gloss", sides: "single", qty: 50, extras: [], designBy: "self", delivery: "pickup" };
+const BASE = { form: "pvc-card", chip: "ntag213", sides: "single", qty: 50, extras: [], stripeData: "", designBy: "self", delivery: "pickup" };
 
 export function checkPricing(nfc) {
   const out = [];
@@ -57,9 +57,10 @@ export function checkPricing(nfc) {
     if (br.some((b) => b.unit <= 0)) out.push(`${f.id}: a price break is zero or negative`);
   }
   for (const c of nfc.CHIPS) if (!(c.id in P.chip)) out.push(`chip ${c.id} has no price`);
-  for (const f of nfc.FINISHES) if (!(f.id in P.finish)) out.push(`finish ${f.id} has no price`);
+  if ("finish" in P || "FINISHES" in nfc) out.push("finish options were removed from the product and must not come back");
   for (const e of nfc.EXTRAS) if (!(e.id in P.extra)) out.push(`extra ${e.id} has no price`);
-  for (const d of nfc.DELIVERY) if (!(d.id in P.delivery)) out.push(`delivery ${d.id} has no price`);
+  if ("delivery" in P) out.push("delivery is not priced in the quote: OKHub communicates the fee, so PRICING.delivery must not exist");
+  if (nfc.DELIVERY.map((d) => d.id).join() !== "pickup,ibadan,outside") out.push(`delivery options changed: ${nfc.DELIVERY.map((d) => d.id)}`);
   return out;
 }
 
@@ -69,10 +70,23 @@ export function checkQuotes(nfc) {
 
   // 50 PVC, 1 side: break price 6000 x 50, setup waived, pickup.
   eq("50 pvc pickup", nfc.quote({ ...BASE }).total, 300000);
-  // 50 PVC double, delivered in Ibadan: (6000 + 300) x 50 + 2000.
-  eq("50 pvc double ibadan", nfc.quote({ ...BASE, sides: "double", delivery: "ibadan" }).total, 317000);
-  // 10 PVC, ntag215, matte, serial, pickup: unit 9000+300+100+150 = 9550 -> 95500 + 3000 setup.
-  eq("10 pvc small order", nfc.quote({ ...BASE, qty: 10, chip: "ntag215", finish: "matte", extras: ["serial"] }).total, 98500);
+  // 50 PVC double, delivered in Ibadan: (6000 + 300) x 50. The delivery fee is NOT added.
+  eq("50 pvc double ibadan", nfc.quote({ ...BASE, sides: "double", delivery: "ibadan" }).total, 315000);
+  eq("outside Ibadan costs the same as within", nfc.quote({ ...BASE, delivery: "outside" }).total, nfc.quote({ ...BASE, delivery: "ibadan" }).total);
+  eq("pickup is final", nfc.quote({ ...BASE, delivery: "pickup" }).deliveryTbc, false);
+  eq("ibadan fee to be confirmed", nfc.quote({ ...BASE, delivery: "ibadan" }).deliveryTbc, true);
+  eq("outside fee to be confirmed", nfc.quote({ ...BASE, delivery: "outside" }).deliveryTbc, true);
+  const dl = nfc.quote({ ...BASE, delivery: "outside" }).lines.at(-1);
+  if (!(dl.tbc === true && dl.amount === 0)) out.push(`delivery line should be an unpriced "to be confirmed" line: ${JSON.stringify(dl)}`);
+  if (nfc.quote({ ...BASE, delivery: "pickup" }).lines.at(-1).tbc) out.push("pickup line must not be marked to be confirmed");
+  // 10 PVC, ntag215, serial, pickup: unit 9000+300+150 = 9450 -> 94500 + 3000 setup.
+  eq("10 pvc small order", nfc.quote({ ...BASE, qty: 10, chip: "ntag215", extras: ["serial"] }).total, 97500);
+  // Extras only count on forms that can take them.
+  eq("hole on a sticker is ignored", nfc.unitPrice({ ...BASE, form: "sticker", qty: 100, extras: ["hole"] }), 800);
+  eq("stripe on a key fob is ignored", nfc.unitPrice({ ...BASE, form: "keyfob", qty: 50, extras: ["magstripe"] }), 4000);
+  eq("stripe on a PVC card is charged", nfc.unitPrice({ ...BASE, extras: ["magstripe"] }), 6500);
+  eq("hole on a metal card is charged", nfc.unitPrice({ ...BASE, form: "metal-card", extras: ["hole"] }), 11600);
+  eq("activeExtras drops what the form cannot take", nfc.activeExtras("sticker", ["serial", "hole", "magstripe"]).join(), "serial");
   // Duplicate extras must not double charge.
   eq("duplicate extras", nfc.unitPrice({ ...BASE, extras: ["hole", "hole"] }), 6100);
   // OKHub design fee is one-off.
@@ -85,7 +99,7 @@ export function checkQuotes(nfc) {
   for (const l of nfc.quote({ ...BASE }).lines) if (/\u20A6/.test(`${l.label}${l.note ?? ""}`)) out.push(`price line "${l.label}" embeds a naira sign`);
 
   // Lines always sum to total.
-  const q = nfc.quote({ ...BASE, qty: 120, sides: "double", extras: ["serial", "hole", "magstripe"], designBy: "okhub", delivery: "nationwide" });
+  const q = nfc.quote({ ...BASE, qty: 120, sides: "double", extras: ["serial", "hole", "magstripe"], designBy: "okhub", delivery: "outside" });
   eq("lines sum", q.lines.reduce((s, l) => s + l.amount, 0), q.total);
 
   // Per-card price never rises with quantity.
@@ -142,6 +156,21 @@ export function checkOrder(nfc) {
   if (!over.some((m) => /NTAG213 holds 144/.test(m) && /NTAG215/.test(m))) out.push(`over-capacity order not refused with a useful message: ${over}`);
   if (bad({ ...big, selection: { ...good.selection, chip: "ntag215" } }).length) out.push("an order that fits NTAG215 was refused for NTAG215");
   if (!bad({ actions: [{ id: "text", value: "x".repeat(2000) }], selection: { ...good.selection, chip: "ntag216" } }).some((m) => /largest chip/.test(m))) out.push("an order too big for every chip was not refused");
+
+  // Magnetic stripe data: digits only, 1 to 37, PVC cards only.
+  const stripe = (data, form = "pvc-card") => nfc.validateOrder({ ...good, selection: { ...good.selection, form, extras: ["magstripe"], stripeData: data } });
+  if (!stripe("").some((m) => /Magnetic stripe/.test(m))) out.push("magnetic stripe with no data accepted");
+  if (!stripe("12ab").some((m) => /Magnetic stripe/.test(m))) out.push("non-digit stripe data accepted");
+  if (!stripe("1".repeat(38)).some((m) => /Magnetic stripe/.test(m))) out.push("38 digit stripe data accepted");
+  if (stripe("1".repeat(37)).length) out.push(`37 digit stripe data refused: ${stripe("1".repeat(37))}`);
+  if (stripe("", "keyfob").some((m) => /Magnetic stripe/.test(m))) out.push("a stripe the key fob cannot have still demanded data");
+
+  // Delivery wording the customer was promised.
+  if (!/2-5 working days/.test(nfc.DELIVERY_TIME)) out.push("DELIVERY_TIME lost the 2-5 working days promise");
+  if (!/15-21 days after payment/.test(nfc.DELIVERY_BACKORDER)) out.push("DELIVERY_BACKORDER lost the 15-21 days after payment promise");
+  if (!/fee/i.test(nfc.DELIVERY_FEE_NOTE)) out.push("DELIVERY_FEE_NOTE does not mention the fee");
+  const cap = nfc.whatsappCaption({ ...good, selection: { ...good.selection, delivery: "outside" } });
+  if (!/delivery fee to be confirmed/.test(cap)) out.push("caption does not say the delivery fee is to be confirmed");
 
   const long = { ...good, customer: { ...good.customer, name: "N".repeat(100), business: "B".repeat(100) } };
   if (nfc.whatsappCaption(long).length > 1000) out.push("caption exceeds 1000 characters");
@@ -281,6 +310,10 @@ export function checkWiring(root) {
   for (const field of ["ref", "name", "phone", "caption", "website", "pdf"]) {
     if (!client.includes(`f.set("${field}"`)) out.push(`lib/nfc-delivery.ts does not send "${field}"`);
     if (!worker.includes(`form.get("${field}")`)) out.push(`the Worker does not read "${field}"`);
+  }
+  // The delivery promise must reach the customer on the page and on the PDF.
+  for (const p of ["components/nfc/NfcOrderForm.tsx", "lib/nfc-pdf.ts"]) {
+    for (const c of ["DELIVERY_TIME", "DELIVERY_BACKORDER"]) if (!read(p).includes(c)) out.push(`${p} does not show ${c}`);
   }
   // The WhatsApp token must never be public.
   for (const p of ["lib/nfc-delivery.ts", "lib/nfc.ts", "components/nfc/NfcOrderForm.tsx", ".env.example"]) {

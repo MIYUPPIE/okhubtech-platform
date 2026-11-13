@@ -9,8 +9,9 @@
  * jsPDF is imported on demand so it never lands in the page's first bundle.
  */
 
+import { STRIPE_HEIGHT_MM, STRIPE_TOP_MM } from "./nfc-design";
 import { BANK, EMAIL, LOCATION, PHONE_DISPLAY } from "./contact";
-import { ACTIONS, DELIVERY, EXTRAS, FINISHES, chipById, formById, memoryReport, nairaPlain, quote, type Order } from "./nfc";
+import { ACTIONS, DELIVERY, DELIVERY_BACKORDER, DELIVERY_FEE_NOTE, DELIVERY_TIME, EXTRAS, activeExtras, chipById, formById, memoryReport, nairaPlain, quote, type Order } from "./nfc";
 
 export type Artwork = { front: string; back: string };
 
@@ -27,15 +28,14 @@ export function specRows(o: Order): [string, string][] {
   const s = o.selection;
   const f = formById(s.form);
   const c = chipById(s.chip);
-  const finish = FINISHES.find((x) => x.id === s.finish)?.label ?? s.finish;
-  const extras = [...new Set(s.extras)].map((e) => EXTRAS.find((x) => x.id === e)?.label ?? e);
+  const extras = activeExtras(s.form, s.extras).map((e) => EXTRAS.find((x) => x.id === e)?.label ?? e);
   return [
     ["Form", `${f.label} (${f.widthMm} x ${f.heightMm} mm)`],
     ["Chip", `${c.label}, ${c.bytes} bytes`],
     ["Quantity", String(quote(s).qty)],
     ["Printing", s.sides === "double" ? "Front and back" : "Front only"],
-    ["Finish", finish],
     ["Extras", extras.length ? extras.join(", ") : "None"],
+    ...(activeExtras(s.form, s.extras).includes("magstripe") ? [["Stripe data", s.stripeData.trim()] as [string, string]] : []),
     ["Artwork", s.designBy === "okhub" ? "OKHub will design it" : "Designed by the customer (attached)"],
     ["Delivery", DELIVERY.find((d) => d.id === s.delivery)?.label ?? s.delivery],
   ];
@@ -134,16 +134,27 @@ export async function buildOrderPdf(o: Order, art: Artwork): Promise<Blob> {
     text(l.label, M, y, 9.5, INK);
     const note = l.each !== undefined ? `${nairaPlain(l.each)} each` : l.note;
     if (note) text(note, M + 88, y, 8.5, MUTED);
-    text(l.amount < 0 ? `- ${nairaPlain(-l.amount)}` : nairaPlain(l.amount), W - M, y, 9.5, INK, false, "right");
+    text(l.tbc ? "To be confirmed" : l.amount < 0 ? `- ${nairaPlain(-l.amount)}` : nairaPlain(l.amount), W - M, y, 9.5, INK, false, "right");
     y += 5.2;
   }
   doc.setFillColor(...GOLD);
   doc.rect(M, y - 1.5, W - 2 * M, 9, "F");
-  text("Total", M + 3, y + 4.4, 11, INK, true);
+  text(q.deliveryTbc ? "Total (excluding delivery)" : "Total", M + 3, y + 4.4, 11, INK, true);
   text(nairaPlain(q.total), W - M - 3, y + 4.4, 11, INK, true, "right");
   y += 13;
-  text(`About ${nairaPlain(q.perCard)} per card, delivery included.`, M, y, 8.5, MUTED);
+  text(`About ${nairaPlain(q.perCard)} per card${q.deliveryTbc ? ", before the delivery fee" : ""}.`, M, y, 8.5, MUTED);
   y += 3;
+
+  ensureSpace(34);
+  heading("Delivery");
+  text(DELIVERY_TIME, M, y, 9.5, INK, true);
+  y += 5;
+  text(DELIVERY_BACKORDER, M, y, 9.5, INK);
+  y += 5;
+  if (q.deliveryTbc) {
+    text(DELIVERY_FEE_NOTE, M, y, 9.5, INK);
+    y += 5;
+  }
 
   heading("How to pay");
   text(`${BANK.name}   |   ${BANK.accountName}   |   ${BANK.accountNumber}`, M, y, 9.5, INK, true);
@@ -169,6 +180,9 @@ export async function buildOrderPdf(o: Order, art: Artwork): Promise<Blob> {
   doc.addPage();
   text("Print artwork, actual size", M, 18, 14, INK, true);
   text(`${o.ref}   |   ${form.label}, ${form.widthMm} x ${form.heightMm} mm   |   300 dpi`, M, 24, 9, MUTED);
+  if (activeExtras(o.selection.form, o.selection.extras).includes("magstripe")) {
+    text(`Magnetic stripe runs across the back, ${STRIPE_TOP_MM} to ${(STRIPE_TOP_MM + STRIPE_HEIGHT_MM).toFixed(1)} mm from the top edge. Keep artwork clear of it.`, M, 29, 9, MUTED);
+  }
   let py = 36;
   const pages: [string, string][] = o.selection.sides === "double" ? [["FRONT", art.front], ["BACK", art.back]] : [["FRONT", art.front]];
   for (const [label, data] of pages) {

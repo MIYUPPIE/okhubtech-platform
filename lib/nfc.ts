@@ -24,9 +24,8 @@ import { whatsappChatUrl } from "./contact.ts";
 
 export type FormId = "pvc-card" | "wood-card" | "metal-card" | "keyfob" | "sticker" | "wristband";
 export type ChipId = "ntag213" | "ntag215" | "ntag216";
-export type FinishId = "gloss" | "matte" | "frosted" | "soft-touch";
 export type Sides = "single" | "double";
-export type DeliveryId = "pickup" | "ibadan" | "nationwide";
+export type DeliveryId = "pickup" | "ibadan" | "outside";
 export type ActionId = "website" | "contact" | "whatsapp" | "wifi" | "social" | "payment" | "text" | "other";
 export type ExtraId = "serial" | "hole" | "magstripe";
 export type DesignBy = "self" | "okhub";
@@ -62,13 +61,6 @@ export const CHIPS: readonly Chip[] = [
   { id: "ntag216", label: "NTAG216", bytes: 888, blurb: "Most memory. Rich contact cards and Wi-Fi." },
 ];
 
-export const FINISHES: readonly { id: FinishId; label: string }[] = [
-  { id: "gloss", label: "Gloss" },
-  { id: "matte", label: "Matte" },
-  { id: "frosted", label: "Frosted" },
-  { id: "soft-touch", label: "Soft touch" },
-];
-
 export type ActionField = { key: string; label: string; placeholder: string; optional?: boolean };
 
 export const ACTIONS: readonly { id: ActionId; label: string; placeholder: string; fields?: readonly ActionField[] }[] = [
@@ -98,22 +90,37 @@ export const ACTIONS: readonly { id: ActionId; label: string; placeholder: strin
   { id: "other", label: "Something else (we programme it for you)", placeholder: "Describe what should happen on tap" },
 ];
 
-export const EXTRAS: readonly { id: ExtraId; label: string; blurb: string }[] = [
-  { id: "serial", label: "Printed serial numbers", blurb: "A unique number on every card, for tracking." },
-  { id: "hole", label: "Punched hole", blurb: "For lanyards and key rings." },
-  { id: "magstripe", label: "Magnetic stripe", blurb: "Works with legacy swipe readers." },
+/** Which forms can take each extra. A stripe needs a flat card body; a hole needs a card or fob that is not already drilled. */
+export const EXTRAS: readonly { id: ExtraId; label: string; blurb: string; forms: readonly FormId[] }[] = [
+  { id: "serial", label: "Printed serial numbers", blurb: "A unique number on every card, for tracking.", forms: ["pvc-card", "wood-card", "metal-card", "keyfob", "sticker", "wristband"] },
+  { id: "hole", label: "Punched hole", blurb: "For lanyards. Slot or round hole near the top edge.", forms: ["pvc-card", "wood-card", "metal-card"] },
+  { id: "magstripe", label: "Magnetic stripe", blurb: "A stripe on the back that swipe readers can read, as well as the tap chip. You give us the number to encode.", forms: ["pvc-card"] },
 ];
+
+/** Extras that are real for this form, de-duplicated. Anything else the selection carries is ignored. */
+export const activeExtras = (form: FormId, extras: readonly ExtraId[]): ExtraId[] =>
+  [...new Set(extras)].filter((e) => EXTRAS.find((x) => x.id === e)?.forms.includes(form));
+
+/** Track 2 holds digits only, 37 of them at most. */
+export const STRIPE_MAX = 37;
+
 
 export const DELIVERY: readonly { id: DeliveryId; label: string }[] = [
   { id: "pickup", label: "Pick up in Ibadan" },
   { id: "ibadan", label: "Delivery within Ibadan" },
-  { id: "nationwide", label: "Delivery anywhere in Nigeria" },
+  { id: "outside", label: "Delivery outside Ibadan" },
 ];
+
+/** Shown on the page, the PDF and the WhatsApp message. */
+export const DELIVERY_TIME = "Delivery takes 2-5 working days.";
+export const DELIVERY_BACKORDER = "If the product is not available, delivery takes 15-21 days after payment.";
+export const DELIVERY_FEE_NOTE = "The delivery fee is not in the total. OKHub will tell you the fee before you pay.";
+
 
 /** Whole naira. Edit here; everything else follows. */
 export const PRICING = {
   /**
-   * Per-card price by quantity, before chip, finish, sides and extras. Highest
+   * Per-card price by quantity, before chip, sides and extras. Highest
    * minQty not above the order wins. Must start at minQty 1 and never rise.
    */
   breaks: {
@@ -126,7 +133,6 @@ export const PRICING = {
   } satisfies Record<FormId, readonly { minQty: number; unit: number }[]>,
   /** Per unit, added to the break price. */
   chip: { ntag213: 0, ntag215: 300, ntag216: 700 } satisfies Record<ChipId, number>,
-  finish: { gloss: 0, matte: 100, frosted: 250, "soft-touch": 400 } satisfies Record<FinishId, number>,
   /** Per unit, for printing the back as well as the front. */
   doubleSided: 300,
   extra: { serial: 150, hole: 100, magstripe: 500 } satisfies Record<ExtraId, number>,
@@ -134,8 +140,6 @@ export const PRICING = {
   setupFee: 3000,
   /** One-off, when OKHub does the artwork instead of the customer. */
   designService: 7500,
-  /** One-off, per order. */
-  delivery: { pickup: 0, ibadan: 2000, nationwide: 4500 } satisfies Record<DeliveryId, number>,
 } as const;
 
 export const SETUP_WAIVED_FROM = 50;
@@ -144,20 +148,25 @@ export const MAX_QTY = 10000;
 export type Selection = {
   form: FormId;
   chip: ChipId;
-  finish: FinishId;
   sides: Sides;
   qty: number;
   extras: readonly ExtraId[];
+  /** Digits to encode on the magnetic stripe, when that extra is chosen. */
+  stripeData: string;
   designBy: DesignBy;
   delivery: DeliveryId;
 };
 
-export type PriceLine = { label: string; amount: number; note?: string; /** Per-unit price, formatted by the caller (the PDF cannot print the naira sign). */ each?: number };
+export type PriceLine = { label: string; amount: number; note?: string; /** Per-unit price, formatted by the caller (the PDF cannot print the naira sign). */ each?: number;
+  /** Not yet priced: shown as "to be confirmed" and counted as 0 in the total. */
+  tbc?: boolean };
 
 export type Quote = {
   qty: number;
   unitPrice: number;
   lines: PriceLine[];
+  /** True when the order is delivered: the total then excludes a fee OKHub will communicate. */
+  deliveryTbc: boolean;
   /** Every line summed, in naira. */
   total: number;
   /** total / qty rounded to the nearest naira, for display. */
@@ -179,13 +188,12 @@ export const breakPrice = (form: FormId, qty: number): number => {
   return unit;
 };
 
-/** Per-card price at the selection's quantity: break price plus chip, finish, sides and extras. */
+/** Per-card price at the selection's quantity: break price plus chip, sides and extras. */
 export const unitPrice = (s: Selection): number =>
   breakPrice(s.form, s.qty) +
   PRICING.chip[s.chip] +
-  PRICING.finish[s.finish] +
   (s.sides === "double" ? PRICING.doubleSided : 0) +
-  [...new Set(s.extras)].reduce((sum, e) => sum + PRICING.extra[e], 0);
+  activeExtras(s.form, s.extras).reduce((sum, e) => sum + PRICING.extra[e], 0);
 
 /**
  * The whole quote. An invalid quantity still returns lines (priced at the
@@ -213,11 +221,15 @@ export function quote(s: Selection): Quote {
   ];
   if (qty < SETUP_WAIVED_FROM) lines.push({ label: "Print setup", amount: PRICING.setupFee, note: `Free from ${SETUP_WAIVED_FROM} units` });
   if (s.designBy === "okhub") lines.push({ label: "OKHub designs it for you", amount: PRICING.designService });
-  const ship = PRICING.delivery[s.delivery];
-  lines.push({ label: DELIVERY.find((d) => d.id === s.delivery)?.label ?? "Delivery", amount: ship });
+  const deliveryTbc = s.delivery !== "pickup";
+  lines.push({
+    label: DELIVERY.find((d) => d.id === s.delivery)?.label ?? "Delivery",
+    amount: 0,
+    ...(deliveryTbc ? { tbc: true, note: "Fee communicated by OKHub" } : {}),
+  });
 
   const total = lines.reduce((sum, l) => sum + l.amount, 0);
-  return { qty, unitPrice: unit, lines, total, perCard: Math.round(total / qty), problems };
+  return { qty, unitPrice: unit, lines, deliveryTbc, total, perCard: Math.round(total / qty), problems };
 }
 
 // ---------------------------------------------------------------------------
@@ -412,6 +424,9 @@ export function validateOrder(o: Order): string[] {
     const problem = actionProblem(a);
     if (problem) errors.push(problem);
   }
+  if (activeExtras(o.selection.form, o.selection.extras).includes("magstripe") && !/^\d{1,37}$/.test(o.selection.stripeData.trim())) {
+    errors.push(`Magnetic stripe: enter the digits to encode (numbers only, up to ${STRIPE_MAX}).`);
+  }
   const mem = memoryReport(o.actions, o.selection.chip);
   if (!mem.fits) {
     const chip = chipById(o.selection.chip);
@@ -438,7 +453,8 @@ export function whatsappCaption(o: Order): string {
     `Phone: ${o.customer.phone}`,
     `${q.qty} x ${f.label}, ${c.label}, ${o.selection.sides} sided`,
     `Chip memory: ${mem.used} of ${mem.capacity} bytes, ${o.actions.length} item${o.actions.length === 1 ? "" : "s"}`,
-    `Total: ${nairaPlain(q.total)}`,
+    `Total: ${nairaPlain(q.total)}${q.deliveryTbc ? " (delivery fee to be confirmed)" : ""}`,
+    `Delivery: ${DELIVERY.find((d) => d.id === o.selection.delivery)?.label ?? o.selection.delivery}`,
     "Full specification and artwork are in the attached PDF.",
   ].join("\n");
 }

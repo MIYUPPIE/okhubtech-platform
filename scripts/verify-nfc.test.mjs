@@ -45,6 +45,19 @@ expect("phone accepted junk", checkOrder({ ...nfc, normalisePhone: () => "234803
 expect("everything valid", checkOrder({ ...nfc, validateOrder: () => [] }), /accepted/);
 expect("long caption", checkOrder({ ...nfc, whatsappCaption: () => "x".repeat(1200) }), /caption exceeds/);
 
+// 2b. Delivery, finish and extras rules
+expect("delivery silently priced", checkQuotes({ ...nfc, quote: (s) => { const q = nfc.quote(s); return s.delivery === "ibadan" ? { ...q, total: q.total + 2000 } : q; } }), /ibadan|within/);
+expect("pickup marked tbc", checkQuotes({ ...nfc, quote: (s) => { const q = nfc.quote(s); return { ...q, deliveryTbc: true }; } }), /pickup is final/);
+expect("delivery fee not flagged", checkQuotes({ ...nfc, quote: (s) => ({ ...nfc.quote(s), deliveryTbc: false }) }), /to be confirmed/);
+expect("finish came back", checkPricing({ ...nfc, FINISHES: [] }), /finish options were removed/);
+expect("delivery price came back", checkPricing(withPricing({ delivery: { pickup: 0, ibadan: 1, outside: 1 } })), /PRICING.delivery must not exist/);
+expect("stripe charged on a key fob", checkQuotes({ ...nfc, unitPrice: (s) => nfc.unitPrice({ ...s, form: s.form === "keyfob" ? "pvc-card" : s.form }) }), /key fob|ignored|stripe/);
+expect("hole charged on a sticker", checkQuotes({ ...nfc, activeExtras: (f, e) => [...new Set(e)], unitPrice: (s) => nfc.breakPrice(s.form, s.qty) + 100 }), /ignored|got/);
+expect("stripe data not required", checkOrder({ ...nfc, validateOrder: (o) => nfc.validateOrder(o).filter((m) => !/Magnetic stripe/.test(m)) }), /magnetic stripe/);
+expect("delivery promise reworded", checkOrder({ ...nfc, DELIVERY_TIME: "Fast." }), /2-5 working days/);
+expect("backorder promise reworded", checkOrder({ ...nfc, DELIVERY_BACKORDER: "Later." }), /15-21 days/);
+expect("caption hides the tbc fee", checkOrder({ ...nfc, whatsappCaption: () => "NEW NFC ORDER NFC-261113-2345" }), /to be confirmed/);
+
 // 3b. NDEF
 expect("uri ignores prefix compression", checkNdef({ ...nfc, uriRecordBytes: (u) => 3 + 1 + 1 + u.length }), /https URI/);
 expect("text counted in chars not bytes", checkNdef({ ...nfc, textRecordBytes: (t) => 3 + 1 + 3 + t.length }), /UTF-8/);
@@ -72,6 +85,7 @@ const tree = (files) => {
   return root;
 };
 const empty = checkWiring(tree({}));
+expect("promise missing on page", empty, /does not show DELIVERY_TIME/);
 expect("no page", empty, /page\.tsx is missing/);
 expect("not in sitemap", empty, /STANDALONE_PAGES/);
 expect("no footer link", empty, /footer/);

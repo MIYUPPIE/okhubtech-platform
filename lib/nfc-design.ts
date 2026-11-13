@@ -13,6 +13,10 @@ import type { Form } from "./nfc";
 
 export const PX_PER_MM = 300 / 25.4;
 
+/** ISO 7811 magnetic stripe on the back of a card: 12.7 mm wide, its top edge 5.5 mm from the card top. */
+export const STRIPE_TOP_MM = 5.5;
+export const STRIPE_HEIGHT_MM = 12.7;
+
 export type Fill =
   | { kind: "solid"; color: string }
   | { kind: "gradient"; from: string; to: string; angle: number };

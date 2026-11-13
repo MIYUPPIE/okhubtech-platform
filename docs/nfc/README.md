@@ -31,6 +31,19 @@ The page shows a live meter, offers a one-click chip upgrade with the price
 difference, and `validateOrder()` refuses an order that does not fit, naming the
 chip that does. The PDF lists each item with its bytes.
 
+## Delivery, finish and the magnetic stripe
+
+- Delivery is not priced. The total excludes it, the page and PDF say "to be
+  confirmed", and OKHub tells the customer the fee (within or outside Ibadan)
+  before they pay. Pickup in Ibadan is final. Wording lives in `DELIVERY_TIME`,
+  `DELIVERY_BACKORDER` and `DELIVERY_FEE_NOTE` in `lib/nfc.ts`: 2-5 working days,
+  or 15-21 days after payment if the product is not available.
+- Finish options were removed.
+- Extras are limited by form (`EXTRAS[].forms`): magnetic stripe on PVC cards only,
+  punched hole on card bodies only. The stripe needs digits to encode (Track 2: up
+  to 37), and the back preview shows the stripe area (ISO 7811: 12.7 mm wide, top
+  edge 5.5 mm from the card top) so artwork stays off it.
+
 ## Changing prices
 
 Edit `PRICING` in `lib/nfc.ts`. The page, PDF and gate follow. The gate rejects
