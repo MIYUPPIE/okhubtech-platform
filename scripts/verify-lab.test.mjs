@@ -17,6 +17,13 @@ const routes = knownRoutes(ROOT);
 const withItem = (slug, patch) => structuredClone(LAB).map((i) => (i.slug === slug ? { ...i, ...patch } : i));
 const run = (items) => checkLab(items, LAB_KINDS, routes, ROOT);
 
+/** No paper is listed today; the paper rules are tested on a synthetic one. */
+const paper = (patch = {}) => ({
+  slug: "test-paper", kind: "paper", title: "A paper", tagline: "One line.", status: "Submitted, 2026",
+  summary: "A summary.", points: ["one", "two"], authors: ["An Author"], stack: ["LLM"], links: [], ...patch,
+});
+const withPaper = (patch) => [...structuredClone(LAB), paper(patch)];
+
 const cases = [
   ["baseline passes", () => run(LAB), 0],
   ["route list parsed", () => (routes.has("/products/logsme") && routes.has("/schools") ? [] : ["routes not parsed"]), 0],
@@ -28,12 +35,13 @@ const cases = [
   ["NVIDIA course notes", () => run(withItem("pybullet-for-kids", { title: "A Beginner's Guide to Autonomous Robots" })), /NVIDIA/],
   ["removed campaign", () => run(withItem("nfctool", { tagline: "Built for kso.ng" })), /removed/],
   ["client named", () => run(withItem("whatsapp-gateway", { status: "In production for Vesi" })), /client name/],
-  ["email address", () => run(withItem("logsme-paper", { summary: "Contact someone@example.com." })), /email address/],
+  ["email address", () => run(withItem("camguard", { summary: "Contact someone@example.com." })), /email address/],
   ["server address", () => run(withItem("whatsapp-gateway", { summary: "Runs on 159.223.30.191." })), /server address/],
 
   // papers
-  ["paper claimed as published", () => run(withItem("logsme-paper", { status: "Published, 2025" })), /must start with "Submitted"/],
-  ["paper without authors", () => run(withItem("gamblealert-paper", { authors: [] })), /no authors/],
+  ["paper claimed as published", () => run(withPaper({ status: "Published, 2025" })), /must start with "Submitted"/],
+  ["paper without authors", () => run(withPaper({ authors: [] })), /no authors/],
+  ["a well-formed paper passes", () => run(withPaper({})), 0],
   ["authors on a non-paper", () => run(withItem("camguard", { authors: ["Someone"] })), /only papers carry authors/],
 
   // links and shape

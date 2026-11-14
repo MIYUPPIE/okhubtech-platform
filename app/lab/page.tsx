@@ -9,9 +9,9 @@ export const metadata: Metadata = pageMetadata({
   path: "/lab",
   title: "Lab",
   description:
-    "OKHub's research, papers, prototypes, tools and teaching material: accessible communication research, fab scheduling, submitted papers on LogSME and GambleAlert, and the tools behind our work.",
+    "OKHub's research, prototypes, tools and teaching material: accessible communication research, fab scheduling, camera prototypes, and the tools behind our work.",
   ogSlug: "lab",
-  ogAlt: "OKHub Lab: research, papers, prototypes and tools",
+  ogAlt: "OKHub Lab: research, prototypes and tools",
 });
 
 function LabCard({ item }: { item: LabItem }) {
@@ -84,8 +84,7 @@ export default function LabPage() {
         </h1>
         <p className="mt-6 max-w-3xl text-lg text-black/80 dark:text-white/80">
           Not everything we build is for sale. This is the rest of it: the questions we are
-          researching, the papers we have written about systems we deployed, the prototypes that
-          prove one idea at a time, and the tools and guides we use every week. Each one says
+          researching, the prototypes that prove one idea at a time, and the tools and guides we use every week. Each one says
           plainly how far it has got.
         </p>
         <nav aria-label="Lab sections" className="mt-8 flex flex-wrap gap-2">

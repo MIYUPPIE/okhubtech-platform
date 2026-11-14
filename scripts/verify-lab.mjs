@@ -136,7 +136,10 @@ async function main() {
     for (const p of problems) console.error(`  - ${p}`);
     process.exit(1);
   }
-  const counts = lab.LAB_KINDS.map((k) => `${lab.LAB.filter((i) => i.kind === k.kind).length} ${k.kind}`).join(", ");
+  const counts = lab.LAB_KINDS.map((k) => [lab.LAB.filter((i) => i.kind === k.kind).length, k.kind])
+    .filter(([n]) => n > 0)
+    .map(([n, kind]) => `${n} ${kind}`)
+    .join(", ");
   console.log(`PASS  /lab: ${lab.LAB.length} items (${counts}), links resolve, nothing third-party`);
 }
 

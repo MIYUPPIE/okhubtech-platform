@@ -107,40 +107,6 @@ const LAB_DATA: LabItem[] = [
     links: [],
   },
   {
-    slug: "logsme-paper",
-    kind: "paper",
-    title: "LogSME: an AI-powered inventory, production and analytics platform for Nigerian manufacturing SMEs",
-    tagline: "The design and build of LogSME, from raw-material intake to finished-goods sales.",
-    status: "Submitted, April 2025",
-    summary:
-      "Most Nigerian manufacturing SMEs still run inventory and production on paper. The paper sets out the needs assessment behind LogSME, its architecture, the embedded AI business adviser that turns operating data into plain-language advice, and the voice interface built for owners who work from a phone.",
-    points: [
-      "End-to-end production-cycle tracking with automatic stock monitoring.",
-      "An AI adviser that explains business performance from structured data.",
-      "A voice interface for low digital literacy, mobile-first users.",
-    ],
-    authors: ["Okanlawon Olayemi Micheal"],
-    stack: ["React", "Node.js", "MongoDB", "LLM"],
-    links: [{ label: "LogSME", href: "/products/logsme" }],
-  },
-  {
-    slug: "gamblealert-paper",
-    kind: "paper",
-    title: "GambleAlert: an AI psychologist chatbot for real-time gambling intervention and risk classification in Sub-Saharan Africa",
-    tagline: "Design, deployment and first evaluation of the GambleAlert chatbot.",
-    status: "Submitted, April 2026",
-    summary:
-      "Problem gambling is rising fast across Sub-Saharan Africa while support is almost absent. The paper describes GambleAlert, a chatbot with conversational memory and a sentiment and risk module that sorts conversations into low, moderate and high risk, and reports on its deployment.",
-    points: [
-      "A three-tier risk classification running alongside every conversation.",
-      "Conversational memory, so support builds over a session instead of restarting.",
-      "Deployed publicly, with interactions logged for evaluation.",
-    ],
-    authors: ["Okanlawon Olayemi Micheal", "Fisayo Oke"],
-    stack: ["LLM", "LangChain", "Sentiment analysis"],
-    links: [{ label: "GambleAlert", href: "/products/gamblealert" }],
-  },
-  {
     slug: "light-compensation",
     kind: "prototype",
     title: "Light compensation",
