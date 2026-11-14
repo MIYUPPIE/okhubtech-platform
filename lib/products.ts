@@ -433,6 +433,25 @@ const PRODUCTS_DATA: Product[] = [
     stack: ["Elixir", "Frigate", "MQTT", "Raspberry Pi 4", "Coral TPU"],
   },
   {
+    slug: "in-store-vision",
+    name: "In-Store CV Tracking",
+    tagline: "Shelf and shopper, watched together: who took what, and who needs help.",
+    sector: "Retail",
+    summary: [
+      "A camera system for shops that watches the shelf and the shopper together. It tracks each person through the store and keeps their identity when they step out of view, counts the products on each shelf, and when a count drops it attributes the missing item to whoever reached into that shelf just before. An unmatched drop is still raised for a person to review rather than thrown away.",
+      "The same camera feed watches for safety: a fall, a weapon or a fire. Alerts go over MQTT to small ESP8266 nodes in each zone, routed by urgency, and every shelf removal is written out as a running, POS-ready item list. It is a working prototype, and it needs no labelled dataset to start counting new products.",
+    ],
+    highlights: [
+      "Grab detection from pose: fires once when a wrist enters a shelf zone, not on every frame it stays there.",
+      "Fall detection that waits for the torso to stay horizontal over several frames, so tying a shoelace does not trigger it.",
+      "Open-vocabulary shelf counting: name the products and it counts them, with no training run.",
+      "Theft fusion links a shelf count drop to the person who grabbed in that zone moments before.",
+      "Alerts routed by type: weapon and fire to critical, falls to staff, theft to review.",
+      "Each part is tested on its own, from re-identification to the POS feed.",
+    ],
+    stack: ["Python", "YOLO26", "YOLOE", "StrongSORT", "MQTT", "ESP8266"],
+  },
+  {
     slug: "yoruba-live-voice",
     name: "Yoruba Live Voice",
     tagline: "An always-on Yoruba speech pipeline that never stops listening.",
