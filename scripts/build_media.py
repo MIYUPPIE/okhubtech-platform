@@ -432,6 +432,7 @@ OG_CARDS: list[OGCardSpec] = [
     OGCardSpec("data", "Data & Analytics", "Signals into decisions."),
     OGCardSpec("contact", "Get in touch", "Talk to OKHub."),
     OGCardSpec("studio", "The Studio", "The robotics and training floor."),
+    OGCardSpec("lab", "Lab", "Research, prototypes and the tools behind our work."),
     OGCardSpec("kits", "Kits", "Electronics and robotics kits, tested before they ship.",
                photo="kits/ignite-genesis.webp"),
     OGCardSpec("schools", "For secondary schools", "A robotics lab, trained staff and the kits to run it.",

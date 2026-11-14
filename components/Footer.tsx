@@ -32,6 +32,7 @@ const footerLinks = [
       { label: "Kits", href: "/kits" },
       { label: "NFC Cards", href: "/nfc" },
       { label: "Schools", href: "/schools" },
+      { label: "Lab", href: "/lab" },
       { label: "Portfolio", href: "/portfolio" },
       { label: "Security", href: "#" },
       { label: "Contact", href: "/contact" },

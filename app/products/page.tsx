@@ -44,6 +44,9 @@ export default function ProductsPage() {
         <Link href="/portfolio" className="btn-secondary">
           Hardware &amp; research work
         </Link>
+        <Link href="/lab" className="btn-secondary">
+          The lab: research &amp; prototypes
+        </Link>
       </div>
 
       <ul className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -84,8 +84,11 @@ body {
   padding: 0 1.5rem;
 }
 
+/* padding-block, not `padding: 5rem 0`: the shorthand zeroed the 1.5rem side
+   gutter of .container-default on every element using both, so below 1200px
+   wide those sections ran edge to edge. */
 .section-shell {
-  padding: 5rem 0;
+  padding-block: 5rem;
 }
 
 .text-gradient {
